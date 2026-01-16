@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Routine - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <div>
+                <div class="college-name">ICC Companion</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName">Student</strong></span>
+            <button class="btn-logout" onclick="logout('student')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="routines.html" class="active">📋 Routines</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">📋 Class Routine</h1>
+
+        <div style="color: #64748b; font-size: 14px; margin-bottom: 20px;">
+            Class timetable for: <strong id="filterInfo">-</strong>
+        </div>
+
+        <!-- Routine Display -->
+        <div id="routineContainer">
+            <div class="card" style="text-align: center; padding: 40px; color: #64748b;">
+                Loading class routine...
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        if (!checkStudentLogin()) { }
+
+        var student = getStudentInfo();
+        document.getElementById('userName').textContent = student.name;
+        document.getElementById('filterInfo').textContent = student.dept + ' - Semester ' + student.semester;
+
+        loadRoutine();
+
+        function loadRoutine() {
+            var url = '../api/get-class-routines.php?dept=' + student.dept + '&semester=' + student.semester;
+
+            fetch(url)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var container = document.getElementById('routineContainer');
+
+                    if (data.success && data.data.length > 0) {
+                        // Show the LATEST routine (first one since ordered by date DESC)
+                        var routine = data.data[0];
+                        var fileExt = routine.file_url.split('.').pop().toLowerCase();
+
+                        var html = '<div class="card">';
+                        html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">';
+                        html += '<h3 style="margin: 0;">📋 ' + routine.title + '</h3>';
+                        html += '<span style="font-size: 12px; color: #64748b;">Updated: ' + formatDate(routine.created_at) + '</span>';
+                        html += '</div>';
+
+                        if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) {
+                            // Show image inline
+                            html += '<div style="text-align: center;">';
+                            html += '<img src="../' + routine.file_url + '" style="max-width: 100%; border-radius: 8px; border: 1px solid #e2e8f0;">';
+                            html += '</div>';
+                        } else if (fileExt === 'pdf') {
+                            // PDF - embed inline with iframe
+                            html += '<div style="border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0;">';
+                            html += '<iframe src="../' + routine.file_url + '" style="width: 100%; height: 600px; border: none;"></iframe>';
+                            html += '</div>';
+                            html += '<div style="text-align: center; margin-top: 10px;">';
+                            html += '<a href="../' + routine.file_url + '" target="_blank" class="btn btn-sm btn-outline">🔗 Open in New Tab</a>';
+                            html += '</div>';
+                        } else {
+                            // Other files - download
+                            html += '<div style="text-align: center; padding: 30px; background: #f8fafc; border-radius: 8px;">';
+                            html += '<a href="../' + routine.file_url + '" target="_blank" class="btn btn-primary">📥 Download File</a>';
+                            html += '</div>';
+                        }
+
+                        html += '</div>';
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div class="card" style="text-align: center; padding: 40px; color: #64748b;">' +
+                            '<div style="font-size: 48px; margin-bottom: 15px;">📋</div>' +
+                            'No class routine uploaded for ' + student.dept + ' Semester ' + student.semester + ' yet.' +
+                            '</div>';
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>

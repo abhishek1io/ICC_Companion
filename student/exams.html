@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Timetable - ICC Companion</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .schedule-file-card {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-left: 4px solid #ef4444;
+            margin-bottom: 20px;
+        }
+
+        .schedule-file-card.sessional {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left-color: #f59e0b;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,6 +42,7 @@
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
             <li><a href="attendance.html">📊 Attendance</a></li>
             <li><a href="exams.html" class="active">📅 Exams</a></li>
+            <li><a href="routines.html">📋 Routines</a></li>
             <li><a href="lost-found.html">🔍 Lost & Found</a></li>
             <li><a href="announcements.html">📢 Announcements</a></li>
         </ul>
@@ -43,37 +56,72 @@
             Showing exams for: <strong id="filterInfo">-</strong>
         </div>
 
-        <!-- Sessional Exams Section -->
-        <div class="card">
-            <h3 class="card-title" style="color: #f59e0b;">📋 Sessional Examinations</h3>
+        <!-- SESSIONAL SECTION -->
+        <div class="card" style="border-left: 4px solid #f59e0b;">
+            <h3 style="margin: 0 0 15px 0; color: #d97706;">📋 Sessional Examinations</h3>
+
+            <!-- Schedule File (if uploaded) -->
+            <div id="sessionalSchedule" style="display: none;"></div>
+
+            <!-- Exam List -->
             <div id="sessionalExams">
-                <div style="text-align: center; padding: 20px; color: #64748b;">Loading...</div>
+                <div style="text-align: center; padding: 15px; color: #64748b;">Loading...</div>
             </div>
         </div>
 
-        <!-- Final Exams Section -->
-        <div class="card">
-            <h3 class="card-title" style="color: #ef4444;">📝 Final Examinations</h3>
+        <!-- FINAL SECTION -->
+        <div class="card" style="border-left: 4px solid #ef4444;">
+            <h3 style="margin: 0 0 15px 0; color: #dc2626;">📝 Final Examinations</h3>
+
+            <!-- Schedule File (if uploaded) -->
+            <div id="finalSchedule" style="display: none;"></div>
+
+            <!-- Exam List -->
             <div id="finalExams">
-                <div style="text-align: center; padding: 20px; color: #64748b;">Loading...</div>
+                <div style="text-align: center; padding: 15px; color: #64748b;">Loading...</div>
             </div>
         </div>
     </div>
 
     <script src="../js/main.js"></script>
     <script>
-        // Check if logged in
-        if (!checkStudentLogin()) {
-            // Will redirect to login
-        }
+        if (!checkStudentLogin()) { }
 
-        // Get student info and display
         var student = getStudentInfo();
         document.getElementById('userName').textContent = student.name;
         document.getElementById('filterInfo').textContent = student.dept + ' - Semester ' + student.semester;
 
-        // Load exams
+        loadScheduleFiles();
         loadExams();
+
+        function loadScheduleFiles() {
+            fetch('../api/get-exam-schedules.php')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        data.data.forEach(function (s) {
+                            var container = document.getElementById(s.schedule_type + 'Schedule');
+                            var fileExt = s.file_url.split('.').pop().toLowerCase();
+
+                            var html = '<div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center;">';
+
+                            if (['jpg', 'jpeg', 'png'].includes(fileExt)) {
+                                html += '<img src="../' + s.file_url + '" style="max-width: 100%; border-radius: 8px;">';
+                            } else if (fileExt === 'pdf') {
+                                // PDF - embed inline
+                                html += '<iframe src="../' + s.file_url + '" style="width: 100%; height: 500px; border: none; border-radius: 8px;"></iframe>';
+                                html += '<div style="margin-top: 10px;"><a href="../' + s.file_url + '" target="_blank" class="btn btn-sm btn-outline">🔗 Open in New Tab</a></div>';
+                            } else {
+                                html += '<a href="../' + s.file_url + '" target="_blank" class="btn btn-sm btn-primary">📥 Download</a>';
+                            }
+
+                            html += '</div>';
+                            container.innerHTML = html;
+                            container.style.display = 'block';
+                        });
+                    }
+                });
+        }
 
         function loadExams() {
             var url = '../api/get-exams.php?dept=' + student.dept + '&semester=' + student.semester;
@@ -82,65 +130,47 @@
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     if (data.success) {
-                        // Separate by type
                         var sessional = data.data.filter(function (e) { return e.exam_type === 'sessional'; });
                         var final = data.data.filter(function (e) { return e.exam_type === 'final'; });
 
-                        // Render each section
-                        renderExamSection('sessionalExams', sessional, 'Sessional');
-                        renderExamSection('finalExams', final, 'Final Examination');
-                    } else {
-                        document.getElementById('sessionalExams').innerHTML = '<div style="color: #64748b; text-align: center;">No exams found</div>';
-                        document.getElementById('finalExams').innerHTML = '<div style="color: #64748b; text-align: center;">No exams found</div>';
+                        renderExamList('sessionalExams', sessional);
+                        renderExamList('finalExams', final);
                     }
-                })
-                .catch(function (error) {
-                    console.error('Error:', error);
                 });
         }
 
-        function renderExamSection(containerId, exams, typeName) {
+        function renderExamList(containerId, exams) {
             var container = document.getElementById(containerId);
 
             if (exams.length === 0) {
-                container.innerHTML = '<div style="color: #64748b; text-align: center; padding: 20px;">No ' + typeName + ' exams scheduled yet.</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">No exams scheduled yet</div>';
                 return;
             }
 
             var html = '';
             exams.forEach(function (exam) {
                 var days = daysRemaining(exam.exam_date);
-                var daysText = days < 0 ? 'Completed' : (days === 0 ? 'Today!' : (days === 1 ? '1 day left' : days + ' days left'));
-                var daysClass = days < 0 ? 'badge-secondary' : (days <= 7 ? 'badge-danger' : (days <= 14 ? 'badge-warning' : 'badge-success'));
+                var daysText = days < 0 ? 'Done' : (days === 0 ? 'Today!' : days + ' days');
+                var badgeClass = days < 0 ? '' : (days <= 3 ? 'badge-danger' : (days <= 7 ? 'badge-warning' : 'badge-success'));
 
-                html += '<div class="exam-item" style="display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #e2e8f0;">';
+                html += '<div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">';
 
-                // Date Box
-                html += '<div style="text-align: center; min-width: 70px; margin-right: 20px;">';
-                html += '<div style="font-size: 24px; font-weight: bold; color: var(--primary);">' + new Date(exam.exam_date).getDate() + '</div>';
-                html += '<div style="font-size: 12px; color: #64748b; text-transform: uppercase;">' + new Date(exam.exam_date).toLocaleString('en', { month: 'short', year: 'numeric' }) + '</div>';
+                // Date
+                html += '<div style="text-align: center; min-width: 60px; margin-right: 15px;">';
+                html += '<div style="font-size: 20px; font-weight: bold; color: var(--primary);">' + new Date(exam.exam_date).getDate() + '</div>';
+                html += '<div style="font-size: 11px; color: #64748b;">' + new Date(exam.exam_date).toLocaleString('en', { month: 'short' }) + '</div>';
                 html += '</div>';
 
                 // Details
                 html += '<div style="flex: 1;">';
-                html += '<div style="font-weight: 600; color: var(--dark);">' + exam.subject_name + '</div>';
-                html += '<div style="font-size: 13px; color: #64748b; margin-top: 4px;">';
-                html += '🕐 ' + formatTime(exam.start_time) + ' - ' + formatTime(exam.end_time) + ' | ';
-                html += '📍 ' + exam.room;
+                html += '<div style="font-weight: 600;">' + exam.subject_name + '</div>';
+                html += '<div style="font-size: 12px; color: #64748b;">🕐 ' + formatTimeStr(exam.start_time) + ' - ' + formatTimeStr(exam.end_time) + ' | 📍 ' + exam.room + '</div>';
                 html += '</div>';
 
-                // Attachment if exists
-                if (exam.attachment_url) {
-                    html += '<div style="margin-top: 8px;">';
-                    html += '<a href="' + exam.attachment_url + '" target="_blank" class="btn btn-sm btn-outline" style="font-size: 12px;">📎 View Attachment</a>';
-                    html += '</div>';
+                // Days badge
+                if (days >= 0) {
+                    html += '<span class="badge ' + badgeClass + '">' + daysText + '</span>';
                 }
-                html += '</div>';
-
-                // Days Badge
-                html += '<div>';
-                html += '<span class="badge ' + daysClass + '">' + daysText + '</span>';
-                html += '</div>';
 
                 html += '</div>';
             });
@@ -148,13 +178,11 @@
             container.innerHTML = html;
         }
 
-        function formatTime(timeStr) {
-            var parts = timeStr.split(':');
-            var hours = parseInt(parts[0]);
-            var minutes = parts[1];
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12;
-            return hours + ':' + minutes + ' ' + ampm;
+        function formatTimeStr(t) {
+            var p = t.split(':');
+            var h = parseInt(p[0]);
+            var ampm = h >= 12 ? 'PM' : 'AM';
+            return (h % 12 || 12) + ':' + p[1] + ' ' + ampm;
         }
     </script>
 </body>

@@ -5,33 +5,29 @@
 
 include 'config.php';
 
-// Get limit from query
-$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 50;
+// Get filters
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 0;
+$dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
+$semester = isset($_GET['semester']) ? trim($_GET['semester']) : '';
 
 // Build query
-$sql = "SELECT 
-            announcement_id,
-            title,
-            description,
-            priority,
-            target_dept,
-            target_semester,
-            posted_by,
-            created_at
-        FROM announcements
-        ORDER BY 
-            CASE priority 
-                WHEN 'high' THEN 1 
-                WHEN 'medium' THEN 2 
-                ELSE 3 
-            END,
-            created_at DESC
-        LIMIT ?";
+$sql = "SELECT * FROM announcements WHERE 1=1";
 
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $limit);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+if (!empty($dept) && $dept !== 'all') {
+    $sql .= " AND (target_dept = 'all' OR target_dept = '" . mysqli_real_escape_string($conn, $dept) . "')";
+}
+
+if (!empty($semester) && $semester !== 'all') {
+    $sql .= " AND (target_semester = 'all' OR target_semester = '" . mysqli_real_escape_string($conn, $semester) . "')";
+}
+
+$sql .= " ORDER BY created_at DESC";
+
+if ($limit > 0) {
+    $sql .= " LIMIT " . $limit;
+}
+
+$result = mysqli_query($conn, $sql);
 
 $announcements = [];
 while ($row = mysqli_fetch_assoc($result)) {

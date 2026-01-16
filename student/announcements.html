@@ -30,6 +30,7 @@
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
             <li><a href="attendance.html">📊 Attendance</a></li>
             <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="routines.html">📋 Routines</a></li>
             <li><a href="lost-found.html">🔍 Lost & Found</a></li>
             <li><a href="announcements.html" class="active">📢 Announcements</a></li>
         </ul>
@@ -88,6 +89,11 @@
                                 html += '    For: ';
                                 if (item.target_dept !== 'all') html += item.target_dept + ' ';
                                 if (item.target_semester !== 'all') html += 'Semester ' + item.target_semester;
+                                html += '  </div>';
+                            }
+                            if (item.attachment_url) {
+                                html += '  <div style="margin-top: 12px;">';
+                                html += '    <a href="../' + item.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View Attachment</a>';
                                 html += '  </div>';
                             }
                             html += '</div>';

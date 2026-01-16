@@ -258,6 +258,7 @@ CREATE TABLE announcements (
     announcement_id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL,
     description TEXT NOT NULL,
+    attachment_url VARCHAR(255),
     priority ENUM('high', 'medium', 'low') DEFAULT 'medium',
     target_dept VARCHAR(50) DEFAULT 'all',
     target_semester VARCHAR(20) DEFAULT 'all',
@@ -272,6 +273,32 @@ INSERT INTO announcements (title, description, priority, target_dept, target_sem
 ('Mid-Term Exam Schedule', 'Mid-term examinations for Semester 5 will begin from February 15, 2026. Detailed timetable has been published.', 'medium', 'all', '5', 'admin'),
 ('Library Timing Change', 'Library will remain open till 8:00 PM from Monday to Friday starting next week.', 'low', 'all', 'all', 'admin'),
 ('Sports Day Registration', 'Annual sports day is scheduled for February 20, 2026. Register with your department sports coordinator by January 25.', 'medium', 'all', 'all', 'admin');
+
+-- =============================================
+-- TABLE 9: CLASS ROUTINES (One file per dept+sem)
+-- =============================================
+CREATE TABLE class_routines (
+    routine_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL,
+    file_url VARCHAR(255) NOT NULL,
+    dept_code VARCHAR(10) NOT NULL,
+    semester VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Sample class routine
+INSERT INTO class_routines (title, file_url, dept_code, semester) VALUES
+('BCA Semester 5 Weekly Routine', 'uploads/routines/bca_sem5_routine.pdf', 'BCA', '5');
+
+-- =============================================
+-- TABLE 10: EXAM SCHEDULES (One file per type)
+-- =============================================
+CREATE TABLE exam_schedules (
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,
+    schedule_type ENUM('sessional', 'final') NOT NULL UNIQUE,
+    file_url VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- =============================================
 -- HELPFUL VIEWS (Optional but useful)

@@ -6,6 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Exams - ICC Companion</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .section-card {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            color: white;
+        }
+
+        .section-header.sessional {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .section-header.final {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .section-body {
+            padding: 20px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .file-upload-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,6 +76,7 @@
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="attendance.html">📊 Attendance</a></li>
             <li><a href="exams.html" class="active">📅 Exams</a></li>
+            <li><a href="routines.html">📋 Routines</a></li>
             <li><a href="lost-found.html">🔍 Lost & Found</a></li>
             <li><a href="announcements.html">📢 Announcements</a></li>
         </ul>
@@ -38,45 +84,121 @@
 
     <!-- Main Content -->
     <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h1 class="page-title" style="margin-bottom: 0;">📅 Manage Exam Timetable</h1>
-            <button class="btn btn-primary" onclick="showAddForm()">+ Add Exam</button>
+        <h1 class="page-title">📅 Manage Exam Timetable</h1>
+
+        <!-- SESSIONAL EXAMS SECTION -->
+        <div class="section-card">
+            <div class="section-header sessional">
+                <h3 style="margin: 0;">📋 Sessional Examinations</h3>
+            </div>
+            <div class="section-body">
+                <!-- Upload Schedule File -->
+                <div class="file-upload-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>📄 Schedule File:</strong>
+                            <span id="sessionalFileStatus" style="color: #64748b; margin-left: 10px;">No file
+                                uploaded</span>
+                        </div>
+                        <div>
+                            <input type="file" id="sessionalFile" accept=".pdf,.jpg,.jpeg,.png" style="display: none;"
+                                onchange="uploadSchedule('sessional')">
+                            <button class="btn btn-sm btn-outline"
+                                onclick="document.getElementById('sessionalFile').click()">📤 Upload</button>
+                            <button class="btn btn-sm btn-danger" id="sessionalDeleteBtn" style="display: none;"
+                                onclick="deleteSchedule('sessional')">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam List -->
+                <div class="action-row">
+                    <button class="btn btn-primary btn-sm" onclick="showAddForm('sessional')">+ Add Sessional
+                        Exam</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Subject</th>
+                                <th>Dept</th>
+                                <th>Sem</th>
+                                <th>Time</th>
+                                <th>Room</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessionalTable">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #64748b;">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <!-- Exams Table -->
-        <div class="card">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Subject</th>
-                            <th>Dept</th>
-                            <th>Sem</th>
-                            <th>Time</th>
-                            <th>Room</th>
-                            <th>Type</th>
-                            <th>Attachment</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="examsTable">
-                        <tr>
-                            <td colspan="9" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- FINAL EXAMS SECTION -->
+        <div class="section-card">
+            <div class="section-header final">
+                <h3 style="margin: 0;">📝 Final Examinations</h3>
+            </div>
+            <div class="section-body">
+                <!-- Upload Schedule File -->
+                <div class="file-upload-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>📄 Schedule File:</strong>
+                            <span id="finalFileStatus" style="color: #64748b; margin-left: 10px;">No file
+                                uploaded</span>
+                        </div>
+                        <div>
+                            <input type="file" id="finalFile" accept=".pdf,.jpg,.jpeg,.png" style="display: none;"
+                                onchange="uploadSchedule('final')">
+                            <button class="btn btn-sm btn-outline"
+                                onclick="document.getElementById('finalFile').click()">📤 Upload</button>
+                            <button class="btn btn-sm btn-danger" id="finalDeleteBtn" style="display: none;"
+                                onclick="deleteSchedule('final')">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam List -->
+                <div class="action-row">
+                    <button class="btn btn-primary btn-sm" onclick="showAddForm('final')">+ Add Final Exam</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Subject</th>
+                                <th>Dept</th>
+                                <th>Sem</th>
+                                <th>Time</th>
+                                <th>Room</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="finalTable">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #64748b;">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Add/Edit Exam Modal -->
+    <!-- Add Exam Modal -->
     <div id="examModal"
         style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto;">
-        <div class="card" style="width: 90%; max-width: 550px; margin: 20px auto;">
+        <div class="card" style="width: 90%; max-width: 500px; margin: 20px auto;">
             <h3 id="modalTitle" class="card-title">Add Exam</h3>
-            <form id="examForm" enctype="multipart/form-data">
-                <input type="hidden" id="editId" value="">
+            <form id="examForm">
+                <input type="hidden" id="examType" value="">
 
                 <div class="form-row">
                     <div class="form-group">
@@ -106,49 +228,34 @@
                 <div class="form-group">
                     <label for="subject">Subject *</label>
                     <select id="subject" required>
-                        <option value="">Select department & semester first</option>
+                        <option value="">Select dept & sem first</option>
                     </select>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="examDate">Exam Date *</label>
+                        <label for="examDate">Date *</label>
                         <input type="date" id="examDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="examType">Exam Type *</label>
-                        <select id="examType" required>
-                            <option value="sessional">Sessional</option>
-                            <option value="final">Final Examination</option>
-                        </select>
+                        <label for="room">Room *</label>
+                        <input type="text" id="room" required placeholder="e.g., Hall A">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="startTime">Start Time *</label>
+                        <label for="startTime">Start *</label>
                         <input type="time" id="startTime" required>
                     </div>
                     <div class="form-group">
-                        <label for="endTime">End Time *</label>
+                        <label for="endTime">End *</label>
                         <input type="time" id="endTime" required>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="room">Room/Hall *</label>
-                    <input type="text" id="room" required placeholder="e.g., Lab 101, Hall A">
-                </div>
-
-                <div class="form-group">
-                    <label for="attachment">Attachment (PDF, Image - Optional)</label>
-                    <input type="file" id="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="padding: 8px;">
-                    <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Syllabus, question paper format,
-                        instructions, etc.</div>
-                </div>
-
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary">Save Exam</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
                 </div>
             </form>
@@ -158,146 +265,151 @@
     <script src="../js/main.js"></script>
     <script>
         if (!checkAdminLogin()) { }
-
         var admin = getAdminInfo();
         document.getElementById('adminName').textContent = admin.name;
 
+        // Load data
         loadExams();
+        loadScheduleFiles();
 
         function loadExams() {
             fetch('../api/get-exams.php')
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
-                    var tbody = document.getElementById('examsTable');
-
-                    if (data.success && data.data.length > 0) {
-                        var html = '';
-                        data.data.forEach(function (e) {
-                            var typeDisplay = e.exam_type === 'sessional' ? 'Sessional' : 'Final Exam';
-                            var typeClass = e.exam_type === 'sessional' ? 'badge-warning' : 'badge-danger';
-
-                            html += '<tr>';
-                            html += '<td><strong>' + formatDate(e.exam_date) + '</strong></td>';
-                            html += '<td>' + e.subject_name + '</td>';
-                            html += '<td><span class="badge badge-info">' + e.dept_code + '</span></td>';
-                            html += '<td>' + e.semester + '</td>';
-                            html += '<td>' + formatTimeStr(e.start_time) + ' - ' + formatTimeStr(e.end_time) + '</td>';
-                            html += '<td>' + e.room + '</td>';
-                            html += '<td><span class="badge ' + typeClass + '">' + typeDisplay + '</span></td>';
-                            html += '<td>';
-                            if (e.attachment_url) {
-                                html += '<a href="' + e.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View</a>';
-                            } else {
-                                html += '<span style="color: #94a3b8;">-</span>';
-                            }
-                            html += '</td>';
-                            html += '<td>';
-                            html += '<button class="btn btn-sm btn-danger" onclick="deleteExam(' + e.exam_id + ')">Delete</button>';
-                            html += '</td>';
-                            html += '</tr>';
-                        });
-                        tbody.innerHTML = html;
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #64748b;">No exams scheduled</td></tr>';
+                    if (data.success) {
+                        var sessional = data.data.filter(function (e) { return e.exam_type === 'sessional'; });
+                        var final = data.data.filter(function (e) { return e.exam_type === 'final'; });
+                        renderExamTable('sessionalTable', sessional);
+                        renderExamTable('finalTable', final);
                     }
                 });
         }
 
-        function formatTimeStr(timeStr) {
-            var parts = timeStr.split(':');
-            var hours = parseInt(parts[0]);
-            var minutes = parts[1];
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12;
-            return hours + ':' + minutes + ' ' + ampm;
-        }
-
-        function loadSubjectOptions() {
-            var dept = document.getElementById('dept').value;
-            var sem = document.getElementById('semester').value;
-
-            if (!dept || !sem) {
-                document.getElementById('subject').innerHTML = '<option value="">Select department & semester first</option>';
+        function renderExamTable(tableId, exams) {
+            var tbody = document.getElementById(tableId);
+            if (exams.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 20px;">No exams added</td></tr>';
                 return;
             }
-
-            fetch('../api/get-subjects.php?dept=' + dept + '&semester=' + sem)
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.success && data.data.length > 0) {
-                        var html = '<option value="">Select subject</option>';
-                        data.data.forEach(function (s) {
-                            html += '<option value="' + s.subject_id + '">' + s.subject_name + '</option>';
-                        });
-                        document.getElementById('subject').innerHTML = html;
-                    } else {
-                        document.getElementById('subject').innerHTML = '<option value="">No subjects found</option>';
-                    }
-                });
+            var html = '';
+            exams.forEach(function (e) {
+                html += '<tr>';
+                html += '<td>' + formatDate(e.exam_date) + '</td>';
+                html += '<td>' + e.subject_name + '</td>';
+                html += '<td><span class="badge badge-info">' + e.dept_code + '</span></td>';
+                html += '<td>' + e.semester + '</td>';
+                html += '<td>' + formatTimeStr(e.start_time) + '-' + formatTimeStr(e.end_time) + '</td>';
+                html += '<td>' + e.room + '</td>';
+                html += '<td><button class="btn btn-sm btn-danger" onclick="deleteExam(' + e.exam_id + ')">Del</button></td>';
+                html += '</tr>';
+            });
+            tbody.innerHTML = html;
         }
 
-        function showAddForm() {
-            document.getElementById('modalTitle').textContent = 'Add Exam';
-            document.getElementById('examForm').reset();
-            document.getElementById('editId').value = '';
-            document.getElementById('examModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('examModal').style.display = 'none';
-        }
-
-        function deleteExam(id) {
-            if (!confirm('Delete this exam?')) return;
-
-            var formData = new FormData();
-            formData.append('exam_id', id);
-
-            fetch('../api/delete-exam.php', {
-                method: 'POST',
-                body: formData
-            })
+        function loadScheduleFiles() {
+            fetch('../api/get-exam-schedules.php')
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     if (data.success) {
-                        showAlert('Exam deleted', 'success');
-                        loadExams();
+                        data.data.forEach(function (s) {
+                            var statusEl = document.getElementById(s.schedule_type + 'FileStatus');
+                            var deleteBtn = document.getElementById(s.schedule_type + 'DeleteBtn');
+                            if (statusEl) {
+                                statusEl.innerHTML = '<a href="../' + s.file_url + '" target="_blank">📎 View File</a>';
+                                deleteBtn.style.display = 'inline-block';
+                                deleteBtn.setAttribute('data-id', s.schedule_id);
+                            }
+                        });
+                    }
+                });
+        }
+
+        function uploadSchedule(type) {
+            var fileInput = document.getElementById(type + 'File');
+            if (!fileInput.files[0]) return;
+
+            var formData = new FormData();
+            formData.append('schedule_type', type);
+            formData.append('file', fileInput.files[0]);
+
+            fetch('../api/upload-exam-schedule.php', { method: 'POST', body: formData })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert('Schedule uploaded', 'success');
+                        loadScheduleFiles();
                     } else {
                         showAlert(data.message, 'error');
                     }
                 });
+        }
+
+        function deleteSchedule(type) {
+            if (!confirm('Delete this schedule file?')) return;
+            var formData = new FormData();
+            formData.append('schedule_type', type);
+
+            fetch('../api/delete-exam-schedule.php', { method: 'POST', body: formData })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert('Deleted', 'success');
+                        document.getElementById(type + 'FileStatus').textContent = 'No file uploaded';
+                        document.getElementById(type + 'DeleteBtn').style.display = 'none';
+                    }
+                });
+        }
+
+        function formatTimeStr(t) {
+            var p = t.split(':'); var h = parseInt(p[0]); var ampm = h >= 12 ? 'PM' : 'AM';
+            return (h % 12 || 12) + ':' + p[1] + ampm;
+        }
+
+        function loadSubjectOptions() {
+            var d = document.getElementById('dept').value;
+            var s = document.getElementById('semester').value;
+            if (!d || !s) return;
+            fetch('../api/get-subjects.php?dept=' + d + '&semester=' + s)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var html = '<option value="">Select</option>';
+                    if (data.success) data.data.forEach(function (s) { html += '<option value="' + s.subject_id + '">' + s.subject_name + '</option>'; });
+                    document.getElementById('subject').innerHTML = html;
+                });
+        }
+
+        function showAddForm(type) {
+            document.getElementById('examType').value = type;
+            document.getElementById('modalTitle').textContent = 'Add ' + (type === 'sessional' ? 'Sessional' : 'Final') + ' Exam';
+            document.getElementById('examForm').reset();
+            document.getElementById('examModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('examModal').style.display = 'none'; }
+
+        function deleteExam(id) {
+            if (!confirm('Delete?')) return;
+            var fd = new FormData(); fd.append('exam_id', id);
+            fetch('../api/delete-exam.php', { method: 'POST', body: fd })
+                .then(function (r) { return r.json(); })
+                .then(function (d) { if (d.success) { showAlert('Deleted', 'success'); loadExams(); } });
         }
 
         document.getElementById('examForm').addEventListener('submit', function (e) {
             e.preventDefault();
+            var fd = new FormData();
+            fd.append('subject_id', document.getElementById('subject').value);
+            fd.append('exam_date', document.getElementById('examDate').value);
+            fd.append('start_time', document.getElementById('startTime').value);
+            fd.append('end_time', document.getElementById('endTime').value);
+            fd.append('room', document.getElementById('room').value);
+            fd.append('exam_type', document.getElementById('examType').value);
 
-            var formData = new FormData();
-            formData.append('subject_id', document.getElementById('subject').value);
-            formData.append('exam_date', document.getElementById('examDate').value);
-            formData.append('start_time', document.getElementById('startTime').value);
-            formData.append('end_time', document.getElementById('endTime').value);
-            formData.append('room', document.getElementById('room').value);
-            formData.append('exam_type', document.getElementById('examType').value);
-
-            // Add attachment if selected
-            var attachmentFile = document.getElementById('attachment').files[0];
-            if (attachmentFile) {
-                formData.append('attachment', attachmentFile);
-            }
-
-            fetch('../api/add-exam.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.success) {
-                        showAlert('Exam added', 'success');
-                        closeModal();
-                        loadExams();
-                    } else {
-                        showAlert(data.message, 'error');
-                    }
+            fetch('../api/add-exam.php', { method: 'POST', body: fd })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    if (d.success) { showAlert('Added', 'success'); closeModal(); loadExams(); }
+                    else showAlert(d.message, 'error');
                 });
         });
     </script>

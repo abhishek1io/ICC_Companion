@@ -31,6 +31,7 @@
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="attendance.html">📊 Attendance</a></li>
             <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="routines.html">📋 Routines</a></li>
             <li><a href="lost-found.html">🔍 Lost & Found</a></li>
             <li><a href="announcements.html" class="active">📢 Announcements</a></li>
         </ul>
@@ -52,13 +53,14 @@
                             <th>Title</th>
                             <th>Priority</th>
                             <th>Target</th>
-                            <th>Posted</th>
+                            <th>Attachment</th>
+                            <th>Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="announcementsTable">
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -67,20 +69,19 @@
     </div>
 
     <!-- Add Announcement Modal -->
-    <div id="announceModal"
-        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div class="card" style="width: 90%; max-width: 600px;">
+    <div id="announcementModal"
+        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto;">
+        <div class="card" style="width: 90%; max-width: 550px; margin: 20px auto;">
             <h3 class="card-title">Post Announcement</h3>
-            <form id="announceForm">
+            <form id="announcementForm" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Title *</label>
-                    <input type="text" id="title" required placeholder="e.g., Holiday Notice">
+                    <input type="text" id="title" required placeholder="Announcement title">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description *</label>
-                    <textarea id="description" rows="4" required
-                        placeholder="Enter the full announcement message..."></textarea>
+                    <textarea id="description" rows="4" required placeholder="Announcement details..."></textarea>
                 </div>
 
                 <div class="form-row">
@@ -88,7 +89,7 @@
                         <label for="priority">Priority *</label>
                         <select id="priority" required>
                             <option value="low">Low (Normal)</option>
-                            <option value="medium">Medium (Important)</option>
+                            <option value="medium" selected>Medium (Important)</option>
                             <option value="high">High (Urgent)</option>
                         </select>
                     </div>
@@ -108,13 +109,19 @@
                     <label for="targetSem">Target Semester</label>
                     <select id="targetSem">
                         <option value="all">All Semesters</option>
-                        <option value="1">Semester 1 Only</option>
-                        <option value="2">Semester 2 Only</option>
-                        <option value="3">Semester 3 Only</option>
-                        <option value="4">Semester 4 Only</option>
-                        <option value="5">Semester 5 Only</option>
-                        <option value="6">Semester 6 Only</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="attachment">Attachment (Optional)</label>
+                    <input type="file" id="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="padding: 8px;">
+                    <div style="font-size: 12px; color: #64748b; margin-top: 5px;">PDF, DOC, or Image files</div>
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -144,17 +151,19 @@
                         var html = '';
                         data.data.forEach(function (a) {
                             var priorityClass = a.priority === 'high' ? 'badge-danger' : (a.priority === 'medium' ? 'badge-warning' : 'badge-secondary');
-                            var priorityText = a.priority === 'high' ? 'Urgent' : (a.priority === 'medium' ? 'Important' : 'Normal');
-
-                            var target = '';
-                            if (a.target_dept !== 'all') target += a.target_dept + ' ';
-                            if (a.target_semester !== 'all') target += 'Sem ' + a.target_semester;
-                            if (!target) target = 'All';
+                            var target = (a.target_dept === 'all' ? 'All Depts' : a.target_dept) + ' / ' + (a.target_semester === 'all' ? 'All Sem' : 'Sem ' + a.target_semester);
 
                             html += '<tr>';
-                            html += '<td><strong>' + a.title + '</strong><br><span style="font-size: 12px; color: #64748b;">' + a.description.substring(0, 60) + '...</span></td>';
-                            html += '<td><span class="badge ' + priorityClass + '">' + priorityText + '</span></td>';
-                            html += '<td>' + target + '</td>';
+                            html += '<td><strong>' + a.title + '</strong><br><small style="color:#64748b;">' + a.description.substring(0, 50) + '...</small></td>';
+                            html += '<td><span class="badge ' + priorityClass + '">' + a.priority.toUpperCase() + '</span></td>';
+                            html += '<td><span style="font-size: 12px;">' + target + '</span></td>';
+                            html += '<td>';
+                            if (a.attachment_url) {
+                                html += '<a href="../' + a.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View</a>';
+                            } else {
+                                html += '<span style="color: #94a3b8;">-</span>';
+                            }
+                            html += '</td>';
                             html += '<td>' + formatDate(a.created_at) + '</td>';
                             html += '<td>';
                             html += '<button class="btn btn-sm btn-danger" onclick="deleteAnnouncement(' + a.announcement_id + ')">Delete</button>';
@@ -163,18 +172,18 @@
                         });
                         tbody.innerHTML = html;
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">No announcements</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">No announcements</td></tr>';
                     }
                 });
         }
 
         function showAddForm() {
-            document.getElementById('announceForm').reset();
-            document.getElementById('announceModal').style.display = 'flex';
+            document.getElementById('announcementForm').reset();
+            document.getElementById('announcementModal').style.display = 'flex';
         }
 
         function closeModal() {
-            document.getElementById('announceModal').style.display = 'none';
+            document.getElementById('announcementModal').style.display = 'none';
         }
 
         function deleteAnnouncement(id) {
@@ -196,7 +205,7 @@
                 });
         }
 
-        document.getElementById('announceForm').addEventListener('submit', function (e) {
+        document.getElementById('announcementForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
             var formData = new FormData();
@@ -206,6 +215,12 @@
             formData.append('target_dept', document.getElementById('targetDept').value);
             formData.append('target_semester', document.getElementById('targetSem').value);
             formData.append('posted_by', 'admin');
+
+            // Add attachment if selected
+            var attachmentFile = document.getElementById('attachment').files[0];
+            if (attachmentFile) {
+                formData.append('attachment', attachmentFile);
+            }
 
             fetch('../api/add-announcement.php', {
                 method: 'POST',
