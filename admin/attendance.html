@@ -4,8 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Attendance - ICC Companion</title>
+    <title>Attendance - ICC Companion</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .tab-container {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: -2px;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .percentage-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .percentage-bar .fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .fill.good {
+            background: #22c55e;
+        }
+
+        .fill.warning {
+            background: #f59e0b;
+        }
+
+        .fill.danger {
+            background: #ef4444;
+        }
+    </style>
 </head>
 
 <body>
@@ -39,222 +109,362 @@
 
     <!-- Main Content -->
     <div class="container">
-        <h1 class="page-title">📊 Mark Attendance</h1>
+        <h1 class="page-title">📊 Attendance Management</h1>
 
-        <!-- Step 1: Select Class Details -->
-        <div class="card">
-            <h3 class="card-title">Step 1: Select Class Details</h3>
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <div class="form-group" style="margin-bottom: 0; min-width: 120px;">
-                    <label for="dept">Department *</label>
-                    <select id="dept" onchange="loadSubjects()">
-                        <option value="">Select</option>
-                        <option value="BCA">BCA</option>
-                        <option value="BBA">BBA</option>
-                        <option value="BA">BA</option>
-                        <option value="BCOM">BCOM</option>
-                    </select>
+        <!-- Tabs -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="showTab('mark')">✏️ Mark Attendance</button>
+            <button class="tab-btn" onclick="showTab('records')">📋 View Records</button>
+        </div>
+
+        <!-- TAB 1: MARK ATTENDANCE -->
+        <div id="markTab">
+            <!-- Select Class -->
+            <div class="card">
+                <h3 class="card-title">Select Class</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="form-group" style="margin: 0; min-width: 120px;">
+                        <label>Department</label>
+                        <select id="markDept" onchange="loadMarkSubjects()">
+                            <option value="">Select</option>
+                            <option value="BCA">BCA</option>
+                            <option value="BBA">BBA</option>
+                            <option value="BA">BA</option>
+                            <option value="BCOM">BCOM</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin: 0; min-width: 100px;">
+                        <label>Semester</label>
+                        <select id="markSem" onchange="loadMarkSubjects()">
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin: 0; min-width: 180px;">
+                        <label>Subject</label>
+                        <select id="markSubject" onchange="loadStudentsToMark()">
+                            <option value="">Select dept & sem first</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin: 0; min-width: 140px;">
+                        <label>Date</label>
+                        <input type="date" id="markDate" onchange="loadStudentsToMark()">
+                    </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 0; min-width: 120px;">
-                    <label for="semester">Semester *</label>
-                    <select id="semester" onchange="loadSubjects()">
-                        <option value="">Select</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                    </select>
+            </div>
+
+            <!-- Students List -->
+            <div class="card" id="markStudentsCard" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="margin: 0;">Mark Present Students</h3>
+                    <div>
+                        <button class="btn btn-sm btn-outline" onclick="selectAll()">Select All</button>
+                        <button class="btn btn-sm btn-outline" onclick="deselectAll()">Deselect All</button>
+                    </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 0; min-width: 180px;">
-                    <label for="subject">Subject *</label>
-                    <select id="subject" onchange="loadStudentsList()">
-                        <option value="">Select department & semester first</option>
-                    </select>
-                </div>
-                <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
-                    <label for="attendanceDate">Date *</label>
-                    <input type="date" id="attendanceDate" onchange="loadStudentsList()">
+                <div class="checkbox-list" id="markStudentsList"></div>
+                <div style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-success" onclick="saveAttendance()">💾 Save Attendance</button>
+                    <span id="selectedCount" style="color: #64748b;">0 selected</span>
                 </div>
             </div>
         </div>
 
-        <!-- Step 2: Mark Students -->
-        <div class="card" id="studentsCard" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 class="card-title" style="border: none; margin: 0; padding: 0;">Step 2: Mark Present Students</h3>
-                <div>
-                    <button class="btn btn-sm btn-outline" onclick="selectAll()">Select All</button>
-                    <button class="btn btn-sm btn-outline" onclick="deselectAll()">Deselect All</button>
+        <!-- TAB 2: VIEW RECORDS -->
+        <div id="recordsTab" style="display: none;">
+            <!-- Simple Filters -->
+            <div class="card">
+                <h3 class="card-title">View Attendance</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                    <div class="form-group" style="margin: 0; min-width: 130px;">
+                        <label>Department *</label>
+                        <select id="viewDept" onchange="loadViewStudents()">
+                            <option value="">Select</option>
+                            <option value="BCA">BCA</option>
+                            <option value="BBA">BBA</option>
+                            <option value="BA">BA</option>
+                            <option value="BCOM">BCOM</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin: 0; min-width: 100px;">
+                        <label>Semester *</label>
+                        <select id="viewSem" onchange="loadViewStudents()">
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin: 0; min-width: 200px;">
+                        <label>Student</label>
+                        <select id="viewStudent">
+                            <option value="">-- All Students --</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="viewAttendance()">📊 View</button>
                 </div>
             </div>
 
-            <div class="checkbox-list" id="studentsList">
-                <!-- Students will be loaded here -->
+            <!-- Results Container -->
+            <div id="viewResults">
+                <div class="card" style="text-align: center; padding: 40px; color: #64748b;">
+                    Select department and semester, then click View
+                </div>
             </div>
-
-            <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
-                <button class="btn btn-success" onclick="saveAttendance()">💾 Save Attendance</button>
-                <span id="selectedCount" style="color: #64748b;">0 students selected</span>
-            </div>
-        </div>
-
-        <!-- Saved Message -->
-        <div id="successMsg" class="alert alert-success" style="display: none;">
-            Attendance saved successfully!
         </div>
     </div>
 
     <script src="../js/main.js"></script>
     <script>
-        // Check if logged in
         if (!checkAdminLogin()) { }
-
         var admin = getAdminInfo();
         document.getElementById('adminName').textContent = admin.name;
+        document.getElementById('markDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('filterMonth').value = new Date().toISOString().slice(0, 7);
 
-        // Set today's date as default
-        document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
+        var markStudents = [];
 
-        var subjects = [];
-        var students = [];
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+            event.target.classList.add('active');
+            document.getElementById('markTab').style.display = tab === 'mark' ? 'block' : 'none';
+            document.getElementById('recordsTab').style.display = tab === 'records' ? 'block' : 'none';
+        }
 
-        function loadSubjects() {
-            var dept = document.getElementById('dept').value;
-            var sem = document.getElementById('semester').value;
-
-            if (!dept || !sem) {
-                document.getElementById('subject').innerHTML = '<option value="">Select department & semester first</option>';
-                document.getElementById('studentsCard').style.display = 'none';
-                return;
-            }
-
-            fetch('../api/get-subjects.php?dept=' + dept + '&semester=' + sem)
-                .then(function (res) { return res.json(); })
+        // ========== MARK ATTENDANCE TAB ==========
+        function loadMarkSubjects() {
+            var d = document.getElementById('markDept').value;
+            var s = document.getElementById('markSem').value;
+            if (!d || !s) return;
+            fetch('../api/get-subjects.php?dept=' + d + '&semester=' + s)
+                .then(function (r) { return r.json(); })
                 .then(function (data) {
-                    if (data.success && data.data.length > 0) {
-                        subjects = data.data;
-                        var html = '<option value="">Select subject</option>';
-                        data.data.forEach(function (s) {
-                            html += '<option value="' + s.subject_id + '">' + s.subject_name + '</option>';
-                        });
-                        document.getElementById('subject').innerHTML = html;
-                    } else {
-                        document.getElementById('subject').innerHTML = '<option value="">No subjects found</option>';
-                    }
+                    var html = '<option value="">Select</option>';
+                    if (data.success) data.data.forEach(function (s) { html += '<option value="' + s.subject_id + '">' + s.subject_name + '</option>'; });
+                    document.getElementById('markSubject').innerHTML = html;
                 });
         }
 
-        function loadStudentsList() {
-            var dept = document.getElementById('dept').value;
-            var sem = document.getElementById('semester').value;
-            var subject = document.getElementById('subject').value;
-            var date = document.getElementById('attendanceDate').value;
+        function loadStudentsToMark() {
+            var d = document.getElementById('markDept').value;
+            var s = document.getElementById('markSem').value;
+            var sub = document.getElementById('markSubject').value;
+            var date = document.getElementById('markDate').value;
+            if (!d || !s || !sub || !date) { document.getElementById('markStudentsCard').style.display = 'none'; return; }
 
-            if (!dept || !sem || !subject || !date) {
-                document.getElementById('studentsCard').style.display = 'none';
-                return;
-            }
-
-            // Load students and existing attendance
-            fetch('../api/get-students.php?dept=' + dept + '&semester=' + sem)
-                .then(function (res) { return res.json(); })
+            fetch('../api/get-students.php?dept=' + d + '&semester=' + s)
+                .then(function (r) { return r.json(); })
                 .then(function (data) {
                     if (data.success && data.data.length > 0) {
-                        students = data.data;
-
-                        // Check for existing attendance
-                        fetch('../api/get-attendance-by-date.php?subject_id=' + subject + '&date=' + date)
-                            .then(function (res) { return res.json(); })
-                            .then(function (attData) {
+                        markStudents = data.data;
+                        fetch('../api/get-attendance-by-date.php?subject_id=' + sub + '&date=' + date)
+                            .then(function (r) { return r.json(); })
+                            .then(function (att) {
                                 var presentRolls = [];
-                                if (attData.success) {
-                                    attData.data.forEach(function (a) {
-                                        if (a.status === 'present') {
-                                            presentRolls.push(a.roll_number);
-                                        }
-                                    });
-                                }
-                                renderStudentsList(presentRolls);
+                                if (att.success) att.data.forEach(function (a) { if (a.status === 'present') presentRolls.push(a.roll_number); });
+                                renderMarkStudents(presentRolls);
                             });
-                    } else {
-                        document.getElementById('studentsList').innerHTML = '<div style="padding: 20px; text-align: center; color: #64748b;">No students found</div>';
                     }
-                    document.getElementById('studentsCard').style.display = 'block';
+                    document.getElementById('markStudentsCard').style.display = 'block';
                 });
         }
 
-        function renderStudentsList(presentRolls) {
+        function renderMarkStudents(presentRolls) {
             var html = '';
-            students.forEach(function (s) {
+            markStudents.forEach(function (s) {
                 var checked = presentRolls.includes(s.roll_number) ? 'checked' : '';
-                html += '<div class="checkbox-item">';
-                html += '<input type="checkbox" id="st_' + s.roll_number + '" value="' + s.roll_number + '" ' + checked + ' onchange="updateCount()">';
-                html += '<div class="student-info">';
-                html += '<div class="roll">' + s.roll_number + '</div>';
-                html += '<div class="name">' + s.name + '</div>';
-                html += '</div>';
-                html += '</div>';
+                html += '<div class="checkbox-item"><input type="checkbox" id="st_' + s.roll_number + '" value="' + s.roll_number + '" ' + checked + ' onchange="updateCount()">';
+                html += '<div class="student-info"><div class="roll">' + s.roll_number + '</div><div class="name">' + s.name + '</div></div></div>';
             });
-            document.getElementById('studentsList').innerHTML = html;
+            document.getElementById('markStudentsList').innerHTML = html;
             updateCount();
         }
 
         function updateCount() {
-            var checkboxes = document.querySelectorAll('#studentsList input[type="checkbox"]:checked');
-            document.getElementById('selectedCount').textContent = checkboxes.length + ' of ' + students.length + ' students present';
+            var count = document.querySelectorAll('#markStudentsList input:checked').length;
+            document.getElementById('selectedCount').textContent = count + ' of ' + markStudents.length + ' present';
         }
 
-        function selectAll() {
-            document.querySelectorAll('#studentsList input[type="checkbox"]').forEach(function (cb) {
-                cb.checked = true;
-            });
-            updateCount();
-        }
-
-        function deselectAll() {
-            document.querySelectorAll('#studentsList input[type="checkbox"]').forEach(function (cb) {
-                cb.checked = false;
-            });
-            updateCount();
-        }
+        function selectAll() { document.querySelectorAll('#markStudentsList input').forEach(function (c) { c.checked = true; }); updateCount(); }
+        function deselectAll() { document.querySelectorAll('#markStudentsList input').forEach(function (c) { c.checked = false; }); updateCount(); }
 
         function saveAttendance() {
-            var subject = document.getElementById('subject').value;
-            var date = document.getElementById('attendanceDate').value;
-
-            // Get all rolls and their status
-            var attendanceData = [];
-            students.forEach(function (s) {
-                var checkbox = document.getElementById('st_' + s.roll_number);
-                attendanceData.push({
-                    roll_number: s.roll_number,
-                    status: checkbox.checked ? 'present' : 'absent'
-                });
+            var sub = document.getElementById('markSubject').value;
+            var date = document.getElementById('markDate').value;
+            var attData = [];
+            markStudents.forEach(function (s) {
+                var cb = document.getElementById('st_' + s.roll_number);
+                attData.push({ roll_number: s.roll_number, status: cb.checked ? 'present' : 'absent' });
             });
 
-            var formData = new FormData();
-            formData.append('subject_id', subject);
-            formData.append('date', date);
-            formData.append('attendance', JSON.stringify(attendanceData));
-            formData.append('marked_by', admin.name);
+            var fd = new FormData();
+            fd.append('subject_id', sub);
+            fd.append('date', date);
+            fd.append('attendance', JSON.stringify(attData));
+            fd.append('marked_by', admin.name);
 
-            fetch('../api/save-attendance.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.success) {
-                        document.getElementById('successMsg').style.display = 'block';
-                        setTimeout(function () {
-                            document.getElementById('successMsg').style.display = 'none';
-                        }, 3000);
-                    } else {
-                        alert('Error: ' + data.message);
+            fetch('../api/save-attendance.php', { method: 'POST', body: fd })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    if (d.success) {
+                        showAlert('Attendance saved!', 'success');
+                        // Only hide the students list UI, don't clear the top select fields
+                        document.getElementById('markStudentsCard').style.display = 'none';
                     }
                 });
+        }
+
+        // ========== VIEW RECORDS TAB (SIMPLIFIED) ==========
+        function loadViewStudents() {
+            var d = document.getElementById('viewDept').value;
+            var s = document.getElementById('viewSem').value;
+            var studentSelect = document.getElementById('viewStudent');
+
+            if (!d || !s) {
+                studentSelect.innerHTML = '<option value="">-- All Students --</option>';
+                return;
+            }
+
+            fetch('../api/get-students.php?dept=' + d + '&semester=' + s)
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var html = '<option value="">-- All Students --</option>';
+                    if (data.success) {
+                        data.data.forEach(function (st) {
+                            html += '<option value="' + st.roll_number + '">' + st.roll_number + ' - ' + st.name + '</option>';
+                        });
+                    }
+                    studentSelect.innerHTML = html;
+                });
+        }
+
+        function viewAttendance() {
+            var d = document.getElementById('viewDept').value;
+            var s = document.getElementById('viewSem').value;
+            var roll = document.getElementById('viewStudent').value;
+            var container = document.getElementById('viewResults');
+
+            if (!d || !s) {
+                container.innerHTML = '<div class="alert alert-warning">Please select Department and Semester</div>';
+                return;
+            }
+
+            var url = '../api/get-attendance-summary.php?dept=' + d + '&semester=' + s;
+            if (roll) url += '&roll_number=' + roll;
+
+            fetch(url)
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (!data.success || data.data.length === 0) {
+                        container.innerHTML = '<div class="card" style="text-align: center; padding: 40px; color: #64748b;">No attendance records found</div>';
+                        return;
+                    }
+
+                    if (roll) {
+                        // SINGLE STUDENT - Show subject-wise breakdown
+                        renderStudentReport(data.data, roll, container);
+                    } else {
+                        // ALL STUDENTS - Show overview list
+                        renderAllStudents(data.data, container);
+                    }
+                });
+        }
+
+        function renderStudentReport(data, rollNumber, container) {
+            // Group by subject and calculate totals
+            var studentName = data[0].student_name;
+            var totalPresent = 0, totalClasses = 0;
+
+            var html = '<div class="card">';
+            html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">';
+            html += '<div>';
+            html += '<h3 style="margin: 0;">📊 ' + rollNumber + '</h3>';
+            html += '<div style="color: #64748b; font-size: 14px;">' + studentName + ' | ' + data[0].dept_code + ' - Sem ' + data[0].semester + '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            html += '<table style="width: 100%;">';
+            html += '<thead><tr><th style="text-align: left;">Subject</th><th style="text-align: center;">Total</th><th style="text-align: center;">Present</th><th style="text-align: right;">Percentage</th></tr></thead>';
+            html += '<tbody>';
+
+            data.forEach(function (r) {
+                var pct = r.total_classes > 0 ? Math.round((r.present_count / r.total_classes) * 100) : 0;
+                var color = pct >= 75 ? '#22c55e' : (pct >= 50 ? '#f59e0b' : '#ef4444');
+                totalPresent += parseInt(r.present_count);
+                totalClasses += parseInt(r.total_classes);
+
+                html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
+                html += '<td style="padding: 12px 0;">' + r.subject_name + '</td>';
+                html += '<td style="text-align: center;">' + r.total_classes + '</td>';
+                html += '<td style="text-align: center;">' + r.present_count + '</td>';
+                html += '<td style="text-align: right;"><span style="font-weight: 600; color: ' + color + ';">' + pct + '%</span></td>';
+                html += '</tr>';
+            });
+
+            // Overall
+            var overallPct = totalClasses > 0 ? Math.round((totalPresent / totalClasses) * 100) : 0;
+            var overallColor = overallPct >= 75 ? '#22c55e' : (overallPct >= 50 ? '#f59e0b' : '#ef4444');
+
+            html += '</tbody>';
+            html += '<tfoot><tr style="background: #f8fafc; font-weight: bold;">';
+            html += '<td style="padding: 12px 0;">OVERALL</td>';
+            html += '<td style="text-align: center;">' + totalClasses + '</td>';
+            html += '<td style="text-align: center;">' + totalPresent + '</td>';
+            html += '<td style="text-align: right;"><span style="font-size: 18px; color: ' + overallColor + ';">' + overallPct + '%</span></td>';
+            html += '</tr></tfoot>';
+            html += '</table></div>';
+
+            container.innerHTML = html;
+        }
+
+        function renderAllStudents(data, container) {
+            // Group by student and calculate overall attendance
+            var students = {};
+            data.forEach(function (r) {
+                if (!students[r.roll_number]) {
+                    students[r.roll_number] = { name: r.student_name, present: 0, total: 0 };
+                }
+                students[r.roll_number].present += parseInt(r.present_count);
+                students[r.roll_number].total += parseInt(r.total_classes);
+            });
+
+            var html = '<div class="card">';
+            html += '<h3 class="card-title">Attendance Overview</h3>';
+            html += '<table style="width: 100%;"><thead><tr>';
+            html += '<th style="text-align: left;">Roll No</th>';
+            html += '<th style="text-align: left;">Student Name</th>';
+            html += '<th style="text-align: center;">Present / Total</th>';
+            html += '<th style="text-align: right; min-width: 150px;">Attendance</th>';
+            html += '</tr></thead><tbody>';
+
+            Object.keys(students).forEach(function (roll) {
+                var st = students[roll];
+                var pct = st.total > 0 ? Math.round((st.present / st.total) * 100) : 0;
+                var color = pct >= 75 ? '#22c55e' : (pct >= 50 ? '#f59e0b' : '#ef4444');
+                var barClass = pct >= 75 ? 'good' : (pct >= 50 ? 'warning' : 'danger');
+
+                html += '<tr style="border-bottom: 1px solid #e2e8f0;">';
+                html += '<td style="padding: 10px 0;"><strong>' + roll + '</strong></td>';
+                html += '<td>' + st.name + '</td>';
+                html += '<td style="text-align: center;">' + st.present + ' / ' + st.total + '</td>';
+                html += '<td style="text-align: right;">';
+                html += '<div style="display: flex; align-items: center; gap: 10px;">';
+                html += '<div class="percentage-bar" style="flex: 1;"><div class="fill ' + barClass + '" style="width: ' + pct + '%;"></div></div>';
+                html += '<span style="font-weight: 600; color: ' + color + '; min-width: 45px;">' + pct + '%</span>';
+                html += '</div></td>';
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
         }
     </script>
 </body>

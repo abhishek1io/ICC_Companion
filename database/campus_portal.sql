@@ -198,6 +198,38 @@ INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked
 ('BCA23003', 14, '2026-01-10', 'present', 'admin'),
 ('BCA23004', 14, '2026-01-10', 'present', 'admin');
 
+-- BBA Semester 5 Attendance (subject_id = 9: Marketing Management)
+INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
+('BBA23001', 9, '2026-01-06', 'present', 'admin'),
+('BBA23002', 9, '2026-01-06', 'present', 'admin'),
+('BBA23001', 9, '2026-01-07', 'present', 'admin'),
+('BBA23002', 9, '2026-01-07', 'absent', 'admin'),
+('BBA23001', 9, '2026-01-08', 'present', 'admin'),
+('BBA23002', 9, '2026-01-08', 'present', 'admin'),
+('BBA23001', 9, '2026-01-09', 'absent', 'admin'),
+('BBA23002', 9, '2026-01-09', 'present', 'admin'),
+('BBA23001', 9, '2026-01-10', 'present', 'admin'),
+('BBA23002', 9, '2026-01-10', 'present', 'admin');
+
+-- BA Semester 1 Attendance (subject_id = 17: English Literature)
+INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
+('BA25001', 17, '2026-01-06', 'present', 'admin'),
+('BA25002', 17, '2026-01-06', 'present', 'admin'),
+('BA25001', 17, '2026-01-07', 'present', 'admin'),
+('BA25002', 17, '2026-01-07', 'present', 'admin'),
+('BA25001', 17, '2026-01-08', 'absent', 'admin'),
+('BA25002', 17, '2026-01-08', 'present', 'admin'),
+('BA25001', 17, '2026-01-09', 'present', 'admin'),
+('BA25002', 17, '2026-01-09', 'absent', 'admin');
+
+-- BCOM Semester 1 Attendance (subject_id = 21: Financial Accounting)
+INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
+('BCOM25001', 21, '2026-01-06', 'present', 'admin'),
+('BCOM25001', 21, '2026-01-07', 'present', 'admin'),
+('BCOM25001', 21, '2026-01-08', 'present', 'admin'),
+('BCOM25001', 21, '2026-01-09', 'absent', 'admin'),
+('BCOM25001', 21, '2026-01-10', 'present', 'admin');
+
 -- =============================================
 -- TABLE 6: EXAMS
 -- =============================================
