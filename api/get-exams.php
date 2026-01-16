@@ -1,6 +1,6 @@
 <?php
 // =============================================
-// GET EXAMS API
+// GET EXAMS API (updated for new exam types)
 // =============================================
 
 include 'config.php';
@@ -8,42 +8,44 @@ include 'config.php';
 // Get filters from query
 $dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
 $semester = isset($_GET['semester']) ? intval($_GET['semester']) : 0;
-$exam_type = isset($_GET['type']) ? trim($_GET['type']) : '';
+$type = isset($_GET['type']) ? trim($_GET['type']) : '';
 
-// Build query
+// Build query with join to get subject details
 $sql = "SELECT 
             e.exam_id,
-            sub.subject_code,
-            sub.subject_name,
-            sub.dept_code,
-            sub.semester,
             e.exam_date,
             e.start_time,
             e.end_time,
             e.room,
-            e.exam_type
+            e.exam_type,
+            e.attachment_url,
+            s.subject_id,
+            s.subject_name,
+            s.subject_code,
+            s.dept_code,
+            s.semester
         FROM exams e
-        JOIN subjects sub ON e.subject_id = sub.subject_id
+        JOIN subjects s ON e.subject_id = s.subject_id
         WHERE e.exam_date >= CURDATE()";
 
 $params = [];
 $types = "";
 
 if (!empty($dept)) {
-    $sql .= " AND sub.dept_code = ?";
+    $sql .= " AND s.dept_code = ?";
     $params[] = $dept;
     $types .= "s";
 }
 
 if ($semester > 0) {
-    $sql .= " AND sub.semester = ?";
+    $sql .= " AND s.semester = ?";
     $params[] = $semester;
     $types .= "i";
 }
 
-if (!empty($exam_type)) {
+if (!empty($type)) {
     $sql .= " AND e.exam_type = ?";
-    $params[] = $exam_type;
+    $params[] = $type;
     $types .= "s";
 }
 

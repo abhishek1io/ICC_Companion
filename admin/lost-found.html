@@ -49,6 +49,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Image</th>
                             <th>Title</th>
                             <th>Type</th>
                             <th>Category</th>
@@ -60,7 +61,7 @@
                     </thead>
                     <tbody id="itemsTable">
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -70,10 +71,10 @@
 
     <!-- Add Item Modal -->
     <div id="itemModal"
-        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div class="card" style="width: 90%; max-width: 500px;">
+        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto;">
+        <div class="card" style="width: 90%; max-width: 550px; margin: 20px auto;">
             <h3 class="card-title">Add Lost/Found Item</h3>
-            <form id="itemForm">
+            <form id="itemForm" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="title">Title *</label>
@@ -121,6 +122,13 @@
                     <input type="text" id="contactInfo" required placeholder="e.g., Security Office - Ext. 1234">
                 </div>
 
+                <div class="form-group">
+                    <label for="itemImage">Image (Optional)</label>
+                    <input type="file" id="itemImage" accept="image/*" style="padding: 8px;">
+                    <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Upload a photo of the item (JPG, PNG)
+                    </div>
+                </div>
+
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button type="submit" class="btn btn-primary">Save Item</button>
                     <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
@@ -153,6 +161,14 @@
                             var statusClass = item.status === 'claimed' ? 'badge-secondary' : 'badge-info';
 
                             html += '<tr>';
+                            // Image column
+                            html += '<td style="width: 60px;">';
+                            if (item.image_url) {
+                                html += '<img src="../' + item.image_url + '" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">';
+                            } else {
+                                html += '<div style="width: 50px; height: 50px; background: #f1f5f9; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #94a3b8;">📷</div>';
+                            }
+                            html += '</td>';
                             html += '<td><strong>' + item.title + '</strong></td>';
                             html += '<td><span class="badge ' + typeClass + '">' + item.item_type.toUpperCase() + '</span></td>';
                             html += '<td>' + item.category + '</td>';
@@ -161,7 +177,7 @@
                             html += '<td><span class="badge ' + statusClass + '">' + item.status + '</span></td>';
                             html += '<td>';
                             if (item.status === 'active') {
-                                html += '<button class="btn btn-sm btn-success" onclick="markClaimed(' + item.item_id + ')">Mark Claimed</button> ';
+                                html += '<button class="btn btn-sm btn-success" onclick="markClaimed(' + item.item_id + ')">Claimed</button> ';
                             }
                             html += '<button class="btn btn-sm btn-danger" onclick="deleteItem(' + item.item_id + ')">Delete</button>';
                             html += '</td>';
@@ -169,7 +185,7 @@
                         });
                         tbody.innerHTML = html;
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #64748b;">No items found</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #64748b;">No items found</td></tr>';
                     }
                 });
         }
@@ -235,6 +251,12 @@
             formData.append('description', document.getElementById('description').value);
             formData.append('contact_info', document.getElementById('contactInfo').value);
             formData.append('posted_by', 'admin');
+
+            // Add image if selected
+            var imageFile = document.getElementById('itemImage').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
 
             fetch('../api/add-lost-found.php', {
                 method: 'POST',

@@ -107,7 +107,12 @@
                             var icon = getCategoryIcon(item.category);
 
                             html += '<div class="item-card">';
-                            html += '  <div class="item-image">' + icon + '</div>';
+                            // Show image if available, otherwise show icon
+                            if (item.image_url) {
+                                html += '  <div class="item-image" style="background: url(../' + item.image_url + ') center/cover;"></div>';
+                            } else {
+                                html += '  <div class="item-image">' + icon + '</div>';
+                            }
                             html += '  <div class="item-details">';
                             html += '    <span class="badge ' + typeClass + '" style="margin-bottom: 8px;">' + item.item_type.toUpperCase() + '</span>';
                             html += '    <div class="item-title">' + item.title + '</div>';

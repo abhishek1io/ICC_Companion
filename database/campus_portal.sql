@@ -208,19 +208,20 @@ CREATE TABLE exams (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     room VARCHAR(50),
-    exam_type ENUM('mid-term', 'end-term', 'internal') DEFAULT 'end-term',
+    exam_type ENUM('sessional', 'final') DEFAULT 'final',
+    attachment_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
 );
 
 -- Sample exam timetable for BCA Semester 5
 INSERT INTO exams (subject_id, exam_date, start_time, end_time, room, exam_type) VALUES
-(13, '2026-02-15', '10:00:00', '13:00:00', 'Lab 101', 'mid-term'),
-(14, '2026-02-17', '10:00:00', '13:00:00', 'Lab 102', 'mid-term'),
-(15, '2026-02-19', '14:00:00', '17:00:00', 'Room 203', 'mid-term'),
-(13, '2026-04-10', '10:00:00', '13:00:00', 'Hall A', 'end-term'),
-(14, '2026-04-12', '10:00:00', '13:00:00', 'Hall A', 'end-term'),
-(15, '2026-04-14', '14:00:00', '17:00:00', 'Hall B', 'end-term');
+(13, '2026-02-15', '10:00:00', '13:00:00', 'Lab 101', 'sessional'),
+(14, '2026-02-17', '10:00:00', '13:00:00', 'Lab 102', 'sessional'),
+(15, '2026-02-19', '14:00:00', '17:00:00', 'Room 203', 'sessional'),
+(13, '2026-04-10', '10:00:00', '13:00:00', 'Hall A', 'final'),
+(14, '2026-04-12', '10:00:00', '13:00:00', 'Hall A', 'final'),
+(15, '2026-04-14', '14:00:00', '17:00:00', 'Hall B', 'final');
 
 -- =============================================
 -- TABLE 7: LOST AND FOUND

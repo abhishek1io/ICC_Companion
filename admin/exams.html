@@ -56,12 +56,13 @@
                             <th>Time</th>
                             <th>Room</th>
                             <th>Type</th>
+                            <th>Attachment</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="examsTable">
                         <tr>
-                            <td colspan="8" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
+                            <td colspan="9" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -71,10 +72,10 @@
 
     <!-- Add/Edit Exam Modal -->
     <div id="examModal"
-        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div class="card" style="width: 90%; max-width: 500px;">
+        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto;">
+        <div class="card" style="width: 90%; max-width: 550px; margin: 20px auto;">
             <h3 id="modalTitle" class="card-title">Add Exam</h3>
-            <form id="examForm">
+            <form id="examForm" enctype="multipart/form-data">
                 <input type="hidden" id="editId" value="">
 
                 <div class="form-row">
@@ -117,9 +118,8 @@
                     <div class="form-group">
                         <label for="examType">Exam Type *</label>
                         <select id="examType" required>
-                            <option value="mid-term">Mid-term</option>
-                            <option value="end-term">End-term</option>
-                            <option value="internal">Internal</option>
+                            <option value="sessional">Sessional</option>
+                            <option value="final">Final Examination</option>
                         </select>
                     </div>
                 </div>
@@ -138,6 +138,13 @@
                 <div class="form-group">
                     <label for="room">Room/Hall *</label>
                     <input type="text" id="room" required placeholder="e.g., Lab 101, Hall A">
+                </div>
+
+                <div class="form-group">
+                    <label for="attachment">Attachment (PDF, Image - Optional)</label>
+                    <input type="file" id="attachment" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="padding: 8px;">
+                    <div style="font-size: 12px; color: #64748b; margin-top: 5px;">Syllabus, question paper format,
+                        instructions, etc.</div>
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -166,6 +173,9 @@
                     if (data.success && data.data.length > 0) {
                         var html = '';
                         data.data.forEach(function (e) {
+                            var typeDisplay = e.exam_type === 'sessional' ? 'Sessional' : 'Final Exam';
+                            var typeClass = e.exam_type === 'sessional' ? 'badge-warning' : 'badge-danger';
+
                             html += '<tr>';
                             html += '<td><strong>' + formatDate(e.exam_date) + '</strong></td>';
                             html += '<td>' + e.subject_name + '</td>';
@@ -173,7 +183,14 @@
                             html += '<td>' + e.semester + '</td>';
                             html += '<td>' + formatTimeStr(e.start_time) + ' - ' + formatTimeStr(e.end_time) + '</td>';
                             html += '<td>' + e.room + '</td>';
-                            html += '<td><span class="badge badge-secondary">' + e.exam_type + '</span></td>';
+                            html += '<td><span class="badge ' + typeClass + '">' + typeDisplay + '</span></td>';
+                            html += '<td>';
+                            if (e.attachment_url) {
+                                html += '<a href="' + e.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View</a>';
+                            } else {
+                                html += '<span style="color: #94a3b8;">-</span>';
+                            }
+                            html += '</td>';
                             html += '<td>';
                             html += '<button class="btn btn-sm btn-danger" onclick="deleteExam(' + e.exam_id + ')">Delete</button>';
                             html += '</td>';
@@ -181,7 +198,7 @@
                         });
                         tbody.innerHTML = html;
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: #64748b;">No exams scheduled</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #64748b;">No exams scheduled</td></tr>';
                     }
                 });
         }
@@ -261,6 +278,12 @@
             formData.append('end_time', document.getElementById('endTime').value);
             formData.append('room', document.getElementById('room').value);
             formData.append('exam_type', document.getElementById('examType').value);
+
+            // Add attachment if selected
+            var attachmentFile = document.getElementById('attachment').files[0];
+            if (attachmentFile) {
+                formData.append('attachment', attachmentFile);
+            }
 
             fetch('../api/add-exam.php', {
                 method: 'POST',
