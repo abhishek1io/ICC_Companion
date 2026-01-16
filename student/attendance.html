@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Attendance - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <div>
+                <div class="college-name">ICC Companion</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName">Student</strong></span>
+            <button class="btn-logout" onclick="logout('student')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="attendance.html" class="active">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">📊 My Attendance</h1>
+
+        <!-- Overall Summary Card -->
+        <div class="card">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h3 style="margin-bottom: 5px;">Semester <span id="semesterNum">-</span> | <span
+                            id="deptName">-</span></h3>
+                    <p style="color: #64748b; font-size: 14px;">Minimum required: 75%</p>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 28px; font-weight: bold; color: var(--primary);" id="overallPercent">--%
+                    </div>
+                    <div style="font-size: 13px; color: #64748b;">Overall Attendance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject-wise Attendance -->
+        <div id="attendanceList">
+            <div style="text-align: center; padding: 40px; color: #64748b;">Loading attendance...</div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkStudentLogin()) {
+            // Will redirect to login
+        }
+
+        // Get student info and display
+        var student = getStudentInfo();
+        document.getElementById('userName').textContent = student.name;
+        document.getElementById('semesterNum').textContent = student.semester;
+        document.getElementById('deptName').textContent = student.dept;
+
+        // Load attendance
+        loadAttendance();
+
+        function loadAttendance() {
+            fetch('../api/get-attendance.php?roll=' + student.roll)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var container = document.getElementById('attendanceList');
+
+                    if (data.success && data.data.length > 0) {
+                        var html = '';
+                        var totalPresent = 0;
+                        var totalClasses = 0;
+
+                        data.data.forEach(function (subject) {
+                            var present = parseInt(subject.present_count);
+                            var total = parseInt(subject.total_classes);
+                            var percent = parseFloat(subject.percentage);
+                            var status = getAttendanceStatus(percent);
+                            var canMiss = classesCanMiss(present, total, 75);
+
+                            totalPresent += present;
+                            totalClasses += total;
+
+                            html += '<div class="attendance-card">';
+                            html += '  <div class="subject-name">' + subject.subject_name + '</div>';
+                            html += '  <div class="stats">';
+                            html += '    <span>Attended: ' + present + ' / ' + total + ' classes</span>';
+                            html += '  </div>';
+                            html += '  <div class="progress-bar">';
+                            html += '    <div class="fill ' + status.class + '" style="width: ' + percent + '%"></div>';
+                            html += '  </div>';
+                            html += '  <div class="status">';
+                            html += '    <span><span class="badge ' + status.badge + '">' + status.text + '</span> ' + percent + '%</span>';
+                            if (status.text === 'Safe' && canMiss > 0) {
+                                html += '    <span style="color: var(--secondary);">Can miss ' + canMiss + ' more</span>';
+                            } else if (status.text !== 'Safe') {
+                                html += '    <span style="color: var(--danger);">Attend more classes!</span>';
+                            }
+                            html += '  </div>';
+                            html += '</div>';
+                        });
+
+                        container.innerHTML = html;
+
+                        // Update overall
+                        var overallPercent = totalClasses > 0 ? Math.round((totalPresent / totalClasses) * 100) : 0;
+                        document.getElementById('overallPercent').textContent = overallPercent + '%';
+
+                    } else {
+                        container.innerHTML = '<div class="card" style="text-align: center; color: #64748b;">No attendance records found for this semester.</div>';
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    document.getElementById('attendanceList').innerHTML = '<div class="alert alert-error">Failed to load attendance</div>';
+                });
+        }
+    </script>
+</body>
+
+</html>

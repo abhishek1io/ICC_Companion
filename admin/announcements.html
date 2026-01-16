@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header" style="background-color: #1e293b;">
+        <div class="logo">
+            <span class="logo-icon">🔐</span>
+            <div>
+                <div class="college-name">ICC Companion - Admin</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Admin: <strong id="adminName">-</strong></span>
+            <button class="btn-logout" onclick="logout('admin')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="students.html">👥 Students</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html" class="active">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1 class="page-title" style="margin-bottom: 0;">📢 Manage Announcements</h1>
+            <button class="btn btn-primary" onclick="showAddForm()">+ Post Announcement</button>
+        </div>
+
+        <!-- Announcements Table -->
+        <div class="card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Target</th>
+                            <th>Posted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="announcementsTable">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Announcement Modal -->
+    <div id="announceModal"
+        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 90%; max-width: 600px;">
+            <h3 class="card-title">Post Announcement</h3>
+            <form id="announceForm">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" required placeholder="e.g., Holiday Notice">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" rows="4" required
+                        placeholder="Enter the full announcement message..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="priority">Priority *</label>
+                        <select id="priority" required>
+                            <option value="low">Low (Normal)</option>
+                            <option value="medium">Medium (Important)</option>
+                            <option value="high">High (Urgent)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="targetDept">Target Department</label>
+                        <select id="targetDept">
+                            <option value="all">All Departments</option>
+                            <option value="BCA">BCA Only</option>
+                            <option value="BBA">BBA Only</option>
+                            <option value="BA">BA Only</option>
+                            <option value="BCOM">BCOM Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="targetSem">Target Semester</label>
+                    <select id="targetSem">
+                        <option value="all">All Semesters</option>
+                        <option value="1">Semester 1 Only</option>
+                        <option value="2">Semester 2 Only</option>
+                        <option value="3">Semester 3 Only</option>
+                        <option value="4">Semester 4 Only</option>
+                        <option value="5">Semester 5 Only</option>
+                        <option value="6">Semester 6 Only</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary">Post Announcement</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        if (!checkAdminLogin()) { }
+
+        var admin = getAdminInfo();
+        document.getElementById('adminName').textContent = admin.name;
+
+        loadAnnouncements();
+
+        function loadAnnouncements() {
+            fetch('../api/get-announcements.php')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var tbody = document.getElementById('announcementsTable');
+
+                    if (data.success && data.data.length > 0) {
+                        var html = '';
+                        data.data.forEach(function (a) {
+                            var priorityClass = a.priority === 'high' ? 'badge-danger' : (a.priority === 'medium' ? 'badge-warning' : 'badge-secondary');
+                            var priorityText = a.priority === 'high' ? 'Urgent' : (a.priority === 'medium' ? 'Important' : 'Normal');
+
+                            var target = '';
+                            if (a.target_dept !== 'all') target += a.target_dept + ' ';
+                            if (a.target_semester !== 'all') target += 'Sem ' + a.target_semester;
+                            if (!target) target = 'All';
+
+                            html += '<tr>';
+                            html += '<td><strong>' + a.title + '</strong><br><span style="font-size: 12px; color: #64748b;">' + a.description.substring(0, 60) + '...</span></td>';
+                            html += '<td><span class="badge ' + priorityClass + '">' + priorityText + '</span></td>';
+                            html += '<td>' + target + '</td>';
+                            html += '<td>' + formatDate(a.created_at) + '</td>';
+                            html += '<td>';
+                            html += '<button class="btn btn-sm btn-danger" onclick="deleteAnnouncement(' + a.announcement_id + ')">Delete</button>';
+                            html += '</td>';
+                            html += '</tr>';
+                        });
+                        tbody.innerHTML = html;
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">No announcements</td></tr>';
+                    }
+                });
+        }
+
+        function showAddForm() {
+            document.getElementById('announceForm').reset();
+            document.getElementById('announceModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('announceModal').style.display = 'none';
+        }
+
+        function deleteAnnouncement(id) {
+            if (!confirm('Delete this announcement?')) return;
+
+            var formData = new FormData();
+            formData.append('announcement_id', id);
+
+            fetch('../api/delete-announcement.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert('Announcement deleted', 'success');
+                        loadAnnouncements();
+                    }
+                });
+        }
+
+        document.getElementById('announceForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('priority', document.getElementById('priority').value);
+            formData.append('target_dept', document.getElementById('targetDept').value);
+            formData.append('target_semester', document.getElementById('targetSem').value);
+            formData.append('posted_by', 'admin');
+
+            fetch('../api/add-announcement.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert('Announcement posted', 'success');
+                        closeModal();
+                        loadAnnouncements();
+                    } else {
+                        showAlert(data.message, 'error');
+                    }
+                });
+        });
+    </script>
+</body>
+
+</html>

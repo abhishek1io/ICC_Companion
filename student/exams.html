@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Timetable - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <div>
+                <div class="college-name">ICC Companion</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName">Student</strong></span>
+            <button class="btn-logout" onclick="logout('student')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html" class="active">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">📅 Exam Timetable</h1>
+
+        <!-- Filter -->
+        <div class="card">
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+                    <label for="examType">Exam Type</label>
+                    <select id="examType" onchange="loadExams()">
+                        <option value="">All Types</option>
+                        <option value="mid-term">Mid-term</option>
+                        <option value="end-term">End-term</option>
+                        <option value="internal">Internal</option>
+                    </select>
+                </div>
+                <div style="color: #64748b; font-size: 14px;">
+                    Showing exams for: <strong id="filterInfo">-</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam List -->
+        <div id="examList">
+            <div style="text-align: center; padding: 40px; color: #64748b;">Loading exams...</div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkStudentLogin()) {
+            // Will redirect to login
+        }
+
+        // Get student info and display
+        var student = getStudentInfo();
+        document.getElementById('userName').textContent = student.name;
+        document.getElementById('filterInfo').textContent = student.dept + ' - Semester ' + student.semester;
+
+        // Load exams
+        loadExams();
+
+        function loadExams() {
+            var examType = document.getElementById('examType').value;
+            var url = '../api/get-exams.php?dept=' + student.dept + '&semester=' + student.semester;
+            if (examType) {
+                url += '&type=' + examType;
+            }
+
+            fetch(url)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var container = document.getElementById('examList');
+
+                    if (data.success && data.data.length > 0) {
+                        var html = '<div class="table-container"><table>';
+                        html += '<thead><tr>';
+                        html += '<th>Date</th>';
+                        html += '<th>Subject</th>';
+                        html += '<th>Time</th>';
+                        html += '<th>Room</th>';
+                        html += '<th>Type</th>';
+                        html += '<th>Days Left</th>';
+                        html += '</tr></thead><tbody>';
+
+                        data.data.forEach(function (exam) {
+                            var days = daysRemaining(exam.exam_date);
+                            var daysText = days === 0 ? 'Today!' : (days === 1 ? '1 day' : days + ' days');
+                            var daysClass = days <= 7 ? 'badge-danger' : (days <= 14 ? 'badge-warning' : 'badge-secondary');
+
+                            html += '<tr>';
+                            html += '<td><strong>' + formatDate(exam.exam_date) + '</strong></td>';
+                            html += '<td>' + exam.subject_name + '</td>';
+                            html += '<td>' + formatTime(exam.start_time) + ' - ' + formatTime(exam.end_time) + '</td>';
+                            html += '<td>' + exam.room + '</td>';
+                            html += '<td><span class="badge badge-info">' + exam.exam_type + '</span></td>';
+                            html += '<td><span class="badge ' + daysClass + '">' + daysText + '</span></td>';
+                            html += '</tr>';
+                        });
+
+                        html += '</tbody></table></div>';
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div class="card" style="text-align: center; color: #64748b;">No upcoming exams found.</div>';
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    document.getElementById('examList').innerHTML = '<div class="alert alert-error">Failed to load exams</div>';
+                });
+        }
+
+        function formatTime(timeStr) {
+            var parts = timeStr.split(':');
+            var hours = parseInt(parts[0]);
+            var minutes = parts[1];
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            return hours + ':' + minutes + ' ' + ampm;
+        }
+    </script>
+</body>
+
+</html>

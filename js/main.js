@@ -1,0 +1,185 @@
+// =============================================
+// ICC COMPANION - MAIN JAVASCRIPT
+// ICON COMMERCE COLLEGE (ICC)
+// =============================================
+
+// Base URL for API calls
+var API_BASE = 'api/';
+
+// =============================================
+// SESSION MANAGEMENT
+// =============================================
+
+// Check if student is logged in
+function checkStudentLogin() {
+    var roll = sessionStorage.getItem('studentRoll');
+    if (!roll) {
+        window.location.href = '../student-login.html';
+        return false;
+    }
+    return true;
+}
+
+// Check if admin is logged in
+function checkAdminLogin() {
+    var adminId = sessionStorage.getItem('adminId');
+    if (!adminId) {
+        window.location.href = '../admin-login.html';
+        return false;
+    }
+    return true;
+}
+
+// Logout function
+function logout(type) {
+    sessionStorage.clear();
+    if (type === 'student') {
+        window.location.href = '../student-login.html';
+    } else {
+        window.location.href = '../admin-login.html';
+    }
+}
+
+// Get student info from session
+function getStudentInfo() {
+    return {
+        roll: sessionStorage.getItem('studentRoll'),
+        name: sessionStorage.getItem('studentName'),
+        dept: sessionStorage.getItem('studentDept'),
+        semester: sessionStorage.getItem('studentSemester')
+    };
+}
+
+// Get admin info from session
+function getAdminInfo() {
+    return {
+        id: sessionStorage.getItem('adminId'),
+        name: sessionStorage.getItem('adminName'),
+        role: sessionStorage.getItem('adminRole')
+    };
+}
+
+// =============================================
+// API HELPER FUNCTIONS
+// =============================================
+
+// Make GET request
+function apiGet(endpoint, callback) {
+    fetch(API_BASE + endpoint)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            callback(null, data);
+        })
+        .catch(function (error) {
+            callback(error, null);
+        });
+}
+
+// Make POST request
+function apiPost(endpoint, formData, callback) {
+    fetch(API_BASE + endpoint, {
+        method: 'POST',
+        body: formData
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            callback(null, data);
+        })
+        .catch(function (error) {
+            callback(error, null);
+        });
+}
+
+// =============================================
+// UI HELPER FUNCTIONS
+// =============================================
+
+// Show loading indicator
+function showLoading(elementId) {
+    var element = document.getElementById(elementId);
+    if (element) {
+        element.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">Loading...</div>';
+    }
+}
+
+// Show alert message
+function showAlert(message, type) {
+    var alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-' + type;
+    alertDiv.textContent = message;
+
+    var container = document.querySelector('.container');
+    if (container) {
+        container.insertBefore(alertDiv, container.firstChild);
+
+        // Auto remove after 5 seconds
+        setTimeout(function () {
+            alertDiv.remove();
+        }, 5000);
+    }
+}
+
+// Format date for display
+function formatDate(dateString) {
+    var date = new Date(dateString);
+    var options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-IN', options);
+}
+
+// Calculate days remaining
+function daysRemaining(dateString) {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var target = new Date(dateString);
+    var diff = target - today;
+    var days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    return days;
+}
+
+// Get attendance status class
+function getAttendanceStatus(percentage) {
+    if (percentage >= 75) {
+        return { class: 'green', text: 'Safe', badge: 'badge-success' };
+    } else if (percentage >= 65) {
+        return { class: 'orange', text: 'Warning', badge: 'badge-warning' };
+    } else {
+        return { class: 'red', text: 'Shortage', badge: 'badge-danger' };
+    }
+}
+
+// Calculate classes that can be missed
+function classesCanMiss(present, total, required) {
+    required = required || 75;
+    // Formula: present / (total + x) >= required/100
+    // x = (present * 100 / required) - total
+    var maxTotal = Math.floor((present * 100) / required);
+    var canMiss = maxTotal - total;
+    return canMiss > 0 ? canMiss : 0;
+}
+
+// =============================================
+// COMMON PAGE SETUP
+// =============================================
+
+// Set user name in header
+function setUserName(name, elementId) {
+    var element = document.getElementById(elementId || 'userName');
+    if (element) {
+        element.textContent = name;
+    }
+}
+
+// Mark active navigation link
+function setActiveNav(page) {
+    var links = document.querySelectorAll('.nav-menu a');
+    links.forEach(function (link) {
+        link.classList.remove('active');
+        if (link.getAttribute('href').includes(page)) {
+            link.classList.add('active');
+        }
+    });
+}

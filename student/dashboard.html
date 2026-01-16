@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <div>
+                <div class="college-name">ICC Companion</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName">Student</strong></span>
+            <button class="btn-logout" onclick="logout('student')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html" class="active">🏠 Dashboard</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Welcome Card -->
+        <div class="card">
+            <h2 style="margin-bottom: 5px;">Welcome back, <span id="studentName">Student</span>! 👋</h2>
+            <p style="color: #64748b;">Roll No: <span id="studentRoll">-</span> | Department: <span
+                    id="studentDept">-</span> | Semester: <span id="studentSem">-</span></p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="dashboard-grid" id="statsContainer">
+            <div class="stat-card">
+                <div class="stat-icon blue">📊</div>
+                <div class="stat-info">
+                    <h3 id="overallAttendance">--%</h3>
+                    <p>Overall Attendance</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">📅</div>
+                <div class="stat-info">
+                    <h3 id="upcomingExams">--</h3>
+                    <p>Upcoming Exams</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📢</div>
+                <div class="stat-info">
+                    <h3 id="newAnnouncements">--</h3>
+                    <p>Announcements</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Access Menu -->
+        <h3 class="page-title" style="font-size: 18px; margin-top: 10px;">Quick Access</h3>
+        <div class="menu-grid">
+            <a href="attendance.html" class="menu-card">
+                <div class="icon">📊</div>
+                <div class="title">My Attendance</div>
+            </a>
+            <a href="exams.html" class="menu-card">
+                <div class="icon">📅</div>
+                <div class="title">Exam Timetable</div>
+            </a>
+            <a href="lost-found.html" class="menu-card">
+                <div class="icon">🔍</div>
+                <div class="title">Lost & Found</div>
+            </a>
+            <a href="announcements.html" class="menu-card">
+                <div class="icon">📢</div>
+                <div class="title">Announcements</div>
+            </a>
+        </div>
+
+        <!-- Latest Announcements -->
+        <h3 class="page-title" style="font-size: 18px; margin-top: 30px;">Latest Announcements</h3>
+        <div id="announcementsList">
+            <!-- Will be loaded by JavaScript -->
+            <div style="text-align: center; padding: 20px; color: #64748b;">Loading...</div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkStudentLogin()) {
+            // Will redirect to login
+        }
+
+        // Get student info and display
+        var student = getStudentInfo();
+        document.getElementById('userName').textContent = student.name;
+        document.getElementById('studentName').textContent = student.name;
+        document.getElementById('studentRoll').textContent = student.roll;
+        document.getElementById('studentDept').textContent = student.dept;
+        document.getElementById('studentSem').textContent = student.semester;
+
+        // Load dashboard data
+        loadDashboardStats();
+        loadLatestAnnouncements();
+
+        function loadDashboardStats() {
+            // Get attendance stats
+            fetch('../api/get-attendance.php?roll=' + student.roll)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success && data.data.length > 0) {
+                        // Calculate overall attendance
+                        var totalPresent = 0;
+                        var totalClasses = 0;
+                        data.data.forEach(function (subject) {
+                            totalPresent += parseInt(subject.present_count);
+                            totalClasses += parseInt(subject.total_classes);
+                        });
+                        var overall = totalClasses > 0 ? Math.round((totalPresent / totalClasses) * 100) : 0;
+                        document.getElementById('overallAttendance').textContent = overall + '%';
+                    } else {
+                        document.getElementById('overallAttendance').textContent = 'N/A';
+                    }
+                });
+
+            // Get upcoming exams count
+            fetch('../api/get-exams.php?dept=' + student.dept + '&semester=' + student.semester)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        document.getElementById('upcomingExams').textContent = data.data.length;
+                    }
+                });
+
+            // Get announcements count
+            fetch('../api/get-announcements.php')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        document.getElementById('newAnnouncements').textContent = data.data.length;
+                    }
+                });
+        }
+
+        function loadLatestAnnouncements() {
+            fetch('../api/get-announcements.php?limit=3')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var container = document.getElementById('announcementsList');
+
+                    if (data.success && data.data.length > 0) {
+                        var html = '';
+                        data.data.forEach(function (item) {
+                            var priorityClass = item.priority === 'high' ? 'high' : '';
+                            html += '<div class="announcement-item ' + priorityClass + '">';
+                            html += '  <div class="title">' + item.title + '</div>';
+                            html += '  <div class="date">' + formatDate(item.created_at) + '</div>';
+                            html += '</div>';
+                        });
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div style="padding: 20px; text-align: center; color: #64748b;">No announcements</div>';
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header" style="background-color: #1e293b;">
+        <div class="logo">
+            <span class="logo-icon">🔐</span>
+            <div>
+                <div class="college-name">ICC Companion - Admin</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Admin: <strong id="adminName">-</strong></span>
+            <button class="btn-logout" onclick="logout('admin')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="students.html">👥 Students</a></li>
+            <li><a href="attendance.html" class="active">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">📊 Mark Attendance</h1>
+
+        <!-- Step 1: Select Class Details -->
+        <div class="card">
+            <h3 class="card-title">Step 1: Select Class Details</h3>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div class="form-group" style="margin-bottom: 0; min-width: 120px;">
+                    <label for="dept">Department *</label>
+                    <select id="dept" onchange="loadSubjects()">
+                        <option value="">Select</option>
+                        <option value="BCA">BCA</option>
+                        <option value="BBA">BBA</option>
+                        <option value="BA">BA</option>
+                        <option value="BCOM">BCOM</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0; min-width: 120px;">
+                    <label for="semester">Semester *</label>
+                    <select id="semester" onchange="loadSubjects()">
+                        <option value="">Select</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0; min-width: 180px;">
+                    <label for="subject">Subject *</label>
+                    <select id="subject" onchange="loadStudentsList()">
+                        <option value="">Select department & semester first</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+                    <label for="attendanceDate">Date *</label>
+                    <input type="date" id="attendanceDate" onchange="loadStudentsList()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Mark Students -->
+        <div class="card" id="studentsCard" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 class="card-title" style="border: none; margin: 0; padding: 0;">Step 2: Mark Present Students</h3>
+                <div>
+                    <button class="btn btn-sm btn-outline" onclick="selectAll()">Select All</button>
+                    <button class="btn btn-sm btn-outline" onclick="deselectAll()">Deselect All</button>
+                </div>
+            </div>
+
+            <div class="checkbox-list" id="studentsList">
+                <!-- Students will be loaded here -->
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+                <button class="btn btn-success" onclick="saveAttendance()">💾 Save Attendance</button>
+                <span id="selectedCount" style="color: #64748b;">0 students selected</span>
+            </div>
+        </div>
+
+        <!-- Saved Message -->
+        <div id="successMsg" class="alert alert-success" style="display: none;">
+            Attendance saved successfully!
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkAdminLogin()) { }
+
+        var admin = getAdminInfo();
+        document.getElementById('adminName').textContent = admin.name;
+
+        // Set today's date as default
+        document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
+
+        var subjects = [];
+        var students = [];
+
+        function loadSubjects() {
+            var dept = document.getElementById('dept').value;
+            var sem = document.getElementById('semester').value;
+
+            if (!dept || !sem) {
+                document.getElementById('subject').innerHTML = '<option value="">Select department & semester first</option>';
+                document.getElementById('studentsCard').style.display = 'none';
+                return;
+            }
+
+            fetch('../api/get-subjects.php?dept=' + dept + '&semester=' + sem)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success && data.data.length > 0) {
+                        subjects = data.data;
+                        var html = '<option value="">Select subject</option>';
+                        data.data.forEach(function (s) {
+                            html += '<option value="' + s.subject_id + '">' + s.subject_name + '</option>';
+                        });
+                        document.getElementById('subject').innerHTML = html;
+                    } else {
+                        document.getElementById('subject').innerHTML = '<option value="">No subjects found</option>';
+                    }
+                });
+        }
+
+        function loadStudentsList() {
+            var dept = document.getElementById('dept').value;
+            var sem = document.getElementById('semester').value;
+            var subject = document.getElementById('subject').value;
+            var date = document.getElementById('attendanceDate').value;
+
+            if (!dept || !sem || !subject || !date) {
+                document.getElementById('studentsCard').style.display = 'none';
+                return;
+            }
+
+            // Load students and existing attendance
+            fetch('../api/get-students.php?dept=' + dept + '&semester=' + sem)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success && data.data.length > 0) {
+                        students = data.data;
+
+                        // Check for existing attendance
+                        fetch('../api/get-attendance-by-date.php?subject_id=' + subject + '&date=' + date)
+                            .then(function (res) { return res.json(); })
+                            .then(function (attData) {
+                                var presentRolls = [];
+                                if (attData.success) {
+                                    attData.data.forEach(function (a) {
+                                        if (a.status === 'present') {
+                                            presentRolls.push(a.roll_number);
+                                        }
+                                    });
+                                }
+                                renderStudentsList(presentRolls);
+                            });
+                    } else {
+                        document.getElementById('studentsList').innerHTML = '<div style="padding: 20px; text-align: center; color: #64748b;">No students found</div>';
+                    }
+                    document.getElementById('studentsCard').style.display = 'block';
+                });
+        }
+
+        function renderStudentsList(presentRolls) {
+            var html = '';
+            students.forEach(function (s) {
+                var checked = presentRolls.includes(s.roll_number) ? 'checked' : '';
+                html += '<div class="checkbox-item">';
+                html += '<input type="checkbox" id="st_' + s.roll_number + '" value="' + s.roll_number + '" ' + checked + ' onchange="updateCount()">';
+                html += '<div class="student-info">';
+                html += '<div class="roll">' + s.roll_number + '</div>';
+                html += '<div class="name">' + s.name + '</div>';
+                html += '</div>';
+                html += '</div>';
+            });
+            document.getElementById('studentsList').innerHTML = html;
+            updateCount();
+        }
+
+        function updateCount() {
+            var checkboxes = document.querySelectorAll('#studentsList input[type="checkbox"]:checked');
+            document.getElementById('selectedCount').textContent = checkboxes.length + ' of ' + students.length + ' students present';
+        }
+
+        function selectAll() {
+            document.querySelectorAll('#studentsList input[type="checkbox"]').forEach(function (cb) {
+                cb.checked = true;
+            });
+            updateCount();
+        }
+
+        function deselectAll() {
+            document.querySelectorAll('#studentsList input[type="checkbox"]').forEach(function (cb) {
+                cb.checked = false;
+            });
+            updateCount();
+        }
+
+        function saveAttendance() {
+            var subject = document.getElementById('subject').value;
+            var date = document.getElementById('attendanceDate').value;
+
+            // Get all rolls and their status
+            var attendanceData = [];
+            students.forEach(function (s) {
+                var checkbox = document.getElementById('st_' + s.roll_number);
+                attendanceData.push({
+                    roll_number: s.roll_number,
+                    status: checkbox.checked ? 'present' : 'absent'
+                });
+            });
+
+            var formData = new FormData();
+            formData.append('subject_id', subject);
+            formData.append('date', date);
+            formData.append('attendance', JSON.stringify(attendanceData));
+            formData.append('marked_by', admin.name);
+
+            fetch('../api/save-attendance.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        document.getElementById('successMsg').style.display = 'block';
+                        setTimeout(function () {
+                            document.getElementById('successMsg').style.display = 'none';
+                        }, 3000);
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

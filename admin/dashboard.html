@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header" style="background-color: #1e293b;">
+        <div class="logo">
+            <span class="logo-icon">🔐</span>
+            <div>
+                <div class="college-name">ICC Companion - Admin</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Admin: <strong id="adminName">-</strong></span>
+            <button class="btn-logout" onclick="logout('admin')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html" class="active">🏠 Dashboard</a></li>
+            <li><a href="students.html">👥 Students</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">Admin Dashboard</h1>
+
+        <!-- Stats Cards -->
+        <div class="dashboard-grid" id="statsContainer">
+            <div class="stat-card">
+                <div class="stat-icon blue">👥</div>
+                <div class="stat-info">
+                    <h3 id="totalStudents">--</h3>
+                    <p>Total Students</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">📅</div>
+                <div class="stat-info">
+                    <h3 id="upcomingExams">--</h3>
+                    <p>Upcoming Exams</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">🔍</div>
+                <div class="stat-info">
+                    <h3 id="lostItems">--</h3>
+                    <p>Active Lost/Found</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">📢</div>
+                <div class="stat-info">
+                    <h3 id="announcements">--</h3>
+                    <p>Announcements</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <h3 class="page-title" style="font-size: 18px; margin-top: 10px;">Quick Actions</h3>
+        <div class="menu-grid">
+            <a href="students.html" class="menu-card">
+                <div class="icon">👥</div>
+                <div class="title">Manage Students</div>
+            </a>
+            <a href="attendance.html" class="menu-card">
+                <div class="icon">📊</div>
+                <div class="title">Mark Attendance</div>
+            </a>
+            <a href="exams.html" class="menu-card">
+                <div class="icon">📅</div>
+                <div class="title">Exam Timetable</div>
+            </a>
+            <a href="lost-found.html" class="menu-card">
+                <div class="icon">🔍</div>
+                <div class="title">Lost & Found</div>
+            </a>
+            <a href="announcements.html" class="menu-card">
+                <div class="icon">📢</div>
+                <div class="title">Post Announcement</div>
+            </a>
+        </div>
+
+        <!-- Students by Department -->
+        <h3 class="page-title" style="font-size: 18px; margin-top: 30px;">Students by Department</h3>
+        <div class="card">
+            <div id="deptStats"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                <div style="text-align: center; padding: 20px; color: #64748b; grid-column: 1/-1;">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkAdminLogin()) {
+            // Will redirect to login
+        }
+
+        // Get admin info and display
+        var admin = getAdminInfo();
+        document.getElementById('adminName').textContent = admin.name;
+
+        // Load dashboard stats
+        loadDashboardStats();
+
+        function loadDashboardStats() {
+            // Get students count
+            fetch('../api/get-students.php')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        document.getElementById('totalStudents').textContent = data.data.length;
+
+                        // Calculate department-wise
+                        var deptCount = {};
+                        data.data.forEach(function (s) {
+                            deptCount[s.dept_code] = (deptCount[s.dept_code] || 0) + 1;
+                        });
+
+                        var deptHtml = '';
+                        for (var dept in deptCount) {
+                            deptHtml += '<div style="text-align: center; padding: 20px; background: #f8fafc; border-radius: 8px;">';
+                            deptHtml += '<div style="font-size: 24px; font-weight: bold; color: var(--primary);">' + deptCount[dept] + '</div>';
+                            deptHtml += '<div style="font-size: 14px; color: #64748b;">' + dept + '</div>';
+                            deptHtml += '</div>';
+                        }
+                        document.getElementById('deptStats').innerHTML = deptHtml;
+                    }
+                });
+
+            // Get exams count
+            fetch('../api/get-exams.php')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        document.getElementById('upcomingExams').textContent = data.data.length;
+                    }
+                });
+
+            // Get lost/found count
+            fetch('../api/get-lost-found.php?status=active')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        document.getElementById('lostItems').textContent = data.data.length;
+                    }
+                });
+
+            // Get announcements count
+            fetch('../api/get-announcements.php')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        document.getElementById('announcements').textContent = data.data.length;
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

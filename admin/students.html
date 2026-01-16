@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header" style="background-color: #1e293b;">
+        <div class="logo">
+            <span class="logo-icon">🔐</span>
+            <div>
+                <div class="college-name">ICC Companion - Admin</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Admin: <strong id="adminName">-</strong></span>
+            <button class="btn-logout" onclick="logout('admin')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="students.html" class="active">👥 Students</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1 class="page-title" style="margin-bottom: 0;">👥 Manage Students</h1>
+            <button class="btn btn-primary" onclick="showAddForm()">+ Add Student</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="card">
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div class="form-group" style="margin-bottom: 0; min-width: 120px;">
+                    <label for="filterDept">Department</label>
+                    <select id="filterDept" onchange="loadStudents()">
+                        <option value="">All</option>
+                        <option value="BCA">BCA</option>
+                        <option value="BBA">BBA</option>
+                        <option value="BA">BA</option>
+                        <option value="BCOM">BCOM</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0; min-width: 120px;">
+                    <label for="filterSem">Semester</label>
+                    <select id="filterSem" onchange="loadStudents()">
+                        <option value="">All</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                    <label for="search">Search</label>
+                    <input type="text" id="search" placeholder="Roll number or name..." onkeyup="searchStudents()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Semester</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: #64748b;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal"
+        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="card" style="width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <h3 id="modalTitle" class="card-title">Add New Student</h3>
+            <form id="studentForm">
+                <input type="hidden" id="editId" value="">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rollNumber">Roll Number *</label>
+                        <input type="text" id="rollNumber" required placeholder="e.g., BCA25001">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" required placeholder="Student name">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dob">Date of Birth *</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dept">Department *</label>
+                        <select id="dept" required>
+                            <option value="">Select</option>
+                            <option value="BCA">BCA</option>
+                            <option value="BBA">BBA</option>
+                            <option value="BA">BA</option>
+                            <option value="BCOM">BCOM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="semester">Semester *</label>
+                        <select id="semester" required>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" id="phone" placeholder="Phone number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Email address">
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary">Save Student</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkAdminLogin()) { }
+
+        // Get admin info
+        var admin = getAdminInfo();
+        document.getElementById('adminName').textContent = admin.name;
+
+        var allStudents = [];
+
+        // Load students
+        loadStudents();
+
+        function loadStudents() {
+            var dept = document.getElementById('filterDept').value;
+            var sem = document.getElementById('filterSem').value;
+
+            var url = '../api/get-students.php?';
+            if (dept) url += 'dept=' + dept + '&';
+            if (sem) url += 'semester=' + sem;
+
+            fetch(url)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        allStudents = data.data;
+                        renderStudents(allStudents);
+                    }
+                });
+        }
+
+        function renderStudents(students) {
+            var tbody = document.getElementById('studentsTable');
+
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #64748b;">No students found</td></tr>';
+                return;
+            }
+
+            var html = '';
+            students.forEach(function (s) {
+                html += '<tr>';
+                html += '<td><strong>' + s.roll_number + '</strong></td>';
+                html += '<td>' + s.name + '</td>';
+                html += '<td><span class="badge badge-info">' + s.dept_code + '</span></td>';
+                html += '<td>' + s.semester + '</td>';
+                html += '<td>' + (s.email || '-') + '</td>';
+                html += '<td>' + (s.phone || '-') + '</td>';
+                html += '<td>';
+                html += '<button class="btn btn-sm btn-outline" onclick="editStudent(\'' + s.roll_number + '\')">Edit</button> ';
+                html += '<button class="btn btn-sm btn-danger" onclick="deleteStudent(\'' + s.roll_number + '\')">Delete</button>';
+                html += '</td>';
+                html += '</tr>';
+            });
+            tbody.innerHTML = html;
+        }
+
+        function searchStudents() {
+            var search = document.getElementById('search').value.toLowerCase();
+            if (!search) {
+                renderStudents(allStudents);
+                return;
+            }
+
+            var filtered = allStudents.filter(function (s) {
+                return s.roll_number.toLowerCase().includes(search) ||
+                    s.name.toLowerCase().includes(search);
+            });
+            renderStudents(filtered);
+        }
+
+        function showAddForm() {
+            document.getElementById('modalTitle').textContent = 'Add New Student';
+            document.getElementById('studentForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('rollNumber').disabled = false;
+            document.getElementById('studentModal').style.display = 'flex';
+        }
+
+        function editStudent(roll) {
+            var student = allStudents.find(function (s) { return s.roll_number === roll; });
+            if (!student) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Student';
+            document.getElementById('editId').value = student.student_id;
+            document.getElementById('rollNumber').value = student.roll_number;
+            document.getElementById('rollNumber').disabled = true;
+            document.getElementById('name').value = student.name;
+            document.getElementById('dob').value = student.dob;
+            document.getElementById('dept').value = student.dept_code;
+            document.getElementById('semester').value = student.semester;
+            document.getElementById('email').value = student.email || '';
+            document.getElementById('phone').value = student.phone || '';
+            document.getElementById('studentModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none';
+        }
+
+        function deleteStudent(roll) {
+            if (!confirm('Are you sure you want to delete student ' + roll + '?')) return;
+
+            var formData = new FormData();
+            formData.append('roll_number', roll);
+
+            fetch('../api/delete-student.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert('Student deleted successfully', 'success');
+                        loadStudents();
+                    } else {
+                        showAlert(data.message, 'error');
+                    }
+                });
+        }
+
+        // Form submit
+        document.getElementById('studentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData();
+            formData.append('roll_number', document.getElementById('rollNumber').value.toUpperCase());
+            formData.append('name', document.getElementById('name').value);
+            formData.append('dob', document.getElementById('dob').value);
+            formData.append('dept_code', document.getElementById('dept').value);
+            formData.append('semester', document.getElementById('semester').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('phone', document.getElementById('phone').value);
+
+            var editId = document.getElementById('editId').value;
+            var url = editId ? '../api/update-student.php' : '../api/add-student.php';
+            if (editId) formData.append('student_id', editId);
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showAlert(editId ? 'Student updated' : 'Student added', 'success');
+                        closeModal();
+                        loadStudents();
+                    } else {
+                        showAlert(data.message, 'error');
+                    }
+                });
+        });
+    </script>
+</body>
+
+</html>

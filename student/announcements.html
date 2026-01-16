@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <div>
+                <div class="college-name">ICC Companion</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName">Student</strong></span>
+            <button class="btn-logout" onclick="logout('student')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html" class="active">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">📢 Announcements</h1>
+
+        <!-- Announcements List -->
+        <div id="announcementsList">
+            <div style="text-align: center; padding: 40px; color: #64748b;">Loading announcements...</div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkStudentLogin()) {
+            // Will redirect to login
+        }
+
+        // Get student info and display
+        var student = getStudentInfo();
+        document.getElementById('userName').textContent = student.name;
+
+        // Load announcements
+        loadAnnouncements();
+
+        function loadAnnouncements() {
+            fetch('../api/get-announcements.php')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var container = document.getElementById('announcementsList');
+
+                    if (data.success && data.data.length > 0) {
+                        var html = '';
+
+                        data.data.forEach(function (item) {
+                            var priorityClass = item.priority === 'high' ? 'high' : '';
+                            var priorityBadge = '';
+                            if (item.priority === 'high') {
+                                priorityBadge = '<span class="badge badge-danger">Urgent</span> ';
+                            } else if (item.priority === 'medium') {
+                                priorityBadge = '<span class="badge badge-warning">Important</span> ';
+                            }
+
+                            html += '<div class="card announcement-item ' + priorityClass + '" style="border-left: 4px solid ' + (item.priority === 'high' ? 'var(--danger)' : 'var(--primary)') + ';">';
+                            html += '  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">';
+                            html += '    <div class="title" style="font-size: 16px;">' + priorityBadge + item.title + '</div>';
+                            html += '    <div class="date" style="font-size: 12px; color: #64748b; white-space: nowrap;">' + formatDate(item.created_at) + '</div>';
+                            html += '  </div>';
+                            html += '  <div style="font-size: 14px; color: #475569; line-height: 1.6;">' + item.description + '</div>';
+                            if (item.target_dept !== 'all' || item.target_semester !== 'all') {
+                                html += '  <div style="margin-top: 10px; font-size: 12px; color: #64748b;">';
+                                html += '    For: ';
+                                if (item.target_dept !== 'all') html += item.target_dept + ' ';
+                                if (item.target_semester !== 'all') html += 'Semester ' + item.target_semester;
+                                html += '  </div>';
+                            }
+                            html += '</div>';
+                        });
+
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div class="card" style="text-align: center; color: #64748b;">No announcements at this time.</div>';
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    document.getElementById('announcementsList').innerHTML = '<div class="alert alert-error">Failed to load announcements</div>';
+                });
+        }
+    </script>
+</body>
+
+</html>

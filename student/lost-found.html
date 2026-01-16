@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <div>
+                <div class="college-name">ICC Companion</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName">Student</strong></span>
+            <button class="btn-logout" onclick="logout('student')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="lost-found.html" class="active">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">🔍 Lost & Found</h1>
+
+        <!-- Filters -->
+        <div class="card">
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div class="form-group" style="margin-bottom: 0; min-width: 120px;">
+                    <label for="itemType">Type</label>
+                    <select id="itemType" onchange="loadItems()">
+                        <option value="">All</option>
+                        <option value="lost">Lost</option>
+                        <option value="found">Found</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0; min-width: 140px;">
+                    <label for="category">Category</label>
+                    <select id="category" onchange="loadItems()">
+                        <option value="">All Categories</option>
+                        <option value="id-card">ID Cards</option>
+                        <option value="phone">Phones</option>
+                        <option value="wallet">Wallets</option>
+                        <option value="books">Books</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Grid -->
+        <div id="itemsGrid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+            <div style="text-align: center; padding: 40px; color: #64748b; grid-column: 1/-1;">Loading items...</div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkStudentLogin()) {
+            // Will redirect to login
+        }
+
+        // Get student info and display
+        var student = getStudentInfo();
+        document.getElementById('userName').textContent = student.name;
+
+        // Load items
+        loadItems();
+
+        function loadItems() {
+            var itemType = document.getElementById('itemType').value;
+            var category = document.getElementById('category').value;
+
+            var url = '../api/get-lost-found.php?status=active';
+            if (itemType) url += '&type=' + itemType;
+            if (category) url += '&category=' + category;
+
+            fetch(url)
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var container = document.getElementById('itemsGrid');
+
+                    if (data.success && data.data.length > 0) {
+                        var html = '';
+
+                        data.data.forEach(function (item) {
+                            var typeClass = item.item_type === 'lost' ? 'badge-danger' : 'badge-success';
+                            var icon = getCategoryIcon(item.category);
+
+                            html += '<div class="item-card">';
+                            html += '  <div class="item-image">' + icon + '</div>';
+                            html += '  <div class="item-details">';
+                            html += '    <span class="badge ' + typeClass + '" style="margin-bottom: 8px;">' + item.item_type.toUpperCase() + '</span>';
+                            html += '    <div class="item-title">' + item.title + '</div>';
+                            html += '    <div class="item-location">📍 ' + item.location + '</div>';
+                            html += '    <div style="font-size: 12px; color: #64748b; margin-bottom: 10px;">📅 ' + formatDate(item.item_date) + '</div>';
+                            if (item.description) {
+                                html += '    <div style="font-size: 13px; color: #475569; margin-bottom: 10px;">' + item.description.substring(0, 100) + '</div>';
+                            }
+                            html += '    <div style="font-size: 12px; background: #f1f5f9; padding: 8px; border-radius: 4px;">📞 ' + item.contact_info + '</div>';
+                            html += '  </div>';
+                            html += '</div>';
+                        });
+
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b; grid-column: 1/-1;">No items found matching your filters.</div>';
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error:', error);
+                    document.getElementById('itemsGrid').innerHTML = '<div class="alert alert-error" style="grid-column: 1/-1;">Failed to load items</div>';
+                });
+        }
+
+        function getCategoryIcon(category) {
+            var icons = {
+                'id-card': '🪪',
+                'phone': '📱',
+                'wallet': '👛',
+                'books': '📚',
+                'electronics': '🔌',
+                'other': '📦'
+            };
+            return icons[category] || '📦';
+        }
+    </script>
+</body>
+
+</html>
