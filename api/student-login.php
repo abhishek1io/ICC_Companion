@@ -1,17 +1,14 @@
 <?php
-// =============================================
-// STUDENT LOGIN API
-// =============================================
-
+error_reporting(0);
 session_start();
 include 'config.php';
 
 // Get POST data
 $roll_number = isset($_POST['roll_number']) ? trim($_POST['roll_number']) : '';
-$dob = isset($_POST['dob']) ? trim($_POST['dob']) : '';
+$dob_input = isset($_POST['dob']) ? trim($_POST['dob']) : '';
 
 // Validate inputs
-if (empty($roll_number) || empty($dob)) {
+if (empty($roll_number) || empty($dob_input)) {
     sendResponse(false, 'Please enter roll number and date of birth');
 }
 
@@ -29,8 +26,11 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
 if ($row = mysqli_fetch_assoc($result)) {
-    // Check if DOB matches
-    if ($row['dob'] === $dob) {
+    // Check if DOB matches (using strtotime for robustness)
+    $db_dob = date('Y-m-d', strtotime($row['dob']));
+    $user_dob = date('Y-m-d', strtotime($dob_input));
+
+    if ($db_dob === $user_dob) {
         // Login successful - set session
         $_SESSION['student_roll'] = $row['roll_number'];
         $_SESSION['student_name'] = $row['name'];

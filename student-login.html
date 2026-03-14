@@ -41,6 +41,13 @@
 
     <script src="js/main.js"></script>
     <script>
+        // Check if running on Live Server
+        if (window.location.port === '5500') {
+            alert('CRITICAL: You are using VS Code Live Server (port 5500). PHP will NOT work here.\n\nPlease use: http://localhost/ICC_Companion/student-login.html');
+            document.body.innerHTML = '<div style="background:#fff; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; padding:20px;"><h1 style="color:#e11d48; margin-bottom:10px;">XAMPP Required</h1><p style="color:#4b5563; font-size:18px;">This project requires a PHP server. Please use the URL below:</p><code style="background:#f3f4f6; padding:10px 20px; border-radius:8px; font-weight:bold; margin:20px 0; color:#1f2937;">http://localhost/ICC_Companion/student-login.html</code><p><a href="http://localhost/ICC_Companion/student-login.html" style="color:#2563eb; text-decoration:none; font-weight:bold;">Click here to open in XAMPP</a></p></div>';
+            throw new Error('PHP required');
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -84,7 +91,7 @@
                     }
                 })
                 .catch(function (error) {
-                    showError('Login failed. Please try again.');
+                    showError('Login failed: ' + error.message + '. Please ensure you are at http://localhost/ICC_Companion/');
                     console.error('Error:', error);
                 });
         });

@@ -39,7 +39,9 @@ function sendResponse($success, $message, $data = null) {
 
 // Helper function to check if user is logged in (for protected APIs)
 function checkStudentLogin() {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     if (!isset($_SESSION['student_roll'])) {
         sendResponse(false, 'Please login first');
     }
@@ -47,10 +49,11 @@ function checkStudentLogin() {
 }
 
 function checkAdminLogin() {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     if (!isset($_SESSION['admin_id'])) {
         sendResponse(false, 'Admin login required');
     }
     return $_SESSION['admin_id'];
 }
-?>
