@@ -168,9 +168,12 @@
                     </div>
                 </div>
                 <div class="checkbox-list" id="markStudentsList"></div>
-                <div style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
-                    <button class="btn btn-success" onclick="saveAttendance()">💾 Save Attendance</button>
-                    <span id="selectedCount" style="color: #64748b;">0 selected</span>
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn btn-success" onclick="saveAttendance()">💾 Save Attendance</button>
+                        <span id="selectedCount" style="color: #64748b;">0 selected</span>
+                    </div>
+                    <div id="saveStatus" style="margin-top: 10px; color: #22c55e; font-weight: 500; display: none;">✅ Attendance saved!</div>
                 </div>
             </div>
         </div>
@@ -316,8 +319,14 @@
                 .then(function (d) {
                     if (d.success) {
                         showAlert('Attendance saved!', 'success');
-                        // Only hide the students list UI, don't clear the top select fields
-                        document.getElementById('markStudentsCard').style.display = 'none';
+                        
+                        // Show message below button
+                        var statusMsg = document.getElementById('saveStatus');
+                        statusMsg.style.display = 'block';
+                        setTimeout(function() { statusMsg.style.display = 'none'; }, 3000);
+
+                        // Refetch the updated records to show the current state
+                        loadStudentsToMark();
                     }
                 });
         }

@@ -95,7 +95,7 @@
         loadExams();
 
         function loadScheduleFiles() {
-            fetch('../api/get-exam-schedules.php')
+            fetch('../api/get-exam-schedules.php?dept=' + student.dept + '&semester=' + student.semester)
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     if (data.success) {

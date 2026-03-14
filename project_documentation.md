@@ -103,4 +103,25 @@ The project followed a structured 30-day development cycle:
 1. **Week 1 (Foundation)**: Core architecture, Database setup, and Authentication.
 2. **Week 2 (Student Experience)**: Implementation of Attendance, Timetable, and Lost & Found modules.
 3. **Week 3 (Admin Control)**: Development of management tools for students, attendance, and exams.
-4. **Week 4 (Polish & Deployment)**: Announcement system, UI/UX refinements, and final verification.
+1. **Week 4 (Polish & Deployment)**: Announcement system, UI/UX refinements, and final verification.
+
+---
+
+## 🛠️ Technical Depth (Self-Study for Viva)
+
+To explain this project properly during your presentation, focus on these three professional-grade implementations:
+
+### 1. Database Transactions (`ACID` Properties)
+In the attendance system (`save-attendance.php`), we use **Transactions**. 
+- **Concept**: Atomic operations. Either all attendance records are saved, or none are.
+- **Why**: Prevents a situation where half the class is marked present but a database error stops the rest, leaving the data in a "half-saved" state.
+
+### 2. SQL Injection Prevention (Prepared Statements)
+All user-provided data is handled via **Prepared Statements** (`mysqli_prepare`).
+- **Concept**: Separation of SQL logic from User Data.
+- **Why**: This is the industry standard for security. It ensures that a malicious user cannot enter "Roll Number: `1; DROP TABLE students;`" and delete your data.
+
+### 3. Asynchronous Data Handling (Fetch API & JSON)
+The system uses the **AJAX** model via the modern JavaScript **Fetch API**.
+- **Concept**: Asynchronous communication.
+- **Why**: Traditional PHP websites refresh the whole page for every click. This project updates only the necessary data blocks (JSON), making it feel like a modern "Single Page Application" (SPA) while still using fundamentally solid PHP.

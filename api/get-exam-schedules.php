@@ -6,13 +6,38 @@
 include 'config.php';
 
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
+$dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
+$semester = isset($_GET['semester']) ? intval($_GET['semester']) : 0;
 
-$sql = "SELECT * FROM exam_schedules";
+$sql = "SELECT * FROM exam_schedules WHERE 1=1";
+$params = [];
+$types = "";
+
 if (!empty($type)) {
-    $sql .= " WHERE schedule_type = '" . mysqli_real_escape_string($conn, $type) . "'";
+    $sql .= " AND schedule_type = ?";
+    $params[] = $type;
+    $types .= "s";
 }
 
-$result = mysqli_query($conn, $sql);
+if (!empty($dept)) {
+    $sql .= " AND (dept_code = ? OR dept_code IS NULL)";
+    $params[] = $dept;
+    $types .= "s";
+}
+
+if ($semester > 0) {
+    $sql .= " AND (semester = ? OR semester IS NULL)";
+    $params[] = $semester;
+    $types .= "i";
+}
+
+$stmt = mysqli_prepare($conn, $sql);
+if (!empty($params)) {
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+}
+
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 $schedules = [];
 while ($row = mysqli_fetch_assoc($result)) {

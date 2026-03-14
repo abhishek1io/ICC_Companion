@@ -84,6 +84,7 @@
                         <tr>
                             <th>Roll Number</th>
                             <th>Name</th>
+                            <th>DOB</th>
                             <th>Department</th>
                             <th>Semester</th>
                             <th>Email</th>
@@ -214,6 +215,7 @@
                 html += '<tr>';
                 html += '<td><strong>' + s.roll_number + '</strong></td>';
                 html += '<td>' + s.name + '</td>';
+                html += '<td>' + (s.dob || '-') + '</td>';
                 html += '<td><span class="badge badge-info">' + s.dept_code + '</span></td>';
                 html += '<td>' + s.semester + '</td>';
                 html += '<td>' + (s.email || '-') + '</td>';
