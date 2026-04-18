@@ -5,34 +5,520 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICC Companion - ICON COMMERCE COLLEGE</title>
+    <meta name="description" content="ICC Companion — the all-in-one student portal for ICON Commerce College. Track attendance, exams, routines and more.">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        /* ── Base ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        a { text-decoration: none; }
+
+        /* ══════════════════════════════════════
+           NAVBAR
+        ══════════════════════════════════════ */
+        .navbar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 56px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: white;
+        }
+
+        .nav-brand-icon { font-size: 28px; line-height: 1; }
+
+        .nav-brand-name { font-size: 17px; font-weight: 700; display: block; }
+        .nav-brand-sub  { font-size: 10px; opacity: 0.7; letter-spacing: .08em; text-transform: uppercase; }
+
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+        .nbtn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all .2s;
+        }
+
+        .nbtn-ghost {
+            background: rgba(255,255,255,.12);
+            border: 1.5px solid rgba(255,255,255,.35);
+            color: white;
+        }
+        .nbtn-ghost:hover { background: rgba(255,255,255,.22); color: white; }
+
+        .nbtn-white {
+            background: white;
+            color: #2563eb;
+            box-shadow: 0 2px 10px rgba(0,0,0,.14);
+        }
+        .nbtn-white:hover { background: #eff6ff; color: #1d4ed8; }
+
+        /* hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px; height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all .3s;
+        }
+
+        /* mobile nav drawer */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15,23,42,.92);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav-close {
+            position: absolute;
+            top: 24px; right: 24px;
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .mobile-nav a {
+            display: block;
+            width: 260px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .mobile-nav a.mn-student { background: #2563eb; color: white; }
+        .mobile-nav a.mn-admin   { background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.3); color: white; }
+
+        /* ══════════════════════════════════════
+           HERO
+        ══════════════════════════════════════ */
+        .hero {
+            background: linear-gradient(140deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 130px 24px 90px;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 680px;
+            animation: fadeUp .6s ease both;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,.14);
+            border: 1px solid rgba(255,255,255,.28);
+            border-radius: 100px;
+            padding: 6px 18px;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 26px;
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 0 3px rgba(74,222,128,.3);
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5.5vw, 60px);
+            font-weight: 800;
+            color: white;
+            line-height: 1.1;
+            letter-spacing: -.03em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: #bfdbfe;
+        }
+
+        .hero-sub {
+            font-size: clamp(15px, 2vw, 18px);
+            color: rgba(255,255,255,.8);
+            max-width: 520px;
+            margin: 0 auto 44px;
+        }
+
+        /* Login buttons inside hero */
+        .hero-login {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .hlbtn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 28px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            transition: transform .2s, box-shadow .2s, opacity .2s;
+        }
+
+        .hlbtn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hlbtn-student {
+            background: white;
+            color: #1d4ed8;
+            box-shadow: 0 6px 24px rgba(0,0,0,.2);
+        }
+        .hlbtn-student:hover {
+            box-shadow: 0 10px 32px rgba(0,0,0,.25);
+            color: #1d4ed8;
+        }
+
+        .hlbtn-admin {
+            background: rgba(255,255,255,.12);
+            border: 1.5px solid rgba(255,255,255,.35);
+            color: white;
+            backdrop-filter: blur(6px);
+        }
+        .hlbtn-admin:hover { background: rgba(255,255,255,.2); color: white; }
+
+        .hlbtn-hint {
+            font-size: 11px;
+            font-weight: 400;
+            opacity: .65;
+        }
+
+        /* scroll arrow */
+        .scroll-arrow {
+            position: absolute;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,.4);
+            font-size: 22px;
+            z-index: 2;
+            animation: bob 2.2s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50%       { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* ══════════════════════════════════════
+           FEATURES SECTION
+        ══════════════════════════════════════ */
+        .features {
+            background: white;
+            padding: 80px 24px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .section-head {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .sec-label {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin-bottom: 14px;
+        }
+
+        .sec-title {
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: -.02em;
+            margin-bottom: 12px;
+        }
+
+        .sec-desc {
+            font-size: 15.5px;
+            color: #64748b;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            max-width: 1060px;
+            margin: 0 auto;
+        }
+
+        .feat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 28px 24px;
+            transition: transform .22s, box-shadow .22s, border-color .22s;
+        }
+
+        .feat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(37,99,235,.1);
+            border-color: #bfdbfe;
+            background: white;
+        }
+
+        .feat-icon-wrap {
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+
+        .ic-blue   { background: #dbeafe; }
+        .ic-green  { background: #d1fae5; }
+        .ic-orange { background: #fef3c7; }
+        .ic-purple { background: #ede9fe; }
+        .ic-pink   { background: #fce7f3; }
+        .ic-teal   { background: #ccfbf1; }
+
+        .feat-card h3 {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .feat-card p {
+            font-size: 13.5px;
+            color: #64748b;
+            line-height: 1.65;
+        }
+
+        /* ══════════════════════════════════════
+           FOOTER
+        ══════════════════════════════════════ */
+        .landing-footer {
+            background: #0f172a;
+            color: rgba(255,255,255,.4);
+            text-align: center;
+            padding: 26px 24px;
+            font-size: 12.5px;
+        }
+
+        /* ══════════════════════════════════════
+           ANIMATIONS
+        ══════════════════════════════════════ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ══════════════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════════════ */
+
+        /* Tablet (≤ 900px) */
+        @media (max-width: 900px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Large mobile / small tablet (≤ 700px) */
+        @media (max-width: 700px) {
+            .navbar { padding: 16px 20px; }
+
+            .nav-actions { display: none; }
+            .hamburger  { display: flex; }
+
+            .hero { padding: 110px 20px 80px; }
+            .hero-login { max-width: 100%; }
+
+            .hlbtn { padding: 14px 20px; font-size: 14.5px; }
+        }
+
+        /* Small mobile (≤ 480px) */
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features { padding: 56px 18px; }
+
+            .hero h1 { font-size: 32px; }
+            .hero-sub { font-size: 14.5px; }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="login-page">
-        <div class="login-box">
-            <div class="logo">
-                <div class="logo-icon">🎓</div>
-            </div>
-            <h1>ICON COMMERCE COLLEGE</h1>
-            <p class="subtitle">ICC Companion - Choose your login type</p>
 
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <a href="student-login.html" class="btn btn-primary" style="text-align: center;">
-                    👨‍🎓 Student Login
-                </a>
-                <a href="admin-login.html" class="btn btn-outline" style="text-align: center;">
-                    🔐 Admin Login
-                </a>
-            </div>
-
-            <div
-                style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b; font-size: 13px;">
-                <p>Students: Login with Roll Number + Date of Birth</p>
-                <p style="margin-top: 5px;">Admin: Login with Username + Password</p>
+    <!-- ══ NAVBAR ══════════════════════════════════════════ -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-brand-icon">🎓</span>
+            <div>
+                <span class="nav-brand-name">ICC Companion</span>
+                <span class="nav-brand-sub">ICON Commerce College</span>
             </div>
         </div>
-    </div>
-</body>
 
+        <!-- Desktop buttons -->
+        <div class="nav-actions">
+            <a href="admin-login.html" class="nbtn nbtn-ghost" id="navAdminBtn">🔐 Admin Login</a>
+            <a href="student-login.html" class="nbtn nbtn-white" id="navStudentBtn">👨‍🎓 Student Login</a>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <div class="hamburger" id="hamburger" onclick="openMobileNav()">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-nav" id="mobileNav">
+        <span class="mobile-nav-close" onclick="closeMobileNav()">✕</span>
+        <a href="student-login.html" class="mn-student" id="mobileStudentBtn">👨‍🎓 Student Login</a>
+        <a href="admin-login.html"   class="mn-admin"   id="mobileAdminBtn">🔐 Admin Login</a>
+    </div>
+
+    <!-- ══ HERO ════════════════════════════════════════════ -->
+    <section class="hero">
+        <div class="hero-inner">
+
+            <h1>Your College Life,<br><em>All in One Place</em></h1>
+
+            <p class="hero-sub">
+                Attendance, exam schedules, class routines, announcements &amp; more —
+                built for all students at ICON Commerce College.
+            </p>
+
+            <div class="hero-login">
+                <a href="student-login.html" class="hlbtn hlbtn-student" id="heroStudentBtn">
+                    👨‍🎓 &nbsp;Student Login
+                </a>
+                <a href="admin-login.html" class="hlbtn hlbtn-admin" id="heroAdminBtn">
+                    🔐 &nbsp;Admin Login
+                </a>
+            </div>
+
+        </div>
+
+        <div class="scroll-arrow">↓</div>
+    </section>
+
+    <!-- ══ FEATURES ════════════════════════════════════════ -->
+    <section class="features" id="features">
+        <div class="section-head">
+            <span class="sec-label">What's Inside</span>
+            <h2 class="sec-title">Everything You Need, One Portal</h2>
+            <p class="sec-desc">All the tools ICC students need to stay on top of their academic life.</p>
+        </div>
+
+        <div class="features-grid">
+
+            <div class="feat-card">
+                <div class="feat-icon-wrap ic-blue">📊</div>
+                <h3>Attendance Tracker</h3>
+                <p>Monitor your attendance percentage per subject in real-time. Know exactly how many lectures you can miss while staying safely above the 75% threshold.</p>
+            </div>
+
+            <div class="feat-card">
+                <div class="feat-icon-wrap ic-green">📅</div>
+                <h3>Exam Schedules</h3>
+                <p>Access up-to-date internal and final exam timetables filtered by your department and semester. Never miss a paper again.</p>
+            </div>
+
+            <div class="feat-card">
+                <div class="feat-icon-wrap ic-orange">📋</div>
+                <h3>Class Routines</h3>
+                <p>Check your weekly class timetable at a glance. Filter by department and semester to see exactly what's happening today and this week.</p>
+            </div>
+
+            <div class="feat-card">
+                <div class="feat-icon-wrap ic-purple">📢</div>
+                <h3>Announcements</h3>
+                <p>Stay in the loop with instant college notices — from exam postponements to events. High-priority alerts are flagged clearly so nothing slips through.</p>
+            </div>
+
+            <div class="feat-card">
+                <div class="feat-icon-wrap ic-pink">🔍</div>
+                <h3>Lost &amp; Found</h3>
+                <p>Report a lost item or browse items found on campus. A simple board to help students and staff reconnect belongings quickly without any hassle.</p>
+            </div>
+
+            <div class="feat-card">
+                <div class="feat-icon-wrap ic-teal">🛡️</div>
+                <h3>Secure &amp; Private</h3>
+                <p>Login with your Roll Number and Date of Birth — no password to remember. Your data is securely stored and only accessible to you and authorised admin.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══ FOOTER ══════════════════════════════════════════ -->
+    <footer class="landing-footer">
+        © 2025 ICC Companion &nbsp;·&nbsp; ICON Commerce College &nbsp;·&nbsp; All rights reserved
+    </footer>
+
+    <script>
+        function openMobileNav()  { document.getElementById('mobileNav').classList.add('open'); }
+        function closeMobileNav() { document.getElementById('mobileNav').classList.remove('open'); }
+    </script>
+
+</body>
 </html>
