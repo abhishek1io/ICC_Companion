@@ -323,6 +323,26 @@ INSERT INTO class_routines (title, file_url, dept_code, semester) VALUES
 ('BCA Semester 5 Weekly Routine', 'uploads/routines/bca_sem5_routine.pdf', 'BCA', '5');
 
 -- =============================================
+-- TABLE 11: RESOURCES (Syllabus, Books, Materials, Links, Text)
+-- =============================================
+CREATE TABLE resources (
+    resource_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    resource_type ENUM('syllabus', 'book', 'material', 'link', 'text', 'others') NOT NULL,
+    file_url VARCHAR(255),
+    link_url TEXT,
+    content_text TEXT,
+    dept_code VARCHAR(10) NOT NULL,
+    semester VARCHAR(10) NOT NULL,
+    subject_id INT,
+    posted_by VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dept_code) REFERENCES departments(dept_code),
+    FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
+);
+
+-- =============================================
 -- TABLE 10: EXAM SCHEDULES (One file per type)
 -- =============================================
 CREATE TABLE exam_schedules (
