@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subjects - ICC Companion</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <div>
+                <div class="college-name">ICC Companion</div>
+                <div class="college-short">ICON COMMERCE COLLEGE</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-name" id="userName">-</span>
+            <button class="btn-logout" onclick="logout('student')">Logout</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li><a href="subjects.html" class="active">📖 Subjects</a></li>
+            <li><a href="attendance.html">📊 Attendance</a></li>
+            <li><a href="exams.html">📅 Exams</a></li>
+            <li><a href="routines.html">📋 Routines</a></li>
+            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li><a href="announcements.html">📢 Announcements</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">📖 My Subjects</h1>
+
+        <!-- Student Info (Auto-populated) -->
+        <div class="card" style="margin-bottom: 20px;">
+            <p style="color: #64748b; margin: 0;">Showing subjects for: <strong id="studentContext" style="color: var(--dark);">-</strong></p>
+        </div>
+
+        <!-- Subjects List Container -->
+        <div id="subjectsList" class="dashboard-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+            <!-- Subjects will be loaded here -->
+            <div class="card" style="text-align: center; color: #64748b; padding: 40px; grid-column: 1/-1;">
+                Loading your subjects...
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check if logged in
+        if (!checkStudentLogin()) { }
+
+        // Get student info
+        var student = getStudentInfo();
+        document.getElementById('userName').textContent = student.name;
+        document.getElementById('studentContext').textContent = (student.dept || 'N/A') + ' - Semester ' + (student.semester || 'N/A');
+
+        // Load subjects
+        loadSubjects();
+
+        function loadSubjects() {
+            var container = document.getElementById('subjectsList');
+            if (!student.dept || !student.semester) {
+                container.innerHTML = '<div class="card" style="text-align: center; color: #ef4444; padding: 40px; grid-column: 1/-1;">Session error: Department or Semester not found. Please relogin.</div>';
+                return;
+            }
+            
+            fetch('../api/get-subjects.php?dept=' + student.dept + '&semester=' + student.semester)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success && data.data.length > 0) {
+                        var html = '';
+                        data.data.forEach(function(s) {
+                            html += '<div class="card" style="display: flex; flex-direction: column; gap: 8px; border-left: 4px solid var(--primary);">';
+                            html += '<div style="font-size: 12px; font-weight: 600; color: var(--primary); letter-spacing: 0.05em;">' + s.subject_code + '</div>';
+                            html += '<div style="font-size: 16px; font-weight: 600; color: var(--dark);">' + s.subject_name + '</div>';
+                            html += '<div style="font-size: 13px; color: #64748b;">' + s.dept_code + ' | Semester ' + s.semester + '</div>';
+                            html += '</div>';
+                        });
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div class="card" style="text-align: center; color: #64748b; padding: 40px; grid-column: 1/-1;">No subjects found for your course and semester.</div>';
+                    }
+                })
+                .catch(function(err) {
+                    container.innerHTML = '<div class="card" style="text-align: center; color: #ef4444; padding: 40px; grid-column: 1/-1;">Error loading subjects. Please try again later.</div>';
+                });
+        }
+    </script>
+</body>
+
+</html>
