@@ -8,6 +8,9 @@
     <meta name="description" content="ICC Companion — the all-in-one student portal for ICON Commerce College.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
     <style>
 
         /* ── Hero ──────────────────────────────── */
@@ -19,10 +22,15 @@
         }
 
         .landing-hero h1 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            line-height: 1.2;
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(38px, 6vw, 58px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, #bae6fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
         }
 
         .landing-hero .hero-badge {
