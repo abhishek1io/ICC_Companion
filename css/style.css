@@ -61,16 +61,16 @@ a {
 }
 
 .header .logo-icon {
-    font-size: 28px;
+    font-size: clamp(22px, 5vw, 28px);
 }
 
 .header .college-name {
-    font-size: 18px;
+    font-size: clamp(14px, 4vw, 18px);
     font-weight: 600;
 }
 
 .header .college-short {
-    font-size: 12px;
+    font-size: clamp(10px, 2.5vw, 12px);
     opacity: 0.9;
 }
 
