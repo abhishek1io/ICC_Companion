@@ -664,9 +664,8 @@ table tr:hover {
    ============================================= */
 @media (max-width: 768px) {
     .header {
-        flex-direction: column;
         gap: 10px;
-        text-align: center;
+        text-align: left;
     }
 
     .nav-menu ul {

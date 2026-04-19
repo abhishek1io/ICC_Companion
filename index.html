@@ -12,7 +12,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
     <style>
-
         /* ── Hero ──────────────────────────────── */
         .landing-hero {
             background-color: var(--primary);
@@ -139,12 +138,29 @@
             margin: 0 auto 16px;
         }
 
-        .feat-icon.blue   { background-color: #dbeafe; }
-        .feat-icon.green  { background-color: #d1fae5; }
-        .feat-icon.orange { background-color: #fef3c7; }
-        .feat-icon.purple { background-color: #ede9fe; }
-        .feat-icon.pink   { background-color: #fce7f3; }
-        .feat-icon.teal   { background-color: #ccfbf1; }
+        .feat-icon.blue {
+            background-color: #dbeafe;
+        }
+
+        .feat-icon.green {
+            background-color: #d1fae5;
+        }
+
+        .feat-icon.orange {
+            background-color: #fef3c7;
+        }
+
+        .feat-icon.purple {
+            background-color: #ede9fe;
+        }
+
+        .feat-icon.pink {
+            background-color: #fce7f3;
+        }
+
+        .feat-icon.teal {
+            background-color: #ccfbf1;
+        }
 
         .feat-card h3 {
             font-size: 15px;
@@ -179,14 +195,30 @@
 
         /* ── Responsive ────────────────────────── */
         @media (max-width: 768px) {
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .landing-hero h1 { font-size: 26px; }
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .landing-hero h1 {
+                font-size: 26px;
+            }
         }
 
         @media (max-width: 480px) {
-            .features-grid { grid-template-columns: 1fr; }
-            .hero-login-btns { flex-direction: column; align-items: center; }
-            .hero-login-btns .btn { width: 100%; max-width: 300px; text-align: center; }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-login-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-login-btns .btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -215,7 +247,7 @@
         </p>
         <div class="hero-login-btns">
             <a href="student-login.html" class="btn btn-hero-student" id="heroStudentBtn">👨‍🎓 Student Login</a>
-            <a href="admin-login.html"   class="btn btn-hero-admin"   id="heroAdminBtn">🔐 Admin Login</a>
+            <a href="admin-login.html" class="btn btn-hero-admin" id="heroAdminBtn">🔐 Admin Login</a>
         </div>
     </div>
 
@@ -229,13 +261,15 @@
             <div class="feat-card">
                 <div class="feat-icon blue">📊</div>
                 <h3>Attendance Tracker</h3>
-                <p>Monitor per-subject attendance in real-time and know exactly where you stand against the 75% threshold.</p>
+                <p>Monitor per-subject attendance in real-time and know exactly where you stand against the 75%
+                    threshold.</p>
             </div>
 
             <div class="feat-card">
                 <div class="feat-icon green">📅</div>
                 <h3>Exam Schedules</h3>
-                <p>Access internal and final exam timetables filtered by your department and semester. Never miss a paper.</p>
+                <p>Access internal and final exam timetables filtered by your department and semester. Never miss a
+                    paper.</p>
             </div>
 
             <div class="feat-card">
@@ -271,4 +305,5 @@
     </div>
 
 </body>
+
 </html>
