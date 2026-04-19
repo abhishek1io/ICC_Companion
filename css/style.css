@@ -624,7 +624,20 @@ table tr:hover {
 .checkbox-list {
     background-color: white;
     border-radius: 8px;
-    box-shadow: var(--shadow);
+}
+
+.scrollable-list-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 10px 0;
+    background-color: #fafafa;
+}
+
+.scrollable-list-container .checkbox-list {
+    box-shadow: none;
+    border: none;
 }
 
 .checkbox-item {
