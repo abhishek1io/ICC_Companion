@@ -28,6 +28,7 @@
     <nav class="nav-menu">
         <ul>
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
+            <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Staff</a></li>
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="subjects.html">📖 Subjects</a></li>
             <li><a href="resources.html">📚 Resources</a></li>
@@ -140,6 +141,11 @@
 
         var admin = getAdminInfo();
         document.getElementById('adminName').textContent = admin.name;
+
+        // Show staff management if super-admin
+        if (admin.role === 'super-admin') {
+            document.getElementById('navStaff').style.display = 'block';
+        }
 
         loadAnnouncements();
 

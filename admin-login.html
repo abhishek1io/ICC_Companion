@@ -19,7 +19,15 @@
 
             <div id="errorMsg" class="alert alert-error hidden"></div>
 
+            <div class="login-tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button type="button" class="btn btn-outline active" id="adminTab" onclick="setLoginType('admin')"
+                    style="flex: 1; border-radius: 8px; font-size: 14px; padding: 10px;">👨‍💼 Staff</button>
+                <button type="button" class="btn btn-outline" id="superTab" onclick="setLoginType('super-admin')"
+                    style="flex: 1; border-radius: 8px; font-size: 14px; padding: 10px;">👑 Super Admin</button>
+            </div>
+
             <form id="loginForm">
+                <input type="hidden" id="loginType" value="admin">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Enter username" required>
@@ -30,18 +38,17 @@
                     <input type="password" id="password" name="password" placeholder="Enter password" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary" id="loginBtn">Login as Staff</button>
             </form>
 
             <div class="switch-login">
                 <a href="index.html">← Back to Home</a>
             </div>
 
-            <div
+            <div id="demoCreds"
                 style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: 5px; font-size: 12px; color: #64748b;">
-                <strong>Demo Credentials:</strong><br>
-                Username: admin<br>
-                Password: admin123
+                <strong>Staff Credentials:</strong><br>
+                Username: staff | Password: staff123
             </div>
         </div>
     </div>
@@ -55,11 +62,27 @@
             throw new Error('PHP required');
         }
 
+        function setLoginType(type) {
+            document.getElementById('loginType').value = type;
+            if (type === 'super-admin') {
+                document.getElementById('superTab').classList.add('active');
+                document.getElementById('adminTab').classList.remove('active');
+                document.getElementById('loginBtn').textContent = 'Login as Super Admin';
+                document.getElementById('demoCreds').innerHTML = '<strong>Super Admin Credentials:</strong><br>Username: admin | Password: admin123';
+            } else {
+                document.getElementById('adminTab').classList.add('active');
+                document.getElementById('superTab').classList.remove('active');
+                document.getElementById('loginBtn').textContent = 'Login as Staff';
+                document.getElementById('demoCreds').innerHTML = '<strong>Staff Credentials:</strong><br>Username: staff | Password: staff123';
+            }
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
             var username = document.getElementById('username').value.trim();
             var password = document.getElementById('password').value;
+            var expectedRole = document.getElementById('loginType').value;
             var errorMsg = document.getElementById('errorMsg');
 
             // Hide previous error
@@ -85,6 +108,12 @@
                 })
                 .then(function (data) {
                     if (data.success) {
+                        // Check if role matches what was selected (optional, but good for UX)
+                        if (data.data.role !== expectedRole && expectedRole === 'super-admin') {
+                            showError('This account does not have Super Admin privileges.');
+                            return;
+                        }
+
                         // Store admin info in session storage
                         sessionStorage.setItem('adminId', data.data.admin_id);
                         sessionStorage.setItem('adminName', data.data.name);
@@ -97,7 +126,7 @@
                     }
                 })
                 .catch(function (error) {
-                    showError('Login failed: ' + error.message + '. Please ensure you are at http://localhost/ICC_Companion/');
+                    showError('Login failed: ' + error.message);
                     console.error('Error:', error);
                 });
         });
