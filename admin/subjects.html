@@ -35,6 +35,7 @@
         <ul>
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
             <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Staff</a></li>
+            <li id="navDepts" style="display: none;"><a href="departments.html">🏢 Departments</a></li>
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="subjects.html" class="active">📖 Subjects</a></li>
             <li><a href="resources.html">📚 Resources</a></li>
@@ -129,24 +130,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="dept">Department *</label>
-                        <select id="dept" required>
-                            <option value="">Select Dept</option>
-                            <option value="BCA">BCA</option>
-                            <option value="BBA">BBA</option>
-                            <option value="BA">BA</option>
-                            <option value="BCOM">BCOM</option>
+                        <select id="dept" required onchange="updateSemesterDropdown('dept', 'semester')">
+                            <option value="">Loading...</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="semester">Semester *</label>
                         <select id="semester" required>
-                            <option value="">Select Sem</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
+                            <option value="">Select Dept first</option>
                         </select>
                     </div>
                 </div>
@@ -171,7 +162,12 @@
         // Show staff management if super-admin
         if (admin.role === 'super-admin') {
             document.getElementById('navStaff').style.display = 'block';
+            document.getElementById('navDepts').style.display = 'block';
         }
+
+        // Populate dynamic Depts
+        populateDepartments('dept');
+        populateDepartments('filterDept');
 
         // Apply restrictions for assigned staff
         applyRestrictions('filterDept', 'filterSem');

@@ -99,6 +99,7 @@
         <ul>
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
             <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Staff</a></li>
+            <li id="navDepts" style="display: none;"><a href="departments.html">🏢 Departments</a></li>
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="subjects.html">📖 Subjects</a></li>
             <li><a href="resources.html">📚 Resources</a></li>
@@ -128,24 +129,14 @@
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <div class="form-group" style="margin: 0; min-width: 120px;">
                         <label>Department</label>
-                        <select id="markDept" onchange="loadMarkSubjects()">
-                            <option value="">Select</option>
-                            <option value="BCA">BCA</option>
-                            <option value="BBA">BBA</option>
-                            <option value="BA">BA</option>
-                            <option value="BCOM">BCOM</option>
+                        <select id="markDept" onchange="updateSemesterDropdown('markDept', 'markSem'); loadMarkSubjects()">
+                            <option value="">Loading...</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin: 0; min-width: 100px;">
                         <label>Semester</label>
                         <select id="markSem" onchange="loadMarkSubjects()">
-                            <option value="">Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
+                            <option value="">Select Dept</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin: 0; min-width: 180px;">
@@ -189,28 +180,18 @@
             <div class="card">
                 <h3 class="card-title">View Attendance</h3>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
-                    <div class="form-group" style="margin: 0; min-width: 130px;">
-                        <label>Department *</label>
-                        <select id="viewDept" onchange="loadViewStudents()">
-                            <option value="">Select</option>
-                            <option value="BCA">BCA</option>
-                            <option value="BBA">BBA</option>
-                            <option value="BA">BA</option>
-                            <option value="BCOM">BCOM</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin: 0; min-width: 100px;">
-                        <label>Semester *</label>
-                        <select id="viewSem" onchange="loadViewStudents()">
-                            <option value="">Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                        </select>
-                    </div>
+                        <div class="form-group" style="margin: 0; min-width: 120px;">
+                            <label>Dept</label>
+                            <select id="viewDept" onchange="updateSemesterDropdown('viewDept', 'viewSem'); loadSummary()">
+                                <option value="">Loading...</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin: 0; min-width: 100px;">
+                            <label>Sem</label>
+                            <select id="viewSem" onchange="loadSummary()">
+                                <option value="">Select Dept</option>
+                            </select>
+                        </div>
                     <div class="form-group" style="margin: 0; min-width: 200px;">
                         <label>Student</label>
                         <select id="viewStudent">
@@ -239,7 +220,12 @@
         // Show staff management if super-admin
         if (admin.role === 'super-admin') {
             document.getElementById('navStaff').style.display = 'block';
+            document.getElementById('navDepts').style.display = 'block';
         }
+
+        // Populate Depts
+        populateDepartments('markDept');
+        populateDepartments('viewDept');
 
         // Apply restrictions for assigned staff
         applyRestrictions('markDept', 'markSem');

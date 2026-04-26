@@ -234,3 +234,42 @@ function setActiveNav(page) {
         }
     });
 }
+
+// Populate department dropdowns dynamically
+function populateDepartments(selectorId, callback) {
+    var selector = document.getElementById(selectorId);
+    if (!selector) return;
+
+    fetch('../api/get-departments.php')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                var currentVal = selector.value;
+                var html = selector.getAttribute('data-allow-all') === 'true' ? '<option value="all">All Departments</option>' : '<option value="">Select Dept</option>';
+                data.data.forEach(function(dept) {
+                    html += '<option value="' + dept.dept_code + '" data-max-sem="' + dept.max_semesters + '">' + dept.dept_name + ' (' + dept.dept_code + ')</option>';
+                });
+                selector.innerHTML = html;
+                if (currentVal) selector.value = currentVal;
+                if (callback) callback(data.data);
+            }
+        });
+}
+
+// Update semester dropdown based on selected department's max semesters
+function updateSemesterDropdown(deptSelectorId, semSelectorId) {
+    var deptEl = document.getElementById(deptSelectorId);
+    var semEl = document.getElementById(semSelectorId);
+    if (!deptEl || !semEl) return;
+
+    var selectedOption = deptEl.options[deptEl.selectedIndex];
+    var maxSem = selectedOption ? parseInt(selectedOption.getAttribute('data-max-sem')) : 6;
+    if (deptEl.value === 'all' || !deptEl.value) maxSem = 8; // Default fallback
+
+    var html = semEl.getAttribute('data-allow-all') === 'true' ? '<option value="all">All Semesters</option>' : '<option value="">Select Sem</option>';
+    for (var i = 1; i <= maxSem; i++) {
+        html += '<option value="' + i + '">' + i + '</option>';
+    }
+    semEl.innerHTML = html;
+}
+

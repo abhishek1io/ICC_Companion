@@ -35,6 +35,7 @@
         <ul>
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
             <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Staff</a></li>
+            <li id="navDepts" style="display: none;"><a href="departments.html">🏢 Departments</a></li>
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="subjects.html">📖 Subjects</a></li>
             <li><a href="resources.html">📚 Resources</a></li>
@@ -140,6 +141,7 @@
 
         if (admin.role === 'super-admin') {
             document.getElementById('navStaff').style.display = 'block';
+            document.getElementById('navDepts').style.display = 'block';
         }
 
         loadRoutines();
