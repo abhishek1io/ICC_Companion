@@ -10,6 +10,15 @@ $semester = isset($_GET['semester']) ? trim($_GET['semester']) : '';
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 $subject_id = isset($_GET['subject_id']) ? intval($_GET['subject_id']) : 0;
 
+// Admin Scope Filtering
+$scope = getAdminScope();
+if ($scope['dept'] !== 'all') {
+    $dept = $scope['dept'];
+}
+if ($scope['sem'] !== 'all') {
+    $semester = $scope['sem'];
+}
+
 $sql = "SELECT r.*, s.subject_name 
         FROM resources r
         LEFT JOIN subjects s ON r.subject_id = s.subject_id

@@ -9,6 +9,15 @@ $type = isset($_GET['type']) ? trim($_GET['type']) : '';
 $dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
 $semester = isset($_GET['semester']) ? intval($_GET['semester']) : 0;
 
+// Admin Scope Filtering
+$scope = getAdminScope();
+if ($scope['dept'] !== 'all') {
+    $dept = $scope['dept'];
+}
+if ($scope['sem'] !== 'all') {
+    $semester = intval($scope['sem']);
+}
+
 $sql = "SELECT * FROM exam_schedules WHERE 1=1";
 $params = [];
 $types = "";

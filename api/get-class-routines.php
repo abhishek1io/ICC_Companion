@@ -8,6 +8,15 @@ include 'config.php';
 $dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
 $semester = isset($_GET['semester']) ? trim($_GET['semester']) : '';
 
+// Admin Scope Filtering
+$scope = getAdminScope();
+if ($scope['dept'] !== 'all') {
+    $dept = $scope['dept'];
+}
+if ($scope['sem'] !== 'all') {
+    $semester = $scope['sem'];
+}
+
 $sql = "SELECT * FROM class_routines WHERE 1=1";
 
 if (!empty($dept)) {

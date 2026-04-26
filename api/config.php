@@ -62,6 +62,15 @@ function getAdminScope() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+    
+    // Explicitly check for super-admin role to prevent accidental filtering
+    if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'super-admin') {
+        return [
+            'dept' => 'all',
+            'sem' => 'all'
+        ];
+    }
+
     return [
         'dept' => isset($_SESSION['assigned_dept']) ? $_SESSION['assigned_dept'] : 'all',
         'sem' => isset($_SESSION['assigned_semester']) ? $_SESSION['assigned_semester'] : 'all'

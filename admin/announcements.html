@@ -193,6 +193,7 @@
         function showAddForm() {
             document.getElementById('editId').value = '';
             document.getElementById('announcementForm').reset();
+            applyRestrictions('targetDept', 'targetSem');
             document.getElementById('announcementModal').style.display = 'flex';
         }
 

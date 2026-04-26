@@ -10,6 +10,15 @@ $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 0;
 $dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
 $semester = isset($_GET['semester']) ? trim($_GET['semester']) : '';
 
+// Admin Scope Filtering
+$scope = getAdminScope();
+if ($scope['dept'] !== 'all') {
+    $dept = $scope['dept'];
+}
+if ($scope['sem'] !== 'all') {
+    $semester = $scope['sem'];
+}
+
 // Build query
 $sql = "SELECT * FROM announcements WHERE 1=1";
 
