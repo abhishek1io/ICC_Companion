@@ -58,13 +58,13 @@
                             <th>Name</th>
                             <th>Role</th>
                             <th>Assignment</th>
+                            <th>Subjects</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="staffTable">
                         <tr>
-                            <td colspan="4" style="text-align: center; padding: 40px; color: #64748b;">Loading
-                                faculty...</td>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">Loading faculty...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -100,8 +100,9 @@
                 <div class="form-group">
                     <label for="role">Role *</label>
                     <select id="role" required onchange="toggleAssignments()">
-                        <option value="staff">Faculty / Teacher</option>
-                        <option value="super-admin">Principal / HOD</option>
+                        <option value="faculty">Faculty (Subject Teacher)</option>
+                        <option value="dept-admin">HOD (Department Head)</option>
+                        <option value="super-admin">Principal (Global Admin)</option>
                     </select>
                 </div>
 
@@ -133,6 +134,20 @@
         </div>
     </div>
 
+    <!-- Subject Assignment Modal -->
+    <div id="subjectModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1001; align-items: center; justify-content: center;">
+        <div class="card" style="width: 90%; max-width: 450px;">
+            <h3 class="card-title">📚 Assign Subjects: <span id="assignStaffName"></span></h3>
+            <div id="subjectList" style="max-height: 300px; overflow-y: auto; margin: 15px 0; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+                <div style="text-align: center; padding: 20px;">Loading subjects...</div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn btn-primary" onclick="saveSubjectAssignments()">Save Changes</button>
+                <button type="button" class="btn btn-outline" onclick="closeSubjectModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/main.js"></script>
     <script>
         // Check if logged in
@@ -144,7 +159,7 @@
 
         // Security: Only super-admin should be here
         if (admin.role !== 'super-admin') {
-            alert('Access Denied: Super Admin only');
+            alert('Access Denied: Only the Principal can manage faculty.');
             window.location.href = 'dashboard.html';
         } else {
             document.getElementById('navStaff').style.display = 'block';
@@ -155,6 +170,7 @@
         populateDepartments('assignDept');
 
         var allStaff = [];
+        var currentAssigningId = null;
 
         // Load staff
         loadStaff();
@@ -174,7 +190,7 @@
             var tbody = document.getElementById('staffTable');
 
             if (staff.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: #64748b;">No faculty found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">No faculty found</td></tr>';
                 return;
             }
 
@@ -187,8 +203,15 @@
                 html += '<tr>';
                 html += '<td><strong>' + s.username + '</strong></td>';
                 html += '<td>' + s.name + '</td>';
-                html += '<td><span class="badge ' + (s.role === 'super-admin' ? 'badge-danger' : 'badge-info') + '">' + s.role + '</span></td>';
+                html += '<td><span class="badge ' + (s.role === 'super-admin' ? 'badge-danger' : (s.role === 'dept-admin' ? 'badge-warning' : 'badge-info')) + '">' + s.role.toUpperCase() + '</span></td>';
                 html += '<td><span style="font-size: 12px; color: #64748b;">' + assignment + '</span></td>';
+                html += '<td>';
+                if (s.role === 'faculty') {
+                    html += '<button class="btn btn-sm btn-outline" onclick="openSubjectAssignment(' + s.admin_id + ', \'' + s.name + '\')">📚 Manage</button>';
+                } else {
+                    html += '<span style="color: #94a3b8;">Full Dept</span>';
+                }
+                html += '</td>';
                 html += '<td>';
                 html += '<button class="btn btn-sm btn-outline" onclick="editStaff(' + s.admin_id + ')">Edit</button> ';
                 html += '<button class="btn btn-sm btn-danger" onclick="deleteStaff(' + s.admin_id + ')">Delete</button>';
@@ -196,6 +219,73 @@
                 html += '</tr>';
             });
             tbody.innerHTML = html;
+        }
+
+        // --- Subject Assignment Logic ---
+        function openSubjectAssignment(id, name) {
+            currentAssigningId = id;
+            document.getElementById('assignStaffName').textContent = name;
+            document.getElementById('subjectModal').style.display = 'flex';
+            
+            // Get all subjects and this teacher's current assignments
+            var s = allStaff.find(function(item) { return item.admin_id == id; });
+            var dept = s.assigned_dept;
+            var sem = s.assigned_semester;
+
+            var url = '../api/get-subjects.php?';
+            if (dept !== 'all') url += 'dept=' + dept + '&';
+            if (sem !== 'all') url += 'semester=' + sem;
+
+            Promise.all([
+                fetch(url).then(r => r.json()),
+                fetch('../api/get-faculty-subjects.php?admin_id=' + id).then(r => r.json())
+            ]).then(results => {
+                var allSubjs = results[0].data;
+                var currentAssignments = results[1].data || [];
+                var assignedIds = currentAssignments.map(a => a.subject_id);
+
+                var listHtml = '';
+                if (allSubjs.length === 0) {
+                    listHtml = '<div style="text-align:center; color:#64748b; padding:20px;">No subjects found for this scope.</div>';
+                } else {
+                    allSubjs.forEach(sub => {
+                        var checked = assignedIds.includes(sub.subject_id) ? 'checked' : '';
+                        listHtml += '<label style="display:flex; align-items:center; gap:10px; padding:8px; border-bottom:1px solid #f1f5f9; cursor:pointer;">';
+                        listHtml += '  <input type="checkbox" name="subject_ids" value="' + sub.subject_id + '" ' + checked + '>';
+                        listHtml += '  <div>';
+                        listHtml += '    <div style="font-weight:600; font-size:14px;">' + sub.subject_name + '</div>';
+                        listHtml += '    <div style="font-size:11px; color:#64748b;">' + sub.dept_code + ' - Sem ' + sub.semester + ' (' + sub.subject_code + ')</div>';
+                        listHtml += '  </div>';
+                        listHtml += '</label>';
+                    });
+                }
+                document.getElementById('subjectList').innerHTML = listHtml;
+            });
+        }
+
+        function saveSubjectAssignments() {
+            var checkboxes = document.querySelectorAll('input[name="subject_ids"]:checked');
+            var subjectIds = Array.from(checkboxes).map(cb => cb.value);
+
+            var formData = new FormData();
+            formData.append('admin_id', currentAssigningId);
+            formData.append('subject_ids', JSON.stringify(subjectIds));
+
+            fetch('../api/save-faculty-subjects.php', {
+                method: 'POST',
+                body: formData
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    showAlert('Subject assignments saved', 'success');
+                    closeSubjectModal();
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            });
+        }
+
+        function closeSubjectModal() {
+            document.getElementById('subjectModal').style.display = 'none';
         }
 
         function showAddForm() {

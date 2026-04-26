@@ -16,6 +16,19 @@ if ($subject_id === 0 || empty($date) || empty($attendance_json)) {
     sendResponse(false, 'Subject, date, and attendance data are required');
 }
 
+// Security Check: If Faculty, verify subject assignment
+$scope = getAdminScope();
+if ($scope['role'] === 'faculty') {
+    $checkSql = "SELECT assignment_id FROM faculty_subjects WHERE admin_id = ? AND subject_id = ?";
+    $checkStmt = mysqli_prepare($conn, $checkSql);
+    mysqli_stmt_bind_param($checkStmt, "ii", $scope['id'], $subject_id);
+    mysqli_stmt_execute($checkStmt);
+    $checkRes = mysqli_stmt_get_result($checkStmt);
+    if (mysqli_num_rows($checkRes) === 0) {
+        sendResponse(false, 'Access Denied: You are not assigned to this subject.');
+    }
+}
+
 // Parse attendance data
 $attendance = json_decode($attendance_json, true);
 if (!is_array($attendance)) {

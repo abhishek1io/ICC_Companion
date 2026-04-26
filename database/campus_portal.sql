@@ -100,32 +100,32 @@ CREATE TABLE students (
 -- Insert 20 sample students (mixed departments)
 INSERT INTO students (roll_number, name, dob, email, phone, dept_code, semester) VALUES
 -- BCA Students (8)
-('BCA23001', 'Rahul Kumar', '2004-05-15', 'rahul@icc.edu', '9876543210', 'BCA', 5),
-('BCA23002', 'Priya Sharma', '2004-08-22', 'priya@icc.edu', '9876543211', 'BCA', 5),
-('BCA23003', 'Amit Singh', '2004-03-10', 'amit@icc.edu', '9876543212', 'BCA', 5),
-('BCA23004', 'Neha Gupta', '2004-11-05', 'neha@icc.edu', '9876543213', 'BCA', 5),
-('BCA24001', 'Vikram Patel', '2005-01-20', 'vikram@icc.edu', '9876543214', 'BCA', 3),
-('BCA24002', 'Anjali Verma', '2005-07-12', 'anjali@icc.edu', '9876543215', 'BCA', 3),
-('BCA25001', 'Rohan Joshi', '2006-02-28', 'rohan@icc.edu', '9876543216', 'BCA', 1),
-('BCA25002', 'Sneha Reddy', '2006-09-18', 'sneha@icc.edu', '9876543217', 'BCA', 1),
+('UT-231-049-0001', 'Rahul Kumar', '2004-05-15', 'rahul@icc.edu', '9876543210', 'BCA', 5),
+('UT-231-049-0002', 'Priya Sharma', '2004-08-22', 'priya@icc.edu', '9876543211', 'BCA', 5),
+('UT-231-049-0003', 'Amit Singh', '2004-03-10', 'amit@icc.edu', '9876543212', 'BCA', 5),
+('UT-231-049-0004', 'Neha Gupta', '2004-11-05', 'neha@icc.edu', '9876543213', 'BCA', 5),
+('UT-241-049-0001', 'Vikram Patel', '2005-01-20', 'vikram@icc.edu', '9876543214', 'BCA', 3),
+('UT-241-049-0002', 'Anjali Verma', '2005-07-12', 'anjali@icc.edu', '9876543215', 'BCA', 3),
+('UT-251-049-0001', 'Rohan Joshi', '2006-02-28', 'rohan@icc.edu', '9876543216', 'BCA', 1),
+('UT-251-049-0002', 'Sneha Reddy', '2006-09-18', 'sneha@icc.edu', '9876543217', 'BCA', 1),
 
 -- BBA Students (5)
-('BBA23001', 'Arjun Malhotra', '2004-04-25', 'arjun@icc.edu', '9876543218', 'BBA', 5),
-('BBA23002', 'Kavya Nair', '2004-06-30', 'kavya@icc.edu', '9876543219', 'BBA', 5),
-('BBA24001', 'Sanjay Kapoor', '2005-03-15', 'sanjay@icc.edu', '9876543220', 'BBA', 3),
-('BBA25001', 'Divya Sharma', '2006-08-05', 'divya@icc.edu', '9876543221', 'BBA', 1),
-('BBA25002', 'Manish Kumar', '2006-12-10', 'manish@icc.edu', '9876543222', 'BBA', 1),
+('UT-231-050-0001', 'Arjun Malhotra', '2004-04-25', 'arjun@icc.edu', '9876543218', 'BBA', 5),
+('UT-231-050-0002', 'Kavya Nair', '2004-06-30', 'kavya@icc.edu', '9876543219', 'BBA', 5),
+('UT-241-050-0001', 'Sanjay Kapoor', '2005-03-15', 'sanjay@icc.edu', '9876543220', 'BBA', 3),
+('UT-251-050-0001', 'Divya Sharma', '2006-08-05', 'divya@icc.edu', '9876543221', 'BBA', 1),
+('UT-251-050-0002', 'Manish Kumar', '2006-12-10', 'manish@icc.edu', '9876543222', 'BBA', 1),
 
 -- BA Students (4)
-('BA23001', 'Pooja Singh', '2004-02-14', 'pooja@icc.edu', '9876543223', 'BA', 5),
-('BA24001', 'Ravi Shankar', '2005-05-22', 'ravi@icc.edu', '9876543224', 'BA', 3),
-('BA25001', 'Meera Jain', '2006-07-08', 'meera@icc.edu', '9876543225', 'BA', 1),
-('BA25002', 'Karan Thakur', '2006-11-25', 'karan@icc.edu', '9876543226', 'BA', 1),
+('UT-231-051-0001', 'Pooja Singh', '2004-02-14', 'pooja@icc.edu', '9876543223', 'BA', 5),
+('UT-241-051-0001', 'Ravi Shankar', '2005-05-22', 'ravi@icc.edu', '9876543224', 'BA', 3),
+('UT-251-051-0001', 'Meera Jain', '2006-07-08', 'meera@icc.edu', '9876543225', 'BA', 1),
+('UT-251-051-0002', 'Karan Thakur', '2006-11-25', 'karan@icc.edu', '9876543226', 'BA', 1),
 
 -- BCOM Students (3)
-('BCOM23001', 'Ananya Iyer', '2004-09-12', 'ananya@icc.edu', '9876543227', 'BCOM', 5),
-('BCOM24001', 'Suresh Menon', '2005-04-03', 'suresh@icc.edu', '9876543228', 'BCOM', 3),
-('BCOM25001', 'Lakshmi Rao', '2006-06-17', 'lakshmi@icc.edu', '9876543229', 'BCOM', 1);
+('UT-231-052-0001', 'Ananya Iyer', '2004-09-12', 'ananya@icc.edu', '9876543227', 'BCOM', 5),
+('UT-241-052-0001', 'Suresh Menon', '2005-04-03', 'suresh@icc.edu', '9876543228', 'BCOM', 3),
+('UT-251-052-0001', 'Lakshmi Rao', '2006-06-17', 'lakshmi@icc.edu', '9876543229', 'BCOM', 1);
 
 -- =============================================
 -- TABLE 4: ADMINS
@@ -162,73 +162,73 @@ CREATE TABLE attendance (
 -- Sample attendance data for BCA Semester 5 students
 -- Web Technologies (subject_id = 13)
 INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
-('BCA23001', 13, '2026-01-06', 'present', 'admin'),
-('BCA23002', 13, '2026-01-06', 'present', 'admin'),
-('BCA23003', 13, '2026-01-06', 'absent', 'admin'),
-('BCA23004', 13, '2026-01-06', 'present', 'admin'),
-('BCA23001', 13, '2026-01-07', 'present', 'admin'),
-('BCA23002', 13, '2026-01-07', 'present', 'admin'),
-('BCA23003', 13, '2026-01-07', 'present', 'admin'),
-('BCA23004', 13, '2026-01-07', 'absent', 'admin'),
-('BCA23001', 13, '2026-01-08', 'present', 'admin'),
-('BCA23002', 13, '2026-01-08', 'absent', 'admin'),
-('BCA23003', 13, '2026-01-08', 'present', 'admin'),
-('BCA23004', 13, '2026-01-08', 'present', 'admin'),
-('BCA23001', 13, '2026-01-09', 'present', 'admin'),
-('BCA23002', 13, '2026-01-09', 'present', 'admin'),
-('BCA23003', 13, '2026-01-09', 'present', 'admin'),
-('BCA23004', 13, '2026-01-09', 'present', 'admin'),
-('BCA23001', 13, '2026-01-10', 'present', 'admin'),
-('BCA23002', 13, '2026-01-10', 'present', 'admin'),
-('BCA23003', 13, '2026-01-10', 'absent', 'admin'),
-('BCA23004', 13, '2026-01-10', 'present', 'admin');
+('UT-231-049-0001', 13, '2026-01-06', 'present', 'admin'),
+('UT-231-049-0002', 13, '2026-01-06', 'present', 'admin'),
+('UT-231-049-0003', 13, '2026-01-06', 'absent', 'admin'),
+('UT-231-049-0004', 13, '2026-01-06', 'present', 'admin'),
+('UT-231-049-0001', 13, '2026-01-07', 'present', 'admin'),
+('UT-231-049-0002', 13, '2026-01-07', 'present', 'admin'),
+('UT-231-049-0003', 13, '2026-01-07', 'present', 'admin'),
+('UT-231-049-0004', 13, '2026-01-07', 'absent', 'admin'),
+('UT-231-049-0001', 13, '2026-01-08', 'present', 'admin'),
+('UT-231-049-0002', 13, '2026-01-08', 'absent', 'admin'),
+('UT-231-049-0003', 13, '2026-01-08', 'present', 'admin'),
+('UT-231-049-0004', 13, '2026-01-08', 'present', 'admin'),
+('UT-231-049-0001', 13, '2026-01-09', 'present', 'admin'),
+('UT-231-049-0002', 13, '2026-01-09', 'present', 'admin'),
+('UT-231-049-0003', 13, '2026-01-09', 'present', 'admin'),
+('UT-231-049-0004', 13, '2026-01-09', 'present', 'admin'),
+('UT-231-049-0001', 13, '2026-01-10', 'present', 'admin'),
+('UT-231-049-0002', 13, '2026-01-10', 'present', 'admin'),
+('UT-231-049-0003', 13, '2026-01-10', 'absent', 'admin'),
+('UT-231-049-0004', 13, '2026-01-10', 'present', 'admin');
 
 -- Python Programming (subject_id = 14)
 INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
-('BCA23001', 14, '2026-01-06', 'present', 'admin'),
-('BCA23002', 14, '2026-01-06', 'present', 'admin'),
-('BCA23003', 14, '2026-01-06', 'present', 'admin'),
-('BCA23004', 14, '2026-01-06', 'present', 'admin'),
-('BCA23001', 14, '2026-01-08', 'present', 'admin'),
-('BCA23002', 14, '2026-01-08', 'present', 'admin'),
-('BCA23003', 14, '2026-01-08', 'absent', 'admin'),
-('BCA23004', 14, '2026-01-08', 'present', 'admin'),
-('BCA23001', 14, '2026-01-10', 'absent', 'admin'),
-('BCA23002', 14, '2026-01-10', 'present', 'admin'),
-('BCA23003', 14, '2026-01-10', 'present', 'admin'),
-('BCA23004', 14, '2026-01-10', 'present', 'admin');
+('UT-231-049-0001', 14, '2026-01-06', 'present', 'admin'),
+('UT-231-049-0002', 14, '2026-01-06', 'present', 'admin'),
+('UT-231-049-0003', 14, '2026-01-06', 'present', 'admin'),
+('UT-231-049-0004', 14, '2026-01-06', 'present', 'admin'),
+('UT-231-049-0001', 14, '2026-01-08', 'present', 'admin'),
+('UT-231-049-0002', 14, '2026-01-08', 'present', 'admin'),
+('UT-231-049-0003', 14, '2026-01-08', 'absent', 'admin'),
+('UT-231-049-0004', 14, '2026-01-08', 'present', 'admin'),
+('UT-231-049-0001', 14, '2026-01-10', 'absent', 'admin'),
+('UT-231-049-0002', 14, '2026-01-10', 'present', 'admin'),
+('UT-231-049-0003', 14, '2026-01-10', 'present', 'admin'),
+('UT-231-049-0004', 14, '2026-01-10', 'present', 'admin');
 
 -- BBA Semester 5 Attendance (subject_id = 9: Marketing Management)
 INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
-('BBA23001', 9, '2026-01-06', 'present', 'admin'),
-('BBA23002', 9, '2026-01-06', 'present', 'admin'),
-('BBA23001', 9, '2026-01-07', 'present', 'admin'),
-('BBA23002', 9, '2026-01-07', 'absent', 'admin'),
-('BBA23001', 9, '2026-01-08', 'present', 'admin'),
-('BBA23002', 9, '2026-01-08', 'present', 'admin'),
-('BBA23001', 9, '2026-01-09', 'absent', 'admin'),
-('BBA23002', 9, '2026-01-09', 'present', 'admin'),
-('BBA23001', 9, '2026-01-10', 'present', 'admin'),
-('BBA23002', 9, '2026-01-10', 'present', 'admin');
+('UT-231-050-0001', 9, '2026-01-06', 'present', 'admin'),
+('UT-231-050-0002', 9, '2026-01-06', 'present', 'admin'),
+('UT-231-050-0001', 9, '2026-01-07', 'present', 'admin'),
+('UT-231-050-0002', 9, '2026-01-07', 'absent', 'admin'),
+('UT-231-050-0001', 9, '2026-01-08', 'present', 'admin'),
+('UT-231-050-0002', 9, '2026-01-08', 'present', 'admin'),
+('UT-231-050-0001', 9, '2026-01-09', 'absent', 'admin'),
+('UT-231-050-0002', 9, '2026-01-09', 'present', 'admin'),
+('UT-231-050-0001', 9, '2026-01-10', 'present', 'admin'),
+('UT-231-050-0002', 9, '2026-01-10', 'present', 'admin');
 
 -- BA Semester 1 Attendance (subject_id = 17: English Literature)
 INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
-('BA25001', 17, '2026-01-06', 'present', 'admin'),
-('BA25002', 17, '2026-01-06', 'present', 'admin'),
-('BA25001', 17, '2026-01-07', 'present', 'admin'),
-('BA25002', 17, '2026-01-07', 'present', 'admin'),
-('BA25001', 17, '2026-01-08', 'absent', 'admin'),
-('BA25002', 17, '2026-01-08', 'present', 'admin'),
-('BA25001', 17, '2026-01-09', 'present', 'admin'),
-('BA25002', 17, '2026-01-09', 'absent', 'admin');
+('UT-251-051-0001', 17, '2026-01-06', 'present', 'admin'),
+('UT-251-051-0002', 17, '2026-01-06', 'present', 'admin'),
+('UT-251-051-0001', 17, '2026-01-07', 'present', 'admin'),
+('UT-251-051-0002', 17, '2026-01-07', 'present', 'admin'),
+('UT-251-051-0001', 17, '2026-01-08', 'absent', 'admin'),
+('UT-251-051-0002', 17, '2026-01-08', 'present', 'admin'),
+('UT-251-051-0001', 17, '2026-01-09', 'present', 'admin'),
+('UT-251-051-0002', 17, '2026-01-09', 'absent', 'admin');
 
 -- BCOM Semester 1 Attendance (subject_id = 21: Financial Accounting)
 INSERT INTO attendance (roll_number, subject_id, attendance_date, status, marked_by) VALUES
-('BCOM25001', 21, '2026-01-06', 'present', 'admin'),
-('BCOM25001', 21, '2026-01-07', 'present', 'admin'),
-('BCOM25001', 21, '2026-01-08', 'present', 'admin'),
-('BCOM25001', 21, '2026-01-09', 'absent', 'admin'),
-('BCOM25001', 21, '2026-01-10', 'present', 'admin');
+('UT-251-052-0001', 21, '2026-01-06', 'present', 'admin'),
+('UT-251-052-0001', 21, '2026-01-07', 'present', 'admin'),
+('UT-251-052-0001', 21, '2026-01-08', 'present', 'admin'),
+('UT-251-052-0001', 21, '2026-01-09', 'absent', 'admin'),
+('UT-251-052-0001', 21, '2026-01-10', 'present', 'admin');
 
 -- =============================================
 -- TABLE 6: EXAMS
@@ -279,7 +279,7 @@ CREATE TABLE lost_found (
 INSERT INTO lost_found (title, description, category, item_type, location, item_date, contact_info, status, posted_by) VALUES
 ('Black Leather Wallet', 'Black leather wallet with some cash and ID cards inside', 'wallet', 'found', 'Library - 2nd Floor', '2026-01-10', 'Security Office - Ext. 1234', 'active', 'admin'),
 ('Student ID Card - Rahul K', 'ID card found near canteen', 'id-card', 'found', 'Canteen Area', '2026-01-12', 'Main Office', 'active', 'admin'),
-('Blue Umbrella', 'Lost my blue umbrella somewhere in college', 'other', 'lost', 'Unknown', '2026-01-14', 'Contact: 9876543210', 'active', 'BCA23001'),
+('Blue Umbrella', 'Lost my blue umbrella somewhere in college', 'other', 'lost', 'Unknown', '2026-01-14', 'Contact: 9876543210', 'active', 'UT-231-049-0001'),
 ('Samsung Earbuds', 'White Samsung earbuds in black case', 'electronics', 'found', 'Computer Lab', '2026-01-15', 'Lab Attendant', 'active', 'admin'),
 ('Engineering Mathematics Book', 'Found a maths textbook on bench', 'books', 'found', 'Garden Area', '2026-01-08', 'Library Counter', 'claimed', 'admin');
 
@@ -375,5 +375,89 @@ LEFT JOIN attendance a ON s.roll_number = a.roll_number AND sub.subject_id = a.s
 GROUP BY s.roll_number, s.name, s.dept_code, s.semester, sub.subject_name, sub.subject_id;
 
 -- =============================================
+-- ADDITIONAL MOCK DATA
+-- =============================================
+
+-- BBA Subjects (Remaining Semesters)
+INSERT INTO subjects (subject_code, subject_name, dept_code, semester) VALUES
+('BBA202', 'Organizational Behavior', 'BBA', 2),
+('BBA302', 'Financial Management', 'BBA', 3),
+('BBA401', 'Human Resource Management', 'BBA', 4),
+('BBA402', 'Business Research Methods', 'BBA', 4),
+('BBA501', 'Operations Management', 'BBA', 5),
+('BBA502', 'Strategic Management', 'BBA', 5),
+('BBA601', 'Entrepreneurship', 'BBA', 6),
+('BBA602', 'Project Management', 'BBA', 6);
+
+-- BA Subjects (Remaining Semesters)
+INSERT INTO subjects (subject_code, subject_name, dept_code, semester) VALUES
+('BA202', 'Sociology of India', 'BA', 2),
+('BA301', 'Economics I', 'BA', 3),
+('BA302', 'Geography of India', 'BA', 3),
+('BA401', 'Psychology Fundamentals', 'BA', 4),
+('BA402', 'Public Administration', 'BA', 4),
+('BA501', 'International Relations', 'BA', 5),
+('BA502', 'Indian Economy', 'BA', 5),
+('BA601', 'Ethics and Values', 'BA', 6),
+('BA602', 'World History', 'BA', 6);
+
+-- BCOM Subjects (Remaining Semesters)
+INSERT INTO subjects (subject_code, subject_name, dept_code, semester) VALUES
+('BCOM202', 'Company Law', 'BCOM', 2),
+('BCOM301', 'Corporate Accounting', 'BCOM', 3),
+('BCOM302', 'Income Tax Law', 'BCOM', 3),
+('BCOM401', 'Management Accounting', 'BCOM', 4),
+('BCOM402', 'Auditing', 'BCOM', 4),
+('BCOM501', 'GST and Indirect Taxes', 'BCOM', 5),
+('BCOM502', 'Investment Management', 'BCOM', 5),
+('BCOM601', 'Banking and Insurance', 'BCOM', 6),
+('BCOM602', 'Financial Markets', 'BCOM', 6);
+
+-- More Students (Covering all Semesters)
+INSERT INTO students (roll_number, name, dob, email, phone, dept_code, semester) VALUES
+('UT-241-049-0003', 'Siddharth Roy', '2005-02-14', 'siddharth@icc.edu', '9876543230', 'BCA', 4),
+('UT-241-049-0004', 'Tanvi Desai', '2005-08-30', 'tanvi@icc.edu', '9876543231', 'BCA', 4),
+('UT-221-049-0001', 'Manoj Kumar', '2003-12-05', 'manoj@icc.edu', '9876543232', 'BCA', 6),
+('UT-221-049-0002', 'Shweta Singh', '2003-10-18', 'shweta@icc.edu', '9876543233', 'BCA', 6),
+('UT-251-049-0003', 'Rahul Das', '2006-04-22', 'rahul.das@icc.edu', '9876543234', 'BCA', 2),
+('UT-251-049-0004', 'Pooja Sharma', '2006-11-12', 'pooja.s@icc.edu', '9876543235', 'BCA', 2),
+('UT-241-050-0002', 'Zaid Ahmed', '2005-05-15', 'zaid@icc.edu', '9876543236', 'BBA', 4),
+('UT-241-050-0003', 'Simran Kaur', '2005-09-22', 'simran@icc.edu', '9876543237', 'BBA', 4),
+('UT-221-050-0001', 'Abhinav Baruah', '2003-03-10', 'abhinav@icc.edu', '9876543238', 'BBA', 6),
+('UT-221-050-0002', 'Neha Kalita', '2003-07-05', 'neha.k@icc.edu', '9876543239', 'BBA', 6),
+('UT-251-050-0003', 'Pallav Jyoti', '2006-01-20', 'pallav@icc.edu', '9876543240', 'BBA', 2),
+('UT-251-050-0004', 'Priyanka Gogoi', '2006-06-12', 'priyanka@icc.edu', '9876543241', 'BBA', 2),
+('UT-241-051-0002', 'Jitu Mani', '2005-02-28', 'jitu@icc.edu', '9876543242', 'BA', 4),
+('UT-241-051-0003', 'Dipali Saikia', '2005-12-18', 'dipali@icc.edu', '9876543243', 'BA', 4),
+('UT-221-051-0001', 'Bikash Chetia', '2003-04-25', 'bikash@icc.edu', '9876543244', 'BA', 6),
+('UT-221-051-0002', 'Moni Borah', '2003-08-30', 'moni@icc.edu', '9876543245', 'BA', 6),
+('UT-251-051-0003', 'Hiranya Nath', '2006-03-15', 'hiranya@icc.edu', '9876543246', 'BA', 2),
+('UT-251-051-0004', 'Kabita Devi', '2006-09-05', 'kabita@icc.edu', '9876543247', 'BA', 2),
+('UT-241-052-0002', 'Arindam Sharma', '2005-11-14', 'arindam@icc.edu', '9876543248', 'BCOM', 4),
+('UT-241-052-0003', 'Mousumi Dutta', '2005-07-22', 'mousumi@icc.edu', '9876543249', 'BCOM', 4),
+('UT-221-052-0001', 'Biswajit Ray', '2003-05-08', 'biswajit@icc.edu', '9876543250', 'BCOM', 6),
+('UT-221-052-0002', 'Sunita Agarwal', '2003-09-17', 'sunita@icc.edu', '9876543251', 'BCOM', 6),
+('UT-251-052-0002', 'Pranjal Sarma', '2006-02-14', 'pranjal@icc.edu', '9876543252', 'BCOM', 2),
+('UT-251-052-0003', 'Rumi Begum', '2006-10-25', 'rumi@icc.edu', '9876543253', 'BCOM', 2);
+
+
+-- Additional Resources
+INSERT INTO resources (title, description, resource_type, file_url, dept_code, semester, subject_id, posted_by) VALUES
+('BCA 5th Sem Syllabus', 'Complete syllabus for BCA 5th Semester under GU', 'syllabus', 'uploads/resources/bca_sem5_syllabus.pdf', 'BCA', '5', NULL, 'admin'),
+('Java Programming Notes', 'Comprehensive notes for Java (Sem 4)', 'material', 'uploads/resources/java_notes.pdf', 'BCA', '4', 11, 'admin'),
+('Python Cookbook', 'Reference book for Python Programming', 'book', 'uploads/resources/python_cookbook.pdf', 'BCA', '5', 14, 'admin'),
+('Database Concepts Video', 'Introduction to RDBMS and SQL', 'link', NULL, 'BCA', '3', 8, 'admin'),
+('Financial Management PDF', 'Module 1: Time Value of Money', 'material', 'uploads/resources/fin_mgmt_m1.pdf', 'BBA', '3', 25, 'admin'),
+('Sociology Overview', 'Basic concepts of Sociology for Sem 2', 'text', NULL, 'BA', '2', 32, 'admin'),
+('Corporate Accounting Guide', 'Step by step guide for Corporate Accounting', 'book', 'uploads/resources/corp_acc_guide.pdf', 'BCOM', '3', 43, 'admin');
+
+-- Additional Announcements
+INSERT INTO announcements (title, description, priority, target_dept, target_semester, posted_by) VALUES
+('Campus Recruitment Drive', 'TCS will be visiting our campus for a recruitment drive on May 10th. Open for BCA and BBA 6th semester students only.', 'high', 'all', '6', 'admin'),
+('Yoga Workshop', 'A three-day yoga workshop is organized in the college auditorium starting from next Monday.', 'low', 'all', 'all', 'admin'),
+('Online Seminar on AI', 'Join us for an online seminar on "Future of AI" by Dr. John Doe on April 30th at 4:00 PM via Google Meet.', 'medium', 'all', 'all', 'admin');
+
+-- =============================================
 -- END OF DATABASE SETUP
 -- =============================================
+

@@ -19,13 +19,20 @@ if ($scope['sem'] !== 'all') {
     $semester = $scope['sem'];
 }
 
+$params = [];
+$types = "";
+
 $sql = "SELECT r.*, s.subject_name 
         FROM resources r
         LEFT JOIN subjects s ON r.subject_id = s.subject_id
         WHERE 1=1";
 
-$params = [];
-$types = "";
+// If Faculty, only show resources for their assigned subjects
+if ($scope['role'] === 'faculty') {
+    $sql .= " AND r.subject_id IN (SELECT subject_id FROM faculty_subjects WHERE admin_id = ?)";
+    $params[] = $scope['id'];
+    $types .= "i";
+}
 
 if (!empty($dept) && $dept !== 'all') {
     $sql .= " AND r.dept_code = ?";

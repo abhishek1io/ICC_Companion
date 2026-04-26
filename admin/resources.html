@@ -253,7 +253,8 @@
             var sem = document.getElementById('semester').value;
             var subjectSelect = document.getElementById('subject');
             
-            if (!dept || !sem) return;
+            // For faculty/super-admin, we allow loading subjects without strict filters
+            if (admin.role !== 'super-admin' && admin.role !== 'faculty' && (!dept || !sem)) return;
 
             fetch('../api/get-subjects.php?dept=' + dept + '&semester=' + sem)
                 .then(res => res.json())
@@ -265,6 +266,15 @@
                         });
                     }
                     subjectSelect.innerHTML = html;
+
+                    // Faculty Auto-selection & Locking
+                    if (admin.role === 'faculty' && data.success && data.data.length > 0) {
+                        subjectSelect.value = data.data[0].subject_id;
+                        if (data.data.length === 1) {
+                            subjectSelect.disabled = true;
+                            subjectSelect.style.backgroundColor = '#f1f5f9';
+                        }
+                    }
                 });
         }
 
@@ -273,7 +283,10 @@
             var sem = document.getElementById('filterSem').value;
             var type = document.getElementById('filterType').value;
 
-            var url = `../api/get-resources.php?dept=${dept}&semester=${sem}&type=${type}`;
+            var url = '../api/get-resources.php?';
+            if (dept && dept !== 'all') url += 'dept=' + dept + '&';
+            if (sem && sem !== 'all') url += 'semester=' + sem + '&';
+            if (type) url += 'type=' + type;
             
             fetch(url)
                 .then(res => res.json())

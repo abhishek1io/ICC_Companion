@@ -30,14 +30,14 @@
             <li><a href="dashboard.html" class="active">🏠 Dashboard</a></li>
             <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Faculty</a></li>
             <li id="navDepts" style="display: none;"><a href="departments.html">🏢 Departments</a></li>
-            <li><a href="students.html">👥 Students</a></li>
-            <li><a href="subjects.html">📖 Subjects</a></li>
-            <li><a href="resources.html">📚 Resources</a></li>
-            <li><a href="attendance.html">📊 Attendance</a></li>
-            <li><a href="exams.html">📅 Exams</a></li>
-            <li><a href="routines.html">📋 Routines</a></li>
-            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
-            <li><a href="announcements.html">📢 Announcements</a></li>
+            <li id="navStudents"><a href="students.html">👥 Students</a></li>
+            <li id="navSubjects"><a href="subjects.html">📖 Subjects</a></li>
+            <li id="navResources"><a href="resources.html">📚 Resources</a></li>
+            <li id="navAttendance"><a href="attendance.html">📊 Attendance</a></li>
+            <li id="navExams"><a href="exams.html">📅 Exams</a></li>
+            <li id="navRoutines"><a href="routines.html">📋 Routines</a></li>
+            <li id="navLostFound"><a href="lost-found.html">🔍 Lost & Found</a></li>
+            <li id="navAnnouncements"><a href="announcements.html">📢 Announcements</a></li>
         </ul>
     </nav>
 
@@ -95,35 +95,35 @@
                 <div class="icon">🏢</div>
                 <div class="title">Manage Depts</div>
             </a>
-            <a href="students.html" class="menu-card">
+            <a href="students.html" class="menu-card" id="cardStudents">
                 <div class="icon">👥</div>
                 <div class="title">Manage Students</div>
             </a>
-            <a href="subjects.html" class="menu-card">
+            <a href="subjects.html" class="menu-card" id="cardSubjects">
                 <div class="icon">📖</div>
                 <div class="title">Manage Subjects</div>
             </a>
-            <a href="resources.html" class="menu-card">
+            <a href="resources.html" class="menu-card" id="cardResources">
                 <div class="icon">📚</div>
                 <div class="title">Manage Resources</div>
             </a>
-            <a href="attendance.html" class="menu-card">
+            <a href="attendance.html" class="menu-card" id="cardAttendance">
                 <div class="icon">📊</div>
                 <div class="title">Mark Attendance</div>
             </a>
-            <a href="exams.html" class="menu-card">
+            <a href="exams.html" class="menu-card" id="cardExams">
                 <div class="icon">📅</div>
                 <div class="title">Exam Timetable</div>
             </a>
-            <a href="routines.html" class="menu-card">
+            <a href="routines.html" class="menu-card" id="cardRoutines">
                 <div class="icon">📋</div>
                 <div class="title">Manage Routines</div>
             </a>
-            <a href="lost-found.html" class="menu-card">
+            <a href="lost-found.html" class="menu-card" id="cardLostFound">
                 <div class="icon">🔍</div>
                 <div class="title">Lost & Found</div>
             </a>
-            <a href="announcements.html" class="menu-card">
+            <a href="announcements.html" class="menu-card" id="cardAnnouncements">
                 <div class="icon">📢</div>
                 <div class="title">Post Announcement</div>
             </a>
@@ -151,18 +151,43 @@
         updateHeaderUI();
         document.getElementById('welcomeName').textContent = admin.name;
 
-        // Display scope in banner
+        // Display scope in banner and hide restricted items
         var scopeEl = document.getElementById('scopeBadge');
+        
         if (admin.role === 'super-admin') {
+            // Principal
             document.getElementById('navStaff').style.display = 'block';
             document.getElementById('navDepts').style.display = 'block';
             document.getElementById('cardStaff').style.display = 'block';
             document.getElementById('cardDepts').style.display = 'block';
-            scopeEl.innerHTML = '<span class="badge badge-success" style="padding: 4px 10px;">PRINCIPAL / HOD</span> Full System Access';
+            scopeEl.innerHTML = '<span class="badge badge-danger" style="padding: 4px 10px;">PRINCIPAL</span> Full System Access';
+        } else if (admin.role === 'dept-admin') {
+            // HOD
+            // Hide menu items that are restricted for HOD (Depts and Staff)
+            var restrictedItems = ['Depts', 'Staff'];
+            restrictedItems.forEach(function(item) {
+                var nav = document.getElementById('nav' + item);
+                var card = document.getElementById('card' + item);
+                if (nav) nav.style.display = 'none';
+                if (card) card.style.display = 'none';
+            });
+            
+            var dept = admin.assignedDept === 'all' ? 'All Departments' : admin.assignedDept;
+            scopeEl.innerHTML = '<span class="badge badge-warning" style="padding: 4px 10px; color: #000;">HOD</span> Dept: <strong>' + dept + '</strong>';
         } else {
+            // Faculty
+            // Hide menu items that are restricted for Faculty
+            var restrictedItems = ['Staff', 'Depts', 'Subjects', 'Exams', 'Routines', 'LostFound', 'Announcements'];
+            restrictedItems.forEach(function(item) {
+                var nav = document.getElementById('nav' + item);
+                var card = document.getElementById('card' + item);
+                if (nav) nav.style.display = 'none';
+                if (card) card.style.display = 'none';
+            });
+            
             var dept = admin.assignedDept === 'all' ? 'All Departments' : admin.assignedDept;
             var sem = admin.assignedSemester === 'all' ? 'All Semesters' : 'Semester ' + admin.assignedSemester;
-            scopeEl.innerHTML = '<span class="badge badge-info" style="padding: 4px 10px;">FACULTY</span> Assigned to: <strong>' + dept + '</strong> & <strong>' + sem + '</strong>';
+            scopeEl.innerHTML = '<span class="badge badge-info" style="padding: 4px 10px;">FACULTY</span> Assigned: <strong>' + dept + '</strong> | <strong>' + sem + '</strong>';
         }
 
         // Load dashboard stats

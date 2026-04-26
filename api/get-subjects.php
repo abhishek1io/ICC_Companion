@@ -11,30 +11,40 @@ $semester = isset($_GET['semester']) ? intval($_GET['semester']) : 0;
 
 // Enforce staff scope
 $scope = getAdminScope();
-if ($scope['dept'] !== 'all') $dept = $scope['dept'];
-if ($scope['sem'] !== 'all') $semester = intval($scope['sem']);
+if ($scope['role'] !== 'faculty') {
+    if ($scope['dept'] !== 'all') $dept = $scope['dept'];
+    if ($scope['sem'] !== 'all') $semester = intval($scope['sem']);
+}
 
 // Build query
-$sql = "SELECT subject_id, subject_code, subject_name, dept_code, semester 
-        FROM subjects 
-        WHERE 1=1";
+$sql = "SELECT s.subject_id, s.subject_code, s.subject_name, s.dept_code, s.semester 
+        FROM subjects s";
 
 $params = [];
 $types = "";
 
+// If Faculty, only show their assigned subjects
+if ($scope['role'] === 'faculty') {
+    $sql .= " JOIN faculty_subjects fs ON s.subject_id = fs.subject_id WHERE fs.admin_id = ?";
+    $params[] = $scope['id'];
+    $types .= "i";
+} else {
+    $sql .= " WHERE 1=1";
+}
+
 if (!empty($dept)) {
-    $sql .= " AND dept_code = ?";
+    $sql .= " AND s.dept_code = ?";
     $params[] = $dept;
     $types .= "s";
 }
 
 if ($semester > 0) {
-    $sql .= " AND semester = ?";
+    $sql .= " AND s.semester = ?";
     $params[] = $semester;
     $types .= "i";
 }
 
-$sql .= " ORDER BY subject_name";
+$sql .= " ORDER BY s.subject_name";
 
 $stmt = mysqli_prepare($conn, $sql);
 

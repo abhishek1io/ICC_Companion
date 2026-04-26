@@ -63,15 +63,22 @@ function getAdminScope() {
         session_start();
     }
     
-    // Explicitly check for super-admin role to prevent accidental filtering
-    if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'super-admin') {
+    $role = isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : 'faculty';
+    $admin_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : 0;
+
+    // Principal has global access
+    if ($role === 'super-admin') {
         return [
+            'id' => $admin_id,
+            'role' => 'super-admin',
             'dept' => 'all',
             'sem' => 'all'
         ];
     }
 
     return [
+        'id' => $admin_id,
+        'role' => $role,
         'dept' => isset($_SESSION['assigned_dept']) ? $_SESSION['assigned_dept'] : 'all',
         'sem' => isset($_SESSION['assigned_semester']) ? $_SESSION['assigned_semester'] : 'all'
     ];

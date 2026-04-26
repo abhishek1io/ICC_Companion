@@ -129,14 +129,14 @@
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <div class="form-group" style="margin: 0; min-width: 120px;">
                         <label>Department</label>
-                        <select id="markDept" onchange="updateSemesterDropdown('markDept', 'markSem'); loadMarkSubjects()">
-                            <option value="">Loading...</option>
+                        <select id="markDept" data-allow-all="true" onchange="updateSemesterDropdown('markDept', 'markSem'); loadMarkSubjects()">
+                            <option value="">Select Dept</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin: 0; min-width: 100px;">
                         <label>Semester</label>
-                        <select id="markSem" onchange="loadMarkSubjects()">
-                            <option value="">Select Dept</option>
+                        <select id="markSem" data-allow-all="true" onchange="loadMarkSubjects()">
+                            <option value="all">All</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin: 0; min-width: 180px;">
@@ -236,7 +236,7 @@
         applyRestrictions('markDept', 'markSem');
         applyRestrictions('viewDept', 'viewSem');
         document.getElementById('markDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('filterMonth').value = new Date().toISOString().slice(0, 7);
+        document.getElementById('filterMonth').value = '';
 
         var markStudents = [];
 
@@ -251,13 +251,30 @@
         function loadMarkSubjects() {
             var d = document.getElementById('markDept').value;
             var s = document.getElementById('markSem').value;
-            if (!d || !s) return;
+            // For faculty/super-admin, we allow empty filters to see all assigned subjects
+            if (admin.role !== 'super-admin' && admin.role !== 'faculty' && (!d || !s)) return;
             fetch('../api/get-subjects.php?dept=' + d + '&semester=' + s)
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     var html = '<option value="">Select</option>';
-                    if (data.success) data.data.forEach(function (s) { html += '<option value="' + s.subject_id + '">' + s.subject_name + '</option>'; });
-                    document.getElementById('markSubject').innerHTML = html;
+                    if (data.success) {
+                        data.data.forEach(function (sub) { 
+                            html += '<option value="' + sub.subject_id + '">' + sub.subject_name + '</option>'; 
+                        });
+                    }
+                    var subjEl = document.getElementById('markSubject');
+                    subjEl.innerHTML = html;
+
+                    // Faculty Auto-selection & Locking
+                    if (admin.role === 'faculty' && data.success && data.data.length > 0) {
+                        subjEl.value = data.data[0].subject_id;
+                        if (data.data.length === 1) {
+                            subjEl.disabled = true;
+                            subjEl.style.backgroundColor = '#f1f5f9';
+                        }
+                        // Trigger students load
+                        loadStudentsToMark();
+                    }
                 });
         }
 
@@ -357,6 +374,24 @@
                         });
                     }
                     studentSelect.innerHTML = html;
+                });
+        }
+
+        function loadViewStudents() {
+            var d = document.getElementById('viewDept').value;
+            var s = document.getElementById('viewSem').value;
+            if (!d || !s) return;
+
+            fetch('../api/get-students.php?dept=' + d + '&semester=' + s)
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var html = '<option value="">-- All Students --</option>';
+                    if (data.success) {
+                        data.data.forEach(function (st) {
+                            html += '<option value="' + st.roll_number + '">' + st.roll_number + ' - ' + st.name + '</option>';
+                        });
+                    }
+                    document.getElementById('viewStudent').innerHTML = html;
                 });
         }
 

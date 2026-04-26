@@ -41,15 +41,17 @@
 
             <div id="errorMsg" class="alert alert-error hidden"></div>
 
-            <div class="login-tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button type="button" class="btn btn-outline active" id="adminTab" onclick="setLoginType('admin')"
-                    style="flex: 1; border-radius: 8px; font-size: 14px; padding: 10px;">👨‍💼 Faculty</button>
-                <button type="button" class="btn btn-outline" id="superTab" onclick="setLoginType('super-admin')"
-                    style="flex: 1; border-radius: 8px; font-size: 14px; padding: 10px;">👑 Principal / HOD</button>
+            <div class="login-tabs" style="display: flex; gap: 8px; margin-bottom: 20px;">
+                <button type="button" class="btn btn-outline active" id="facultyTab" onclick="setLoginType('faculty')"
+                    style="flex: 1; border-radius: 8px; font-size: 13px; padding: 10px 5px;">👨‍💼 Faculty</button>
+                <button type="button" class="btn btn-outline" id="hodTab" onclick="setLoginType('dept-admin')"
+                    style="flex: 1; border-radius: 8px; font-size: 13px; padding: 10px 5px;">🏢 HOD</button>
+                <button type="button" class="btn btn-outline" id="principalTab" onclick="setLoginType('super-admin')"
+                    style="flex: 1; border-radius: 8px; font-size: 13px; padding: 10px 5px;">👑 Principal</button>
             </div>
 
             <form id="loginForm">
-                <input type="hidden" id="loginType" value="admin">
+                <input type="hidden" id="loginType" value="faculty">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Enter username" required>
@@ -82,14 +84,21 @@
 
         function setLoginType(type) {
             document.getElementById('loginType').value = type;
-            if (type === 'super-admin') {
-                document.getElementById('superTab').classList.add('active');
-                document.getElementById('adminTab').classList.remove('active');
-                document.getElementById('loginBtn').textContent = 'Login as Principal / HOD';
-            } else {
-                document.getElementById('adminTab').classList.add('active');
-                document.getElementById('superTab').classList.remove('active');
+            
+            // Reset all tabs
+            document.getElementById('facultyTab').classList.remove('active');
+            document.getElementById('hodTab').classList.remove('active');
+            document.getElementById('principalTab').classList.remove('active');
+            
+            if (type === 'faculty') {
+                document.getElementById('facultyTab').classList.add('active');
                 document.getElementById('loginBtn').textContent = 'Login as Faculty';
+            } else if (type === 'dept-admin') {
+                document.getElementById('hodTab').classList.add('active');
+                document.getElementById('loginBtn').textContent = 'Login as HOD';
+            } else if (type === 'super-admin') {
+                document.getElementById('principalTab').classList.add('active');
+                document.getElementById('loginBtn').textContent = 'Login as Principal';
             }
         }
 
@@ -124,9 +133,10 @@
                 })
                 .then(function (data) {
                     if (data.success) {
-                        // Check if role matches what was selected (optional, but good for UX)
-                        if (data.data.role !== expectedRole && expectedRole === 'super-admin') {
-                            showError('This account does not have Super Admin privileges.');
+                        // Check if role matches what was selected to prevent accidental wrong tab login
+                        if (data.data.role !== expectedRole) {
+                            var roleDisplay = expectedRole === 'super-admin' ? 'Principal' : (expectedRole === 'dept-admin' ? 'HOD' : 'Faculty');
+                            showError('This account is not registered as ' + roleDisplay + '. Please select the correct tab.');
                             return;
                         }
 

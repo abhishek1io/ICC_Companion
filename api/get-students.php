@@ -32,7 +32,7 @@ $sql = "SELECT
 $params = [];
 $types = "";
 
-if (!empty($dept)) {
+if (!empty($dept) && $dept !== 'all') {
     $sql .= " AND dept_code = ?";
     $params[] = $dept;
     $types .= "s";
