@@ -98,7 +98,7 @@
     <nav class="nav-menu">
         <ul>
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
-            <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Staff</a></li>
+            <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Faculty</a></li>
             <li id="navDepts" style="display: none;"><a href="departments.html">🏢 Departments</a></li>
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="subjects.html">📖 Subjects</a></li>
@@ -182,13 +182,13 @@
                 <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
                         <div class="form-group" style="margin: 0; min-width: 120px;">
                             <label>Dept</label>
-                            <select id="viewDept" onchange="updateSemesterDropdown('viewDept', 'viewSem'); loadSummary()">
+                            <select id="viewDept" onchange="updateSemesterDropdown('viewDept', 'viewSem'); loadViewStudents()">
                                 <option value="">Loading...</option>
                             </select>
                         </div>
                         <div class="form-group" style="margin: 0; min-width: 100px;">
                             <label>Sem</label>
-                            <select id="viewSem" onchange="loadSummary()">
+                            <select id="viewSem" onchange="loadViewStudents()">
                                 <option value="">Select Dept</option>
                             </select>
                         </div>
@@ -198,7 +198,12 @@
                             <option value="">-- All Students --</option>
                         </select>
                     </div>
+                    <div class="form-group" style="margin: 0; min-width: 140px;">
+                        <label>Month (Optional)</label>
+                        <input type="month" id="filterMonth">
+                    </div>
                     <button class="btn btn-primary" onclick="viewAttendance()">📊 View</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('filterMonth').value=''; viewAttendance()">❌ Clear</button>
                 </div>
             </div>
 
@@ -359,6 +364,7 @@
             var d = document.getElementById('viewDept').value;
             var s = document.getElementById('viewSem').value;
             var roll = document.getElementById('viewStudent').value;
+            var month = document.getElementById('filterMonth').value;
             var container = document.getElementById('viewResults');
 
             if (!d || !s) {
@@ -368,6 +374,7 @@
 
             var url = '../api/get-attendance-summary.php?dept=' + d + '&semester=' + s;
             if (roll) url += '&roll_number=' + roll;
+            if (month) url += '&month=' + month;
 
             fetch(url)
                 .then(function (r) { return r.json(); })

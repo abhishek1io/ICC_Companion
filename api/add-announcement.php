@@ -11,6 +11,7 @@ $description = isset($_POST['description']) ? trim($_POST['description']) : '';
 $priority = isset($_POST['priority']) ? trim($_POST['priority']) : 'medium';
 $target_dept = isset($_POST['target_dept']) ? trim($_POST['target_dept']) : 'all';
 $target_semester = isset($_POST['target_semester']) ? trim($_POST['target_semester']) : 'all';
+$link_url = isset($_POST['link_url']) ? trim($_POST['link_url']) : '';
 $posted_by = isset($_POST['posted_by']) ? trim($_POST['posted_by']) : 'admin';
 $attachment_url = '';
 
@@ -50,11 +51,11 @@ if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ER
 }
 
 // Insert announcement
-$sql = "INSERT INTO announcements (title, description, attachment_url, priority, target_dept, target_semester, posted_by) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO announcements (title, description, attachment_url, link_url, priority, target_dept, target_semester, posted_by) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "sssssss", $title, $description, $attachment_url, $priority, $target_dept, $target_semester, $posted_by);
+mysqli_stmt_bind_param($stmt, "ssssssss", $title, $description, $attachment_url, $link_url, $priority, $target_dept, $target_semester, $posted_by);
 
 if (mysqli_stmt_execute($stmt)) {
     sendResponse(true, 'Announcement posted successfully', [

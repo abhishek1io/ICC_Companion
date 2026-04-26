@@ -291,6 +291,7 @@ CREATE TABLE announcements (
     title VARCHAR(200) NOT NULL,
     description TEXT NOT NULL,
     attachment_url VARCHAR(255),
+    link_url VARCHAR(255),
     priority ENUM('high', 'medium', 'low') DEFAULT 'medium',
     target_dept VARCHAR(50) DEFAULT 'all',
     target_semester VARCHAR(20) DEFAULT 'all',

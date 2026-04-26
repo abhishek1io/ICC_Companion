@@ -206,7 +206,7 @@ function updateHeaderUI() {
     var admin = getAdminInfo();
     var nameEl = document.getElementById('adminName');
     if (nameEl) {
-        var roleText = admin.role === 'super-admin' ? 'Super Admin' : 'Staff Admin';
+        var roleText = admin.role === 'super-admin' ? 'Principal / HOD' : 'Faculty';
         var scopeText = '';
         if (admin.role !== 'super-admin') {
             scopeText = ' (' + (admin.assignedDept === 'all' ? 'All Depts' : admin.assignedDept);

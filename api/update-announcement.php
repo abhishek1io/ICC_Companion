@@ -8,6 +8,8 @@ $priority = isset($_POST['priority']) ? trim($_POST['priority']) : 'medium';
 $target_dept = isset($_POST['target_dept']) ? trim($_POST['target_dept']) : 'all';
 $target_semester = isset($_POST['target_semester']) ? trim($_POST['target_semester']) : 'all';
 
+$link_url = isset($_POST['link_url']) ? trim($_POST['link_url']) : '';
+
 if (!$announcement_id || empty($title) || empty($description)) {
     sendResponse(false, 'Missing required data');
 }
@@ -28,13 +30,13 @@ if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] == 0) {
 }
 
 if ($attachment_url) {
-    $sql = "UPDATE announcements SET title = ?, description = ?, priority = ?, target_dept = ?, target_semester = ?, attachment_url = ? WHERE announcement_id = ?";
+    $sql = "UPDATE announcements SET title = ?, description = ?, priority = ?, target_dept = ?, target_semester = ?, attachment_url = ?, link_url = ? WHERE announcement_id = ?";
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ssssssi", $title, $description, $priority, $target_dept, $target_semester, $attachment_url, $announcement_id);
+    mysqli_stmt_bind_param($stmt, "sssssssi", $title, $description, $priority, $target_dept, $target_semester, $attachment_url, $link_url, $announcement_id);
 } else {
-    $sql = "UPDATE announcements SET title = ?, description = ?, priority = ?, target_dept = ?, target_semester = ? WHERE announcement_id = ?";
+    $sql = "UPDATE announcements SET title = ?, description = ?, priority = ?, target_dept = ?, target_semester = ?, link_url = ? WHERE announcement_id = ?";
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "sssssi", $title, $description, $priority, $target_dept, $target_semester, $announcement_id);
+    mysqli_stmt_bind_param($stmt, "ssssssi", $title, $description, $priority, $target_dept, $target_semester, $link_url, $announcement_id);
 }
 
 if (mysqli_stmt_execute($stmt)) {

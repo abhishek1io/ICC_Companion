@@ -93,9 +93,16 @@
                                 if (item.target_semester !== 'all') html += 'Semester ' + item.target_semester;
                                 html += '  </div>';
                             }
-                            if (item.attachment_url) {
-                                html += '  <div style="margin-top: 12px;">';
-                                html += '    <a href="../' + item.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View Attachment</a>';
+                            if (item.attachment_url || item.link_url) {
+                                html += '  <div style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap;">';
+                                if (item.attachment_url) {
+                                    html += '    <a href="../' + item.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View Attachment</a>';
+                                }
+                                if (item.link_url) {
+                                    var displayUrl = item.link_url.replace('https://', '').replace('http://', '');
+                                    if (displayUrl.length > 40) displayUrl = displayUrl.substring(0, 37) + '...';
+                                    html += '    <a href="' + item.link_url + '" target="_blank" class="btn btn-sm btn-outline">🔗 ' + displayUrl + '</a>';
+                                }
                                 html += '  </div>';
                             }
                             html += '</div>';

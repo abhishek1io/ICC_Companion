@@ -75,10 +75,6 @@
         <!-- Quick Access Menu -->
         <h3 class="page-title" style="font-size: 18px; margin-top: 10px;">Quick Access</h3>
         <div class="menu-grid">
-            <a href="attendance.html" class="menu-card">
-                <div class="icon">📊</div>
-                <div class="title">My Attendance</div>
-            </a>
             <a href="subjects.html" class="menu-card">
                 <div class="icon">📖</div>
                 <div class="title">My Subjects</div>
@@ -87,17 +83,21 @@
                 <div class="icon">📚</div>
                 <div class="title">Academic Resources</div>
             </a>
+            <a href="attendance.html" class="menu-card">
+                <div class="icon">📊</div>
+                <div class="title">My Attendance</div>
+            </a>
             <a href="exams.html" class="menu-card">
                 <div class="icon">📅</div>
                 <div class="title">Exam Timetable</div>
             </a>
-            <a href="lost-found.html" class="menu-card">
-                <div class="icon">🔍</div>
-                <div class="title">Lost & Found</div>
-            </a>
             <a href="routines.html" class="menu-card">
                 <div class="icon">📋</div>
                 <div class="title">Class Routine</div>
+            </a>
+            <a href="lost-found.html" class="menu-card">
+                <div class="icon">🔍</div>
+                <div class="title">Lost & Found</div>
             </a>
             <a href="announcements.html" class="menu-card">
                 <div class="icon">📢</div>
@@ -181,8 +181,12 @@
                         var html = '';
                         data.data.forEach(function (item) {
                             var priorityClass = item.priority === 'high' ? 'high' : '';
-                            html += '<div class="announcement-item ' + priorityClass + '">';
-                            html += '  <div class="title">' + item.title + '</div>';
+                            var mediaIcons = '';
+                            if (item.attachment_url) mediaIcons += ' 📎';
+                            if (item.link_url) mediaIcons += ' 🔗';
+                            
+                            html += '<div class="announcement-item ' + priorityClass + '" onclick="window.location.href=\'announcements.html\'" style="cursor: pointer;">';
+                            html += '  <div class="title">' + item.title + mediaIcons + '</div>';
                             html += '  <div class="date">' + formatDate(item.created_at) + '</div>';
                             html += '</div>';
                         });

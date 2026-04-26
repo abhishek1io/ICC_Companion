@@ -28,7 +28,7 @@
     <nav class="nav-menu">
         <ul>
             <li><a href="dashboard.html">🏠 Dashboard</a></li>
-            <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Staff</a></li>
+            <li id="navStaff" style="display: none;"><a href="staff.html">👨‍💼 Manage Faculty</a></li>
             <li id="navDepts" style="display: none;"><a href="departments.html">🏢 Departments</a></li>
             <li><a href="students.html">👥 Students</a></li>
             <li><a href="subjects.html">📖 Subjects</a></li>
@@ -57,7 +57,7 @@
                             <th>Title</th>
                             <th>Priority</th>
                             <th>Target</th>
-                            <th>Attachment</th>
+                            <th>Media</th>
                             <th>Date</th>
                             <th>Actions</th>
                         </tr>
@@ -129,6 +129,11 @@
                     <div style="font-size: 12px; color: #64748b; margin-top: 5px;">PDF, DOC, or Image files</div>
                 </div>
 
+                <div class="form-group">
+                    <label for="link_url">External Link (Optional)</label>
+                    <input type="url" id="link_url" placeholder="https://example.com/more-info">
+                </div>
+
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button type="submit" class="btn btn-primary">Post Announcement</button>
                     <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
@@ -172,8 +177,15 @@
                             html += '<td><span class="badge ' + priorityClass + '">' + a.priority.toUpperCase() + '</span></td>';
                             html += '<td><span style="font-size: 12px;">' + target + '</span></td>';
                             html += '<td>';
-                            if (a.attachment_url) {
-                                html += '<a href="../' + a.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View</a>';
+                            if (a.attachment_url || a.link_url) {
+                                if (a.attachment_url) {
+                                    html += '<a href="../' + a.attachment_url + '" target="_blank" class="btn btn-sm btn-outline" title="View Attachment">📎 File</a> ';
+                                }
+                                if (a.link_url) {
+                                    var displayUrl = a.link_url.replace('https://', '').replace('http://', '');
+                                    if (displayUrl.length > 25) displayUrl = displayUrl.substring(0, 22) + '...';
+                                    html += '<a href="' + a.link_url + '" target="_blank" class="btn btn-sm btn-outline">🔗 ' + displayUrl + '</a>';
+                                }
                             } else {
                                 html += '<span style="color: #94a3b8;">-</span>';
                             }
@@ -206,10 +218,11 @@
             document.getElementById('priority').value = a.priority;
             document.getElementById('targetDept').value = a.target_dept;
             document.getElementById('targetSem').value = a.target_semester;
-            
+            document.getElementById('link_url').value = a.link_url || '';
+
             // Re-apply restrictions if any
             applyRestrictions('targetDept', 'targetSem');
-            
+
             document.getElementById('announcementModal').style.display = 'flex';
         }
 
@@ -245,6 +258,7 @@
             formData.append('priority', document.getElementById('priority').value);
             formData.append('target_dept', document.getElementById('targetDept').value);
             formData.append('target_semester', document.getElementById('targetSem').value);
+            formData.append('link_url', document.getElementById('link_url').value);
             formData.append('posted_by', 'admin');
 
             // Add attachment if selected
