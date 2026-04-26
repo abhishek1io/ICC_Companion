@@ -136,7 +136,7 @@
     <script>
         if (!checkAdminLogin()) { }
         var admin = getAdminInfo();
-        document.getElementById('adminName').textContent = admin.name;
+        updateHeaderUI();
 
         if (admin.role === 'super-admin') {
             document.getElementById('navStaff').style.display = 'block';
@@ -174,6 +174,7 @@
         function showAddForm() {
             document.getElementById('modalTitle').textContent = 'Upload New Routine';
             document.getElementById('uploadForm').reset();
+            applyRestrictions('deptCode', 'semester');
             document.getElementById('editId').value = '';
             document.getElementById('routineFile').required = true;
             document.getElementById('fileHint').style.display = 'none';
@@ -187,6 +188,7 @@
 
         function editRoutine(r) {
             document.getElementById('modalTitle').textContent = 'Edit Routine';
+            document.getElementById('uploadForm').reset();
             document.getElementById('editId').value = r.routine_id;
             document.getElementById('title').value = r.title;
             document.getElementById('deptCode').value = r.dept_code;

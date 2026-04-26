@@ -218,7 +218,7 @@
     <script>
         if (!checkAdminLogin()) { }
         var admin = getAdminInfo();
-        document.getElementById('adminName').textContent = admin.name;
+        updateHeaderUI();
 
         // Show staff management if super-admin
         if (admin.role === 'super-admin') {
@@ -329,6 +329,7 @@
 
         function showAddModal() {
             document.getElementById('resourceForm').reset();
+            applyRestrictions('dept', 'semester');
             document.getElementById('editId').value = '';
             toggleTypeInputs();
             document.getElementById('resourceModal').style.display = 'flex';

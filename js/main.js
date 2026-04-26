@@ -201,6 +201,21 @@ function applyRestrictions(deptSelectorId, semSelectorId) {
     }
 }
 
+// Set user info in header with role and scope
+function updateHeaderUI() {
+    var admin = getAdminInfo();
+    var nameEl = document.getElementById('adminName');
+    if (nameEl) {
+        var roleText = admin.role === 'super-admin' ? 'Super Admin' : 'Staff Admin';
+        var scopeText = '';
+        if (admin.role !== 'super-admin') {
+            scopeText = ' (' + (admin.assignedDept === 'all' ? 'All Depts' : admin.assignedDept);
+            scopeText += ' - ' + (admin.assignedSemester === 'all' ? 'All Sem' : 'Sem ' + admin.assignedSemester) + ')';
+        }
+        nameEl.innerHTML = admin.name + ' <small style="color: #94a3b8; font-weight: normal; margin-left: 5px;">[' + roleText + scopeText + ']</small>';
+    }
+}
+
 // Set user name in header
 function setUserName(name, elementId) {
     var element = document.getElementById(elementId || 'userName');

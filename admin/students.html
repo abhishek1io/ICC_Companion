@@ -180,7 +180,7 @@
 
         // Get admin info
         var admin = getAdminInfo();
-        document.getElementById('adminName').textContent = admin.name;
+        updateHeaderUI();
 
         // Show staff management if super-admin
         if (admin.role === 'super-admin') {
@@ -258,6 +258,7 @@
         function showAddForm() {
             document.getElementById('modalTitle').textContent = 'Add New Student';
             document.getElementById('studentForm').reset();
+            applyRestrictions('dept', 'semester');
             document.getElementById('editId').value = '';
             document.getElementById('rollNumber').disabled = false;
             document.getElementById('studentModal').style.display = 'flex';
@@ -268,6 +269,7 @@
             if (!student) return;
 
             document.getElementById('modalTitle').textContent = 'Edit Student';
+            document.getElementById('studentForm').reset();
             document.getElementById('editId').value = student.student_id;
             document.getElementById('rollNumber').value = student.roll_number;
             document.getElementById('rollNumber').disabled = true;
@@ -277,6 +279,10 @@
             document.getElementById('semester').value = student.semester;
             document.getElementById('email').value = student.email || '';
             document.getElementById('phone').value = student.phone || '';
+            
+            // Re-apply to ensure they stay disabled/locked
+            applyRestrictions('dept', 'semester');
+            
             document.getElementById('studentModal').style.display = 'flex';
         }
 

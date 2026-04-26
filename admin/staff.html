@@ -145,7 +145,7 @@
 
         // Get admin info
         var admin = getAdminInfo();
-        document.getElementById('adminName').textContent = admin.name;
+        updateHeaderUI();
 
         // Security: Only super-admin should be here
         if (admin.role !== 'super-admin') {

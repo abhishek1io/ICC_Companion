@@ -166,7 +166,7 @@
 
         // Get admin info
         var admin = getAdminInfo();
-        document.getElementById('adminName').textContent = admin.name;
+        updateHeaderUI();
 
         // Show staff management if super-admin
         if (admin.role === 'super-admin') {
@@ -241,17 +241,23 @@
         function showAddForm() {
             document.getElementById('modalTitle').textContent = 'Add New Subject';
             document.getElementById('subjectForm').reset();
+            applyRestrictions('dept', 'semester');
             document.getElementById('editId').value = '';
             document.getElementById('subjectModal').style.display = 'flex';
         }
 
         function editSubject(s) {
             document.getElementById('modalTitle').textContent = 'Edit Subject';
+            document.getElementById('subjectForm').reset();
             document.getElementById('editId').value = s.subject_id;
             document.getElementById('subjectCode').value = s.subject_code;
             document.getElementById('subjectName').value = s.subject_name;
             document.getElementById('dept').value = s.dept_code;
             document.getElementById('semester').value = s.semester;
+            
+            // Re-apply to ensure they stay disabled/locked
+            applyRestrictions('dept', 'semester');
+            
             document.getElementById('subjectModal').style.display = 'flex';
         }
 

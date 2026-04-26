@@ -42,7 +42,12 @@
 
     <!-- Main Content -->
     <div class="container">
-        <h1 class="page-title">Admin Dashboard</h1>
+        <div style="background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h1 style="margin: 0; font-size: 24px;">Welcome Back, <span id="welcomeName">-</span>! 👋</h1>
+            <p id="scopeBadge" style="margin: 10px 0 0 0; opacity: 0.9; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                <!-- Filled via JS -->
+            </p>
+        </div>
 
         <!-- Stats Cards -->
         <div class="dashboard-grid" id="statsContainer">
@@ -136,7 +141,18 @@
 
         // Get admin info and display
         var admin = getAdminInfo();
-        document.getElementById('adminName').textContent = admin.name;
+        updateHeaderUI();
+        document.getElementById('welcomeName').textContent = admin.name;
+
+        // Display scope in banner
+        var scopeEl = document.getElementById('scopeBadge');
+        if (admin.role === 'super-admin') {
+            scopeEl.innerHTML = '<span class="badge badge-success" style="padding: 4px 10px;">SUPER ADMIN</span> Full System Access';
+        } else {
+            var dept = admin.assignedDept === 'all' ? 'All Departments' : admin.assignedDept;
+            var sem = admin.assignedSemester === 'all' ? 'All Semesters' : 'Semester ' + admin.assignedSemester;
+            scopeEl.innerHTML = '<span class="badge badge-info" style="padding: 4px 10px;">STAFF ADMIN</span> Assigned to: <strong>' + dept + '</strong> & <strong>' + sem + '</strong>';
+        }
 
         // Show staff management if super-admin
         if (admin.role === 'super-admin') {

@@ -304,7 +304,7 @@
     <script>
         if (!checkAdminLogin()) { }
         var admin = getAdminInfo();
-        document.getElementById('adminName').textContent = admin.name;
+        updateHeaderUI();
 
         // Show staff management if super-admin
         if (admin.role === 'super-admin') {
@@ -462,6 +462,7 @@
             document.getElementById('editId').value = '';
             document.getElementById('modalTitle').textContent = 'Add ' + (type === 'sessional' ? 'Sessional' : 'Final') + ' Exam';
             document.getElementById('examForm').reset();
+            applyRestrictions('dept', 'semester');
             document.getElementById('examModal').style.display = 'flex';
         }
 
