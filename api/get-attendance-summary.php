@@ -11,6 +11,11 @@ $semester = isset($_GET['semester']) ? trim($_GET['semester']) : '';
 $subject_id = isset($_GET['subject_id']) ? intval($_GET['subject_id']) : 0;
 $month = isset($_GET['month']) ? trim($_GET['month']) : '';
 
+// Enforce staff scope
+$scope = getAdminScope();
+if ($scope['dept'] !== 'all') $dept = $scope['dept'];
+if ($scope['sem'] !== 'all') $semester = $scope['sem'];
+
 // First get the attendance data
 $sql = "SELECT 
             s.roll_number,

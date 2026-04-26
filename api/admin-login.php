@@ -13,7 +13,7 @@ if (empty($username) || empty($password)) {
 }
 
 // Query database
-$sql = "SELECT admin_id, username, password, name, role 
+$sql = "SELECT admin_id, username, password, name, role, assigned_dept, assigned_semester 
         FROM admins 
         WHERE username = ?";
 
@@ -29,11 +29,15 @@ if ($row = mysqli_fetch_assoc($result)) {
         $_SESSION['admin_id'] = $row['admin_id'];
         $_SESSION['admin_name'] = $row['name'];
         $_SESSION['admin_role'] = $row['role'];
+        $_SESSION['assigned_dept'] = $row['assigned_dept'];
+        $_SESSION['assigned_semester'] = $row['assigned_semester'];
 
         sendResponse(true, 'Login successful', [
             'admin_id' => $row['admin_id'],
             'name' => $row['name'],
-            'role' => $row['role']
+            'role' => $row['role'],
+            'assigned_dept' => $row['assigned_dept'],
+            'assigned_semester' => $row['assigned_semester']
         ]);
     } else {
         sendResponse(false, 'Incorrect password');

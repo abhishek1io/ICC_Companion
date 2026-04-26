@@ -9,6 +9,11 @@ include 'config.php';
 $dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
 $semester = isset($_GET['semester']) ? intval($_GET['semester']) : 0;
 
+// Enforce staff scope
+$scope = getAdminScope();
+if ($scope['dept'] !== 'all') $dept = $scope['dept'];
+if ($scope['sem'] !== 'all') $semester = intval($scope['sem']);
+
 // Build query
 $sql = "SELECT subject_id, subject_code, subject_name, dept_code, semester 
         FROM subjects 

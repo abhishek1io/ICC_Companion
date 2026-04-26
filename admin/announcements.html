@@ -147,6 +147,9 @@
             document.getElementById('navStaff').style.display = 'block';
         }
 
+        // Apply restrictions for assigned staff
+        applyRestrictions('targetDept', 'targetSem');
+
         loadAnnouncements();
 
         function loadAnnouncements() {

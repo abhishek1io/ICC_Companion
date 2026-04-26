@@ -55,7 +55,9 @@ function getAdminInfo() {
     return {
         id: sessionStorage.getItem('adminId'),
         name: sessionStorage.getItem('adminName'),
-        role: sessionStorage.getItem('adminRole')
+        role: sessionStorage.getItem('adminRole'),
+        assignedDept: sessionStorage.getItem('assignedDept') || 'all',
+        assignedSemester: sessionStorage.getItem('assignedSemester') || 'all'
     };
 }
 
@@ -162,8 +164,42 @@ function classesCanMiss(present, total, required) {
 }
 
 // =============================================
-// COMMON PAGE SETUP
+// RESTRICTION ENFORCEMENT
 // =============================================
+
+// Lock filters for assigned staff
+function applyRestrictions(deptSelectorId, semSelectorId) {
+    var admin = getAdminInfo();
+    if (admin.role === 'super-admin') return; // Super admins have full access
+
+    if (admin.assignedDept !== 'all') {
+        var deptEl = document.getElementById(deptSelectorId);
+        if (deptEl) {
+            deptEl.value = admin.assignedDept;
+            deptEl.disabled = true;
+            deptEl.style.backgroundColor = '#f1f5f9';
+            deptEl.style.cursor = 'not-allowed';
+            
+            // Trigger change event to load data
+            var event = new Event('change');
+            deptEl.dispatchEvent(event);
+        }
+    }
+
+    if (admin.assignedSemester !== 'all') {
+        var semEl = document.getElementById(semSelectorId);
+        if (semEl) {
+            semEl.value = admin.assignedSemester;
+            semEl.disabled = true;
+            semEl.style.backgroundColor = '#f1f5f9';
+            semEl.style.cursor = 'not-allowed';
+            
+            // Trigger change event to load data
+            var event = new Event('change');
+            semEl.dispatchEvent(event);
+        }
+    }
+}
 
 // Set user name in header
 function setUserName(name, elementId) {

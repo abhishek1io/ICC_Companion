@@ -310,6 +310,11 @@
             document.getElementById('navStaff').style.display = 'block';
         }
 
+        // Apply restrictions for assigned staff
+        applyRestrictions('sessionalDept', 'sessionalSem');
+        applyRestrictions('finalDept', 'finalSem');
+        applyRestrictions('dept', 'semester'); // Modal
+
         // Load data
         loadExams();
         loadScheduleFiles();

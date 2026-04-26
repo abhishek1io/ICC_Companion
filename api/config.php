@@ -57,3 +57,13 @@ function checkAdminLogin() {
     }
     return $_SESSION['admin_id'];
 }
+
+function getAdminScope() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    return [
+        'dept' => isset($_SESSION['assigned_dept']) ? $_SESSION['assigned_dept'] : 'all',
+        'sem' => isset($_SESSION['assigned_semester']) ? $_SESSION['assigned_semester'] : 'all'
+    ];
+}

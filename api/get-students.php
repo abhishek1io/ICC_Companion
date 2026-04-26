@@ -10,6 +10,11 @@ $dept = isset($_GET['dept']) ? trim($_GET['dept']) : '';
 $semester = isset($_GET['semester']) ? intval($_GET['semester']) : 0;
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
+// Enforce staff scope
+$scope = getAdminScope();
+if ($scope['dept'] !== 'all') $dept = $scope['dept'];
+if ($scope['sem'] !== 'all') $semester = intval($scope['sem']);
+
 // Build query
 $sql = "SELECT 
             student_id,

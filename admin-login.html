@@ -118,6 +118,8 @@
                         sessionStorage.setItem('adminId', data.data.admin_id);
                         sessionStorage.setItem('adminName', data.data.name);
                         sessionStorage.setItem('adminRole', data.data.role);
+                        sessionStorage.setItem('assignedDept', data.data.assigned_dept);
+                        sessionStorage.setItem('assignedSemester', data.data.assigned_semester);
 
                         // Redirect to admin dashboard
                         window.location.href = 'admin/dashboard.html';

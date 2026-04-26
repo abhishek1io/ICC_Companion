@@ -173,6 +173,10 @@
             document.getElementById('navStaff').style.display = 'block';
         }
 
+        // Apply restrictions for assigned staff
+        applyRestrictions('filterDept', 'filterSem');
+        applyRestrictions('dept', 'semester'); // Also for the add modal
+
         var allSubjects = [];
 
         // Load subjects
