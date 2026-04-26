@@ -79,6 +79,7 @@
         <div class="card" style="width: 90%; max-width: 550px; margin: 20px auto;">
             <h3 class="card-title">Add Lost/Found Item</h3>
             <form id="itemForm" enctype="multipart/form-data">
+                <input type="hidden" id="editId" value="">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="title">Title *</label>
@@ -134,7 +135,7 @@
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary">Save Item</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">Save Item</button>
                     <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
                 </div>
             </form>
@@ -188,6 +189,7 @@
                             if (item.status === 'active') {
                                 html += '<button class="btn btn-sm btn-success" onclick="markClaimed(' + item.item_id + ')">Claimed</button> ';
                             }
+                            html += '<button class="btn btn-sm btn-outline" onclick=\'editItem(' + JSON.stringify(item) + ')\'>Edit</button> ';
                             html += '<button class="btn btn-sm btn-danger" onclick="deleteItem(' + item.item_id + ')">Delete</button>';
                             html += '</td>';
                             html += '</tr>';
@@ -200,8 +202,23 @@
         }
 
         function showAddForm() {
+            document.getElementById('editId').value = '';
             document.getElementById('itemForm').reset();
+            document.getElementById('submitBtn').textContent = 'Save Item';
             document.getElementById('itemDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('itemModal').style.display = 'flex';
+        }
+
+        function editItem(item) {
+            document.getElementById('editId').value = item.item_id;
+            document.getElementById('title').value = item.title;
+            document.getElementById('itemType').value = item.item_type;
+            document.getElementById('category').value = item.category;
+            document.getElementById('itemDate').value = item.item_date;
+            document.getElementById('location').value = item.location;
+            document.getElementById('description').value = item.description;
+            document.getElementById('contactInfo').value = item.contact_info;
+            document.getElementById('submitBtn').textContent = 'Update Item';
             document.getElementById('itemModal').style.display = 'flex';
         }
 
@@ -267,7 +284,14 @@
                 formData.append('image', imageFile);
             }
 
-            fetch('../api/add-lost-found.php', {
+            var editId = document.getElementById('editId').value;
+            if (editId) {
+                formData.append('item_id', editId);
+            }
+
+            var url = editId ? '../api/update-lost-found.php' : '../api/add-lost-found.php';
+
+            fetch(url, {
                 method: 'POST',
                 body: formData
             })

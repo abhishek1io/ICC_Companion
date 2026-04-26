@@ -134,6 +134,7 @@
         <div class="card" style="width: 100%; max-width: 600px; margin: auto;">
             <h2 class="card-title">Add Academic Resource</h2>
             <form id="resourceForm">
+                <input type="hidden" id="editId" value="">
                 <div class="form-group">
                     <label for="title">Title *</label>
                     <input type="text" id="title" required placeholder="e.g., BCA 6th Sem Cloud Computing Syllabus">
@@ -292,6 +293,7 @@
                                         <div style="display:flex; gap: 5px;">
                                             ${r.file_url ? `<a href="../${r.file_url}" target="_blank" class="btn btn-sm btn-outline">👁️ View</a>` : ''}
                                             ${r.link_url ? `<a href="${r.link_url}" target="_blank" class="btn btn-sm btn-outline">🔗 Link</a>` : ''}
+                                            <button onclick='editResource(${JSON.stringify(r)})' class="btn btn-sm btn-outline">✏️</button>
                                             <button onclick="deleteResource(${r.resource_id})" class="btn btn-sm btn-danger">🗑️</button>
                                         </div>
                                     </td>
@@ -327,6 +329,35 @@
 
         function showAddModal() {
             document.getElementById('resourceForm').reset();
+            document.getElementById('editId').value = '';
+            toggleTypeInputs();
+            document.getElementById('resourceModal').style.display = 'flex';
+        }
+
+        function editResource(r) {
+            document.getElementById('resourceForm').reset();
+            document.getElementById('editId').value = r.resource_id;
+            document.getElementById('title').value = r.title;
+            document.getElementById('description').value = r.description;
+            document.getElementById('resourceType').value = r.resource_type;
+            document.getElementById('dept').value = r.dept_code;
+            document.getElementById('semester').value = r.semester;
+            
+            // Re-apply restrictions
+            applyRestrictions('dept', 'semester');
+            
+            // Load subjects and then select the right one
+            loadSubjectsForDept();
+            setTimeout(() => {
+                document.getElementById('subject').value = r.subject_id || '';
+            }, 500);
+
+            if (r.resource_type === 'link') {
+                document.getElementById('linkUrl').value = r.link_url;
+            } else if (r.resource_type === 'text') {
+                document.getElementById('contentText').value = r.content_text;
+            }
+
             toggleTypeInputs();
             document.getElementById('resourceModal').style.display = 'flex';
         }
@@ -355,8 +386,15 @@
             } else {
                 formData.append('content_text', document.getElementById('contentText').value);
             }
+
+            var editId = document.getElementById('editId').value;
+            if (editId) {
+                formData.append('resource_id', editId);
+            }
+
+            var url = editId ? '../api/update-resource.php' : '../api/save-resource.php';
             
-            fetch('../api/save-resource.php', {
+            fetch(url, {
                 method: 'POST',
                 body: formData
             })

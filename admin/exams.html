@@ -235,6 +235,7 @@
         <div class="card" style="width: 90%; max-width: 500px; margin: 20px auto;">
             <h3 id="modalTitle" class="card-title">Add Exam</h3>
             <form id="examForm">
+                <input type="hidden" id="editId" value="">
                 <input type="hidden" id="examType" value="">
 
                 <div class="form-row">
@@ -347,7 +348,10 @@
                 html += '<td>' + e.semester + '</td>';
                 html += '<td>' + formatTimeStr(e.start_time) + '-' + formatTimeStr(e.end_time) + '</td>';
                 html += '<td>' + e.room + '</td>';
-                html += '<td><button class="btn btn-sm btn-danger" onclick="deleteExam(' + e.exam_id + ')">Del</button></td>';
+                html += '<td>';
+                html += '<button class="btn btn-sm btn-outline" onclick=\'editExam(' + JSON.stringify(e) + ')\'>Edit</button> ';
+                html += '<button class="btn btn-sm btn-danger" onclick="deleteExam(' + e.exam_id + ')">Del</button>';
+                html += '</td>';
                 html += '</tr>';
             });
             tbody.innerHTML = html;
@@ -455,8 +459,33 @@
 
         function showAddForm(type) {
             document.getElementById('examType').value = type;
+            document.getElementById('editId').value = '';
             document.getElementById('modalTitle').textContent = 'Add ' + (type === 'sessional' ? 'Sessional' : 'Final') + ' Exam';
             document.getElementById('examForm').reset();
+            document.getElementById('examModal').style.display = 'flex';
+        }
+
+        function editExam(e) {
+            document.getElementById('examType').value = e.exam_type;
+            document.getElementById('editId').value = e.exam_id;
+            document.getElementById('modalTitle').textContent = 'Edit ' + (e.exam_type === 'sessional' ? 'Sessional' : 'Final') + ' Exam';
+            document.getElementById('examForm').reset();
+            
+            document.getElementById('dept').value = e.dept_code;
+            document.getElementById('semester').value = e.semester;
+            document.getElementById('examDate').value = e.exam_date;
+            document.getElementById('room').value = e.room;
+            document.getElementById('startTime').value = e.start_time;
+            document.getElementById('endTime').value = e.end_time;
+            
+            // Re-apply restrictions
+            applyRestrictions('dept', 'semester');
+            
+            loadSubjectOptions();
+            setTimeout(() => {
+                document.getElementById('subject').value = e.subject_id;
+            }, 500);
+
             document.getElementById('examModal').style.display = 'flex';
         }
 
@@ -480,7 +509,12 @@
             fd.append('room', document.getElementById('room').value);
             fd.append('exam_type', document.getElementById('examType').value);
 
-            fetch('../api/add-exam.php', { method: 'POST', body: fd })
+            var editId = document.getElementById('editId').value;
+            if (editId) fd.append('exam_id', editId);
+            
+            var url = editId ? '../api/update-exam.php' : '../api/add-exam.php';
+
+            fetch(url, { method: 'POST', body: fd })
                 .then(function (r) { return r.json(); })
                 .then(function (d) {
                     if (d.success) { showAlert('Added', 'success'); closeModal(); loadExams(); }

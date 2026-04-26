@@ -216,7 +216,7 @@
                 html += '<td><span class="badge badge-info">' + s.dept_code + '</span></td>';
                 html += '<td>Semester ' + s.semester + '</td>';
                 html += '<td>';
-                // html += '<button class="btn btn-sm btn-outline" onclick="editSubject(' + s.subject_id + ')">Edit</button> ';
+                html += '<button class="btn btn-sm btn-outline" onclick=\'editSubject(' + JSON.stringify(s) + ')\'>Edit</button> ';
                 html += '<button class="btn btn-sm btn-danger" onclick="deleteSubject(' + s.subject_id + ')">Delete</button>';
                 html += '</td>';
                 html += '</tr>';
@@ -242,6 +242,16 @@
             document.getElementById('modalTitle').textContent = 'Add New Subject';
             document.getElementById('subjectForm').reset();
             document.getElementById('editId').value = '';
+            document.getElementById('subjectModal').style.display = 'flex';
+        }
+
+        function editSubject(s) {
+            document.getElementById('modalTitle').textContent = 'Edit Subject';
+            document.getElementById('editId').value = s.subject_id;
+            document.getElementById('subjectCode').value = s.subject_code;
+            document.getElementById('subjectName').value = s.subject_name;
+            document.getElementById('dept').value = s.dept_code;
+            document.getElementById('semester').value = s.semester;
             document.getElementById('subjectModal').style.display = 'flex';
         }
 
@@ -280,8 +290,12 @@
             formData.append('dept_code', document.getElementById('dept').value);
             formData.append('semester', document.getElementById('semester').value);
 
-            // Note: Update endpoint not implemented yet as per plan (only add/delete requested/planned)
-            var url = '../api/add-subject.php';
+            var editId = document.getElementById('editId').value;
+            if (editId) {
+                formData.append('subject_id', editId);
+            }
+
+            var url = editId ? '../api/update-subject.php' : '../api/add-subject.php';
 
             fetch(url, {
                 method: 'POST',
