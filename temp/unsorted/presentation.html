@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICC Companion - Final Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e293b;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 60px 80px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Slide Backgrounds */
+        .slide-1 { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; }
+        .slide-2 { background: #f8fafc; color: #1e293b; }
+        .slide-3 { background: #ffffff; color: #1e293b; }
+        .slide-4 { background: #f8fafc; color: #1e293b; }
+        .slide-5 { background: #ffffff; color: #1e293b; }
+        .slide-6 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+        .slide-7 { background: #f8fafc; color: #1e293b; }
+        .slide-8 { background: #ffffff; color: #1e293b; }
+        .slide-9 { background: #f8fafc; color: #1e293b; }
+        .slide-10 { background: #ffffff; color: #1e293b; }
+        .slide-11 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; }
+        .slide-12 { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; }
+
+        h1 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #2563eb;
+        }
+
+        .slide-1 h3, .slide-6 h3, .slide-11 h3, .slide-12 h3 {
+            color: white;
+            opacity: 0.9;
+        }
+
+        p, li {
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 28px;
+        }
+
+        .slide-1 ul li:before, .slide-6 ul li:before, .slide-11 ul li:before {
+            color: white;
+        }
+
+        .subtitle {
+            font-size: 28px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h4 {
+            font-size: 24px;
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 18px;
+            color: #64748b;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-box h3 {
+            font-size: 48px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .stat-box p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            margin: 10px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .slide-6 .tech-badge {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: #2563eb;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .highlight {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .slide-1 .highlight, .slide-6 .highlight, .slide-12 .highlight {
+            color: #fbbf24;
+        }
+
+        .logo {
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 20px;
+        }
+
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 18px;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide slide-1 active center">
+            <div class="logo">🎓</div>
+            <h1>ICC COMPANION</h1>
+            <p class="subtitle">Icon Commerce College Campus Portal</p>
+            <h3>Your All-in-One College Management Solution</h3>
+            <p style="margin-top: 40px; font-size: 22px; opacity: 0.9;">Final Year Project Presentation</p>
+        </div>
+
+        <!-- Slide 2: Project Overview -->
+        <div class="slide slide-2">
+            <h2>📋 Project Overview</h2>
+            <p style="font-size: 26px; margin-bottom: 40px;">A professional web-based management system designed to <span class="highlight">digitize and simplify campus life</span> for both students and staff.</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <div class="feature-icon">🎯</div>
+                    <h4>Mission</h4>
+                    <p>Streamline academic operations and enhance communication</p>
+                </div>
+                <div class="card">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Real-Time</h4>
+                    <p>Instant access to attendance, schedules, and announcements</p>
+                </div>
+                <div class="card">
+                    <div class="feature-icon">📱</div>
+                    <h4>Accessible</h4>
+                    <p>Responsive design works on all devices</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Tech Stack -->
+        <div class="slide slide-3">
+            <h2>🛠️ Technology Stack</h2>
+            <p style="margin-bottom: 30px;">Built with proven and reliable technologies</p>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>Frontend</h3>
+                    <ul>
+                        <li><strong>HTML5 & CSS3</strong> - Semantic structure and modern responsive design</li>
+                        <li><strong>Vanilla JavaScript</strong> - Dynamic DOM manipulation and async API handling</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Backend</h3>
+                    <ul>
+                        <li><strong>PHP</strong> - Server-side logic and API endpoints</li>
+                        <li><strong>MySQL</strong> - Relational database management</li>
+                        <li><strong>Apache</strong> - Web server via XAMPP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; text-align: center;">
+                <span class="tech-badge">HTML5</span>
+                <span class="tech-badge">CSS3</span>
+                <span class="tech-badge">JavaScript</span>
+                <span class="tech-badge">PHP</span>
+                <span class="tech-badge">MySQL</span>
+                <span class="tech-badge">JSON API</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: Student Features -->
+        <div class="slide slide-4">
+            <h2>👨‍🎓 Student Dashboard Features</h2>
+            <ul style="font-size: 22px;">
+                <li><strong>Attendance Tracker</strong> - Visual progress bars with automatic eligibility calculations</li>
+                <li><strong>Exam Timetable</strong> - Real-time schedules with countdown timers</li>
+                <li><strong>Announcements</strong> - Centralized feed for college notices and events</li>
+                <li><strong>Lost & Found Portal</strong> - Browse and report lost/found items</li>
+                <li><strong>Academic Resources</strong> - Access to class routines and exam schedules</li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Admin Features -->
+        <div class="slide slide-5">
+            <h2>👩‍💼 Admin Management Panel</h2>
+            <ul style="font-size: 22px;">
+                <li><strong>Student Information System</strong> - Full CRUD operations for student profiles</li>
+                <li><strong>Smart Attendance Marker</strong> - Quick checkbox-based interface for marking attendance</li>
+                <li><strong>Exam Controller</strong> - Manage academic calendar and schedule exams</li>
+                <li><strong>Global Communications</strong> - Post and manage announcements</li>
+                <li><strong>Lost & Found Manager</strong> - Review and manage reported items</li>
+                <li><strong>Dynamic File Manager</strong> - Upload and update routines and schedules</li>
+            </ul>
+        </div>
+
+        <!-- Slide 6: Key Statistics -->
+        <div class="slide slide-6 center">
+            <h2>📊 System Capabilities</h2>
+            <div class="grid-3" style="margin-top: 50px;">
+                <div class="stat-box">
+                    <h3>8</h3>
+                    <p>Core Modules</p>
+                </div>
+                <div class="stat-box">
+                    <h3>52</h3>
+                    <p>API Endpoints</p>
+                </div>
+                <div class="stat-box">
+                    <h3>9</h3>
+                    <p>Database Tables</p>
+                </div>
+            </div>
+            <div class="grid-2" style="margin-top: 30px;">
+                <div class="stat-box">
+                    <h3>2</h3>
+                    <p>User Roles (Student & Admin)</p>
+                </div>
+                <div class="stat-box">
+                    <h3>100%</h3>
+                    <p>Mobile Responsive</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Database Schema -->
+        <div class="slide slide-7">
+            <h2>💾 Database Architecture</h2>
+            <p style="margin-bottom: 20px;">Highly structured relational database: <span class="highlight">campus_portal</span></p>
+            
+            <table>
+                <tr>
+                    <th>Table</th>
+                    <th>Purpose</th>
+                    <th>Key Relations</th>
+                </tr>
+                <tr>
+                    <td><strong>departments</strong></td>
+                    <td>Academic divisions</td>
+                    <td>Parent to subjects, students</td>
+                </tr>
+                <tr>
+                    <td><strong>students</strong></td>
+                    <td>Student profiles & credentials</td>
+                    <td>Links to attendance, dept</td>
+                </tr>
+                <tr>
+                    <td><strong>attendance</strong></td>
+                    <td>Daily class records</td>
+                    <td>Student + Subject FK</td>
+                </tr>
+                <tr>
+                    <td><strong>exams</strong></td>
+                    <td>Exam schedules</td>
+                    <td>Subject FK</td>
+                </tr>
+                <tr>
+                    <td><strong>announcements</strong></td>
+                    <td>System-wide notices</td>
+                    <td>Department targeting</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Slide 8: System Architecture -->
+        <div class="slide slide-8 center">
+            <h2>🏗️ System Architecture</h2>
+            <div style="margin-top: 60px; font-size: 28px; line-height: 2.5;">
+                <p>👤 <strong>User</strong> (Student/Admin)</p>
+                <p style="font-size: 36px; color: #2563eb;">↓</p>
+                <p>🖥️ <strong>Web Interface</strong> (HTML/CSS/JS)</p>
+                <p style="font-size: 36px; color: #2563eb;">↓</p>
+                <p>🔌 <strong>API Layer</strong> (PHP Endpoints)</p>
+                <p style="font-size: 36px; color: #2563eb;">↓</p>
+                <p>💾 <strong>MySQL Database</strong> + 📁 <strong>File Storage</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Technical Highlights -->
+        <div class="slide slide-9">
+            <h2>🔬 Technical Implementation</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>🔒 Security</h4>
+                    <p><strong>Prepared Statements</strong> - SQL injection prevention using mysqli_prepare</p>
+                    <p style="margin-top: 15px;"><strong>Session Management</strong> - Secure PHP sessions for authentication</p>
+                </div>
+                <div class="card">
+                    <h4>⚡ Performance</h4>
+                    <p><strong>AJAX/Fetch API</strong> - Asynchronous data loading without page refresh</p>
+                    <p style="margin-top: 15px;"><strong>JSON Exchange</strong> - Lightweight data transfer</p>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 30px;">
+                <h4>🎯 Data Integrity</h4>
+                <p><strong>Database Transactions</strong> - ACID properties ensure atomic operations (all-or-nothing saves)</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Development Process -->
+        <div class="slide slide-10">
+            <h2>📅 Development Roadmap</h2>
+            <p style="margin-bottom: 30px;">Structured 30-day development cycle</p>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Week 1: Foundation</h4>
+                    <p>Core architecture, database setup, and authentication system</p>
+                </div>
+                <div class="card">
+                    <h4>Week 2: Student Experience</h4>
+                    <p>Attendance tracker, timetable, and Lost & Found modules</p>
+                </div>
+                <div class="card">
+                    <h4>Week 3: Admin Control</h4>
+                    <p>Management tools for students, attendance, and exams</p>
+                </div>
+                <div class="card">
+                    <h4>Week 4: Polish & Deploy</h4>
+                    <p>Announcement system, UI/UX refinements, and testing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Key Achievements -->
+        <div class="slide slide-11">
+            <h2>🏆 Key Achievements</h2>
+            <ul style="font-size: 26px; margin-top: 40px;">
+                <li>Fully functional dual-role system (Student & Admin)</li>
+                <li>Real-time attendance tracking with automatic calculations</li>
+                <li>Secure authentication and SQL injection prevention</li>
+                <li>Mobile-responsive design for all devices</li>
+                <li>Complete CRUD operations across all modules</li>
+                <li>Professional-grade code architecture</li>
+            </ul>
+        </div>
+
+        <!-- Slide 12: Thank You -->
+        <div class="slide slide-12 center">
+            <div class="logo">🎓</div>
+            <h1>Thank You!</h1>
+            <h3 style="margin-top: 40px;">ICC COMPANION</h3>
+            <p class="subtitle">Icon Commerce College Campus Portal</p>
+            <p style="margin-top: 60px; font-size: 28px;">Questions & Answers</p>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / 12
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 12;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            if (currentSlide < 1) currentSlide = 1;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+            if (e.key === 'Home') { currentSlide = 1; showSlide(currentSlide); }
+            if (e.key === 'End') { currentSlide = totalSlides; showSlide(currentSlide); }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
