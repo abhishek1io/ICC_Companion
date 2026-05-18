@@ -253,7 +253,6 @@ a {
 }
 
 .menu-card:hover {
-    transform: translateY(-2px);
 }
 
 .menu-card:nth-child(1):hover { border-color: #a78bfa; }
@@ -608,12 +607,7 @@ table tr:hover {
 }
 
 .login-box .btn-primary:hover {
-    transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-}
-
-.login-box .btn-primary:active {
-    transform: translateY(0);
 }
 
 .login-box .switch-login {
