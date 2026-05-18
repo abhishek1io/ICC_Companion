@@ -5,7 +5,7 @@
 // =============================================
 
 // Database credentials
-$db_host = "localhost";
+$db_host = "localhost:3309";
 $db_user = "root";
 $db_pass = "";  // Default XAMPP has no password
 $db_name = "campus_portal";
