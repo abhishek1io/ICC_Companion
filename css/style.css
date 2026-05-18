@@ -285,14 +285,8 @@ a {
 .menu-card:nth-child(10):hover { border-color: #fb7185; }
 
 .menu-card .icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    margin: 0 auto 14px;
+    font-size: 32px;
+    margin-bottom: 10px;
 }
 
 .menu-card .title {
@@ -910,25 +904,15 @@ table tr:hover {
 .nav-menu li:nth-child(11) a i { color: #fb7185; }
 
 /* Quick-action menu cards — soft, matching nav */
-.menu-card:nth-child(1) .icon { background: #ede9fe; }
 .menu-card:nth-child(1) .icon i { color: #a78bfa; }
-.menu-card:nth-child(2) .icon { background: #cffafe; }
 .menu-card:nth-child(2) .icon i { color: #22d3ee; }
-.menu-card:nth-child(3) .icon { background: #d1fae5; }
 .menu-card:nth-child(3) .icon i { color: #34d399; }
-.menu-card:nth-child(4) .icon { background: #fef3c7; }
 .menu-card:nth-child(4) .icon i { color: #fbbf24; }
-.menu-card:nth-child(5) .icon { background: #fee2e2; }
 .menu-card:nth-child(5) .icon i { color: #f87171; }
-.menu-card:nth-child(6) .icon { background: #fce7f3; }
 .menu-card:nth-child(6) .icon i { color: #f472b6; }
-.menu-card:nth-child(7) .icon { background: #e0e7ff; }
 .menu-card:nth-child(7) .icon i { color: #818cf8; }
-.menu-card:nth-child(8) .icon { background: #ccfbf1; }
 .menu-card:nth-child(8) .icon i { color: #2dd4bf; }
-.menu-card:nth-child(9) .icon { background: #ffedd5; }
 .menu-card:nth-child(9) .icon i { color: #fb923c; }
-.menu-card:nth-child(10) .icon { background: #ffe4e6; }
 .menu-card:nth-child(10) .icon i { color: #fb7185; }
 
 /* Stat icon colors — soft */
