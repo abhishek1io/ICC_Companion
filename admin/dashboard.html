@@ -43,49 +43,23 @@
 
     <!-- Main Content -->
     <div class="container">
-        <div class="card" style="border-left: 4px solid var(--primary);">
-            <h1 style="margin: 0; font-size: 22px; color: var(--dark);">Welcome Back, <span id="welcomeName">-</span>! <i class="fa-regular fa-hand-wave"></i></h1>
-            <p id="scopeBadge"
-                style="margin: 8px 0 0 0; font-size: 14px; display: flex; align-items: center; gap: 8px;">
-                <!-- Filled via JS -->
-            </p>
+        <div class="card welcome-card" id="welcomeCard">
+            <div class="role-banner">
+                <h1 style="margin: 0; font-size: 22px; color: var(--dark);">Welcome Back, <span id="welcomeName">-</span>!</h1>
+                <span id="roleBadge" class="role-badge-lg"></span>
+            </div>
+            <p id="scopeBadge" class="role-subtitle"></p>
         </div>
 
         <!-- Stats Cards -->
-        <div class="dashboard-grid" id="statsContainer">
-            <div class="stat-card">
-                <div class="stat-icon blue"><i class="fas fa-users"></i></div>
-                <div class="stat-info">
-                    <h3 id="totalStudents">--</h3>
-                    <p>Total Students</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon green"><i class="fas fa-calendar"></i></div>
-                <div class="stat-info">
-                    <h3 id="upcomingExams">--</h3>
-                    <p>Upcoming Exams</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon orange"><i class="fas fa-magnifying-glass"></i></div>
-                <div class="stat-info">
-                    <h3 id="lostItems">--</h3>
-                    <p>Active Lost/Found</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon red"><i class="fas fa-bullhorn"></i></div>
-                <div class="stat-info">
-                    <h3 id="announcements">--</h3>
-                    <p>Announcements</p>
-                </div>
-            </div>
-        </div>
+        <div class="dashboard-grid" id="statsContainer"></div>
 
         <!-- Quick Actions -->
-        <h3 class="page-title" style="font-size: 18px; margin-top: 10px;">Quick Actions</h3>
-        <div class="menu-grid">
+        <div class="section-header-role">
+            <h3 class="page-title" id="quickActionsTitle" style="font-size: 18px;">Quick Actions</h3>
+            <span class="section-badge" id="quickActionsBadge"></span>
+        </div>
+        <div class="menu-grid" id="quickActionsGrid">
             <a href="staff.html" class="menu-card" id="cardStaff" style="display: none;">
                 <div class="icon"><i class="fas fa-user-tie"></i></div>
                 <div class="title">Manage Faculty</div>
@@ -128,9 +102,18 @@
             </a>
         </div>
 
+        <!-- My Subjects (Faculty only) -->
+        <div id="facultySubjectsSection" style="display: none;">
+            <h3 class="page-title" style="font-size: 18px; margin-top: 10px;"><i class="fas fa-book-open"></i> My Subjects</h3>
+            <div class="subject-mini-list" id="facultySubjectsList">
+                <div style="text-align: center; padding: 20px; color: #64748b; grid-column: 1/-1;">Loading...</div>
+            </div>
+        </div>
+
         <!-- Students by Department -->
-        <h3 class="page-title" style="font-size: 18px; margin-top: 30px;">Students by Department</h3>
-        <div class="card">
+        <div id="deptStatsSection">
+            <h3 class="page-title" style="font-size: 18px; margin-top: 30px;"><i class="fas fa-building"></i> Students by Department</h3>
+            <div class="card">
             <div id="deptStats"
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
                 <div style="text-align: center; padding: 20px; color: #64748b; grid-column: 1/-1;">Loading...</div>
@@ -140,107 +123,156 @@
 
     <script src="../js/main.js"></script>
     <script>
-        // Check if logged in
-        if (!checkAdminLogin()) {
-            // Will redirect to login
-        }
+        if (!checkAdminLogin()) {}
 
-        // Get admin info and display
         var admin = getAdminInfo();
         updateHeaderUI();
         document.getElementById('welcomeName').textContent = admin.name;
 
-        // Display scope in banner and hide restricted items
-        var scopeEl = document.getElementById('scopeBadge');
-        
+        var roleLabel, roleClass, scopeText, welcomeClass, sectionLabel;
+        var dept = admin.assignedDept === 'all' ? 'All Departments' : admin.assignedDept;
+        var sem = admin.assignedSemester === 'all' ? 'All Semesters' : 'Semester ' + admin.assignedSemester;
+
         if (admin.role === 'super-admin') {
-            // Principal
+            roleLabel = 'PRINCIPAL';
+            roleClass = 'principal';
+            scopeText = 'You have full system access to all modules.';
+            sectionLabel = 'Full Access';
+            welcomeClass = 'principal';
             document.getElementById('navStaff').style.display = 'block';
             document.getElementById('navDepts').style.display = 'block';
             document.getElementById('cardStaff').style.display = 'block';
             document.getElementById('cardDepts').style.display = 'block';
-            scopeEl.innerHTML = '<span class="badge badge-danger" style="padding: 4px 10px;">PRINCIPAL</span> Full System Access';
         } else if (admin.role === 'dept-admin') {
-            // HOD
-            // Hide menu items that are restricted for HOD (Depts and Staff)
-            var restrictedItems = ['Depts', 'Staff'];
-            restrictedItems.forEach(function(item) {
+            roleLabel = 'HOD';
+            roleClass = 'hod';
+            scopeText = 'Managing <strong>' + dept + '</strong> department.';
+            sectionLabel = 'Department Tools';
+            welcomeClass = 'hod';
+            ['Depts', 'Staff'].forEach(function(item) {
                 var nav = document.getElementById('nav' + item);
                 var card = document.getElementById('card' + item);
                 if (nav) nav.style.display = 'none';
                 if (card) card.style.display = 'none';
             });
-            
-            var dept = admin.assignedDept === 'all' ? 'All Departments' : admin.assignedDept;
-            scopeEl.innerHTML = '<span class="badge badge-warning" style="padding: 4px 10px; color: #000;">HOD</span> Dept: <strong>' + dept + '</strong>';
         } else {
-            // Faculty
-            // Hide menu items that are restricted for Faculty
-            var restrictedItems = ['Staff', 'Depts', 'Subjects', 'Exams', 'Routines', 'LostFound', 'Announcements'];
-            restrictedItems.forEach(function(item) {
+            roleLabel = 'FACULTY';
+            roleClass = 'faculty';
+            scopeText = 'Assigned: <strong>' + dept + '</strong> | <strong>' + sem + '</strong>';
+            sectionLabel = 'My Tools';
+            welcomeClass = 'faculty';
+            ['Staff', 'Depts', 'Subjects', 'Exams', 'Routines', 'LostFound', 'Announcements'].forEach(function(item) {
                 var nav = document.getElementById('nav' + item);
                 var card = document.getElementById('card' + item);
                 if (nav) nav.style.display = 'none';
                 if (card) card.style.display = 'none';
             });
-            
-            var dept = admin.assignedDept === 'all' ? 'All Departments' : admin.assignedDept;
-            var sem = admin.assignedSemester === 'all' ? 'All Semesters' : 'Semester ' + admin.assignedSemester;
-            scopeEl.innerHTML = '<span class="badge badge-info" style="padding: 4px 10px;">FACULTY</span> Assigned: <strong>' + dept + '</strong> | <strong>' + sem + '</strong>';
+            document.getElementById('facultySubjectsSection').style.display = 'block';
+            document.getElementById('deptStatsSection').style.display = 'none';
+            loadFacultySubjects();
         }
 
-        // Load dashboard stats
+        document.getElementById('roleBadge').className = 'role-badge-lg ' + roleClass;
+        document.getElementById('roleBadge').innerHTML = '<i class="fas fa-shield-halved"></i> ' + roleLabel;
+        document.getElementById('scopeBadge').innerHTML = scopeText;
+        document.getElementById('welcomeCard').classList.add(welcomeClass);
+        document.getElementById('quickActionsTitle').textContent = 'Quick Actions \u2022 ' + sectionLabel;
+        document.getElementById('quickActionsBadge').className = 'section-badge ' + roleClass;
+        document.getElementById('quickActionsBadge').textContent = roleLabel;
+
         loadDashboardStats();
 
-        function loadDashboardStats() {
-            // Get students count
-            fetch('../api/get-students.php')
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.success) {
-                        document.getElementById('totalStudents').textContent = data.data.length;
+        function buildStatCards(cards) {
+            var html = '';
+            cards.forEach(function(c) {
+                html += '<div class="stat-card">';
+                html += '  <div class="stat-icon ' + c.color + '"><i class="' + c.icon + '"></i></div>';
+                html += '  <div class="stat-info">';
+                html += '    <h3 id="' + c.id + '">--</h3>';
+                html += '    <p>' + c.label + '</p>';
+                html += '  </div>';
+                html += '</div>';
+            });
+            document.getElementById('statsContainer').innerHTML = html;
+        }
 
-                        // Calculate department-wise
-                        var deptCount = {};
-                        data.data.forEach(function (s) {
-                            deptCount[s.dept_code] = (deptCount[s.dept_code] || 0) + 1;
-                        });
+        function loadDashboardStats() {
+            if (admin.role === 'faculty') {
+                buildStatCards([
+                    { id: 'statStudents', label: 'My Students', icon: 'fas fa-users', color: 'blue' },
+                    { id: 'statSubjects', label: 'My Subjects', icon: 'fas fa-book-open', color: 'purple' },
+                    { id: 'statExams', label: 'Upcoming Exams', icon: 'fas fa-calendar', color: 'green' }
+                ]);
+            } else {
+                buildStatCards([
+                    { id: 'statStudents', label: admin.role === 'dept-admin' ? 'Dept Students' : 'Total Students', icon: 'fas fa-users', color: 'blue' },
+                    { id: 'statExams', label: 'Upcoming Exams', icon: 'fas fa-calendar', color: 'green' },
+                    { id: 'statLost', label: 'Active Lost/Found', icon: 'fas fa-magnifying-glass', color: 'orange' },
+                    { id: 'statAnnounce', label: 'Announcements', icon: 'fas fa-bullhorn', color: 'red' }
+                ]);
+            }
+
+            fetch('../api/get-students.php')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        var el = document.getElementById('statStudents');
+                        if (el) el.textContent = data.data.length;
 
                         var deptHtml = '';
-                        for (var dept in deptCount) {
+                        var deptCount = {};
+                        data.data.forEach(function(s) { deptCount[s.dept_code] = (deptCount[s.dept_code] || 0) + 1; });
+                        for (var d in deptCount) {
                             deptHtml += '<div style="text-align: center; padding: 20px; background: #f8fafc; border-radius: 8px;">';
-                            deptHtml += '<div style="font-size: 24px; font-weight: bold; color: var(--primary);">' + deptCount[dept] + '</div>';
-                            deptHtml += '<div style="font-size: 14px; color: #64748b;">' + dept + '</div>';
+                            deptHtml += '  <div style="font-size: 24px; font-weight: bold; color: var(--primary);">' + deptCount[d] + '</div>';
+                            deptHtml += '  <div style="font-size: 14px; color: #64748b;">' + d + '</div>';
                             deptHtml += '</div>';
                         }
-                        document.getElementById('deptStats').innerHTML = deptHtml;
+                        var ds = document.getElementById('deptStats');
+                        if (ds) ds.innerHTML = deptHtml;
                     }
                 });
 
-            // Get exams count
-            fetch('../api/get-exams.php')
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.success) {
-                        document.getElementById('upcomingExams').textContent = data.data.length;
-                    }
-                });
+            if (admin.role !== 'faculty') {
+                fetch('../api/get-exams.php')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { if (data.success) { var el = document.getElementById('statExams'); if (el) el.textContent = data.data.length; } });
 
-            // Get lost/found count
-            fetch('../api/get-lost-found.php?status=active')
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.success) {
-                        document.getElementById('lostItems').textContent = data.data.length;
-                    }
-                });
+                fetch('../api/get-lost-found.php?status=active')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { if (data.success) { var el = document.getElementById('statLost'); if (el) el.textContent = data.data.length; } });
 
-            // Get announcements count
-            fetch('../api/get-announcements.php')
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (data.success) {
-                        document.getElementById('announcements').textContent = data.data.length;
+                fetch('../api/get-announcements.php')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { if (data.success) { var el = document.getElementById('statAnnounce'); if (el) el.textContent = data.data.length; } });
+            } else {
+                fetch('../api/get-exams.php')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { if (data.success) { var el = document.getElementById('statExams'); if (el) el.textContent = data.data.length; } });
+
+                fetch('../api/get-faculty-subjects.php?admin_id=' + admin.id)
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { if (data.success) { var el = document.getElementById('statSubjects'); if (el) el.textContent = data.data.length; } });
+            }
+        }
+
+        function loadFacultySubjects() {
+            fetch('../api/get-faculty-subjects.php?admin_id=' + admin.id)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    var container = document.getElementById('facultySubjectsList');
+                    if (data.success && data.data.length > 0) {
+                        var html = '';
+                        data.data.forEach(function(s) {
+                            html += '<div class="subject-mini-card">';
+                            html += '  <div class="subj-icon"><i class="fas fa-book"></i></div>';
+                            html += '  <div class="subj-name">' + s.subject_name + ' (' + s.subject_code + ')</div>';
+                            html += '  <div class="subj-meta">' + (s.dept_code || '') + ' | Sem ' + (s.semester || '') + '</div>';
+                            html += '</div>';
+                        });
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b; grid-column: 1/-1;">No subjects assigned yet.</div>';
                     }
                 });
         }

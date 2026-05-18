@@ -879,6 +879,177 @@ table tr:hover {
 }
 
 /* =============================================
+   ROLE-BASED DASHBOARD ENHANCEMENTS
+   ============================================= */
+.role-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.role-badge-lg {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.role-badge-lg i { font-size: 14px; }
+
+.role-badge-lg.principal {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+}
+
+.role-badge-lg.hod {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+}
+
+.role-badge-lg.faculty {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+}
+
+.role-badge-lg.student {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #065f46;
+}
+
+.role-subtitle {
+    font-size: 14px;
+    color: var(--gray);
+    margin-top: 6px;
+}
+
+.section-header-role {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.section-header-role .page-title {
+    margin-bottom: 0;
+}
+
+.section-badge {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.section-badge.principal {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.section-badge.hod {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.section-badge.faculty {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.section-badge.student {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* Faculty My Subjects quick view */
+.subject-mini-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.subject-mini-card {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.subject-mini-card:hover {
+    border-color: var(--primary);
+    background: white;
+}
+
+.subject-mini-card .subj-icon {
+    font-size: 24px;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.subject-mini-card .subj-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.subject-mini-card .subj-meta {
+    font-size: 12px;
+    color: var(--gray);
+    margin-top: 4px;
+}
+
+/* Dashboard welcome card enhancements */
+.welcome-card {
+    border-left: 4px solid var(--primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    opacity: 0.04;
+}
+
+.welcome-card.principal::after {
+    background: var(--danger);
+}
+
+.welcome-card.hod::after {
+    background: var(--warning);
+}
+
+.welcome-card.faculty::after {
+    background: var(--primary);
+}
+
+.welcome-card.student::after {
+    background: var(--secondary);
+}
+
+/* Announcements list in dashboard */
+.announcements-dash {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* =============================================
    FONT AWESOME ICON HELPERS
    ============================================= */
 .header .logo-icon i,

@@ -41,10 +41,12 @@
     <!-- Main Content -->
     <div class="container">
         <!-- Welcome Card -->
-        <div class="card" style="border-left: 4px solid var(--primary);">
-            <h2 style="margin-bottom: 5px; color: var(--dark);">Welcome back, <span id="studentName">Student</span>! <i class="fa-regular fa-hand-wave"></i></h2>
-            <p style="color: var(--gray);">Roll No: <span id="studentRoll">-</span> | Department: <span
-                    id="studentDept">-</span> | Semester: <span id="studentSem">-</span></p>
+        <div class="card welcome-card student" id="welcomeCard">
+            <div class="role-banner">
+                <h2 style="margin: 0; color: var(--dark);">Welcome back, <span id="studentName">Student</span>!</h2>
+                <span class="role-badge-lg student"><i class="fas fa-graduation-cap"></i> STUDENT</span>
+            </div>
+            <p class="role-subtitle">Roll No: <strong><span id="studentRoll">-</span></strong> &middot; Department: <strong><span id="studentDept">-</span></strong> &middot; Semester: <strong><span id="studentSem">-</span></strong></p>
         </div>
 
         <!-- Stats Cards -->
@@ -73,7 +75,10 @@
         </div>
 
         <!-- Quick Access Menu -->
-        <h3 class="page-title" style="font-size: 18px; margin-top: 10px;">Quick Access</h3>
+        <div class="section-header-role">
+            <h3 class="page-title" style="font-size: 18px;">Quick Access</h3>
+            <span class="section-badge student">STUDENT</span>
+        </div>
         <div class="menu-grid">
             <a href="subjects.html" class="menu-card">
                 <div class="icon"><i class="fas fa-book-open"></i></div>
@@ -106,27 +111,23 @@
         </div>
 
         <!-- Latest Announcements -->
-        <h3 class="page-title" style="font-size: 18px; margin-top: 30px;">Latest Announcements</h3>
-        <div id="announcementsList">
-            <!-- Will be loaded by JavaScript -->
+        <h3 class="page-title" style="font-size: 18px; margin-top: 30px;"><i class="fas fa-bullhorn"></i> Latest Announcements</h3>
+        <div class="announcements-dash" id="announcementsList">
             <div style="text-align: center; padding: 20px; color: #64748b;">Loading...</div>
         </div>
     </div>
 
     <script src="../js/main.js"></script>
     <script>
-        // Check if logged in
-        if (!checkStudentLogin()) {
-            // Will redirect to login
-        }
+        if (!checkStudentLogin()) {}
 
-        // Get student info and display
         var student = getStudentInfo();
         document.getElementById('userName').textContent = student.name;
         document.getElementById('studentName').textContent = student.name;
         document.getElementById('studentRoll').textContent = student.roll;
         document.getElementById('studentDept').textContent = student.dept;
         document.getElementById('studentSem').textContent = student.semester;
+        document.getElementById('welcomeCard').classList.add('student');
 
         // Load dashboard data
         loadDashboardStats();

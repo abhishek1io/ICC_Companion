@@ -8,7 +8,7 @@ if ($admin_id <= 0) {
     sendResponse(false, 'Invalid Admin ID');
 }
 
-$sql = "SELECT fs.subject_id, s.subject_name, s.subject_code 
+$sql = "SELECT fs.subject_id, s.subject_name, s.subject_code, s.dept_code, s.semester
         FROM faculty_subjects fs
         JOIN subjects s ON fs.subject_id = s.subject_id
         WHERE fs.admin_id = ?";
