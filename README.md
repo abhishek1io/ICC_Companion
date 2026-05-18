@@ -23,10 +23,129 @@
 
 ### Step 2: Copy Project Files
 
-1. Copy the entire `campus-portal` folder
+1. Copy the entire `ICC_Companion` folder
 2. Paste it inside: `C:\xampp\htdocs\`
 3. Your folder structure should be:
    ```
+   C:\xampp\htdocs\ICC_Companion\
+   ├── index.html
+   ├── student-login.html
+   ├── admin-login.html
+   ├── css\
+   ├── js\
+   ├── api\
+   ├── student\
+   ├── admin\
+   └── database\
+   ```
+
+---
+
+### Step 3: Start XAMPP
+
+1. Open **XAMPP Control Panel**
+2. Click **Start** next to **Apache** (for web server)
+3. Click **Start** next to **MySQL** (for database)
+4. Both should show "Running" in green
+
+---
+
+### Step 4: Create Database
+
+1. Open your browser
+2. Go to: `http://localhost/phpmyadmin`
+3. Click on **"Import"** tab at the top
+4. Click **"Choose File"** button
+5. Select: `ICC_Companion/database/campus_portal.sql`
+6. Click **"Go"** button at the bottom
+
+**If successful, you'll see:**
+- A new database called `campus_portal`
+- Tables like: students, admins, attendance, exams, etc.
+
+---
+
+### Step 5: Test the Application
+
+1. Open browser
+2. Go to: `http://localhost/ICC_Companion`
+3. You should see the ICC Companion home page!
+
+---
+
+## 🔐 Login Credentials
+
+### Student Login
+| Roll Number | Date of Birth | Department | Semester |
+|-------------|---------------|------------|----------|
+| UT-231-049-0001 | 2004-05-15 | BCA | 5 |
+| UT-231-049-0002 | 2004-08-22 | BCA | 5 |
+| UT-231-050-0001 | 2004-04-25 | BBA | 5 |
+| UT-231-052-0001 | 2004-09-12 | BCOM | 5 |
+| UT-251-049-0001 | 2006-02-28 | BCA | 1 |
+| UT-251-052-0001 | 2006-06-17 | BCOM | 1 |
+
+### Admin Login
+Click the **Quick Login** buttons on the admin login page, or use:
+
+| Role | Username | Password |
+|------|----------|----------|
+| Principal (Full Access) | admin | admin123 |
+| HOD (BCA Department) | bca | bca123 |
+| Faculty (Subject Teacher) | staff | staff123 |
+
+---
+
+## 📁 Project Structure
+
+```
+ICC_Companion/
+│
+├── index.html              ← Home page (choose login type)
+├── student-login.html      ← Student login
+├── admin-login.html        ← Admin login
+│
+├── student/                ← Student pages (view only)
+│   ├── dashboard.html      ← Student home
+│   ├── subjects.html       ← View subjects
+│   ├── resources.html      ← Academic resources
+│   ├── attendance.html     ← View attendance
+│   ├── exams.html          ← Exam timetable
+│   ├── routines.html       ← Class routine
+│   ├── lost-found.html     ← Browse lost & found
+│   └── announcements.html  ← Read notices
+│
+├── admin/                  ← Admin pages (full control)
+│   ├── dashboard.html      ← Admin home
+│   ├── staff.html          ← Manage faculty
+│   ├── departments.html    ← Manage departments
+│   ├── students.html       ← Add/Edit/Delete students
+│   ├── subjects.html       ← Manage subjects
+│   ├── resources.html      ← Manage resources
+│   ├── attendance.html     ← Mark attendance
+│   ├── exams.html          ← Manage exams
+│   ├── routines.html       ← Manage routines
+│   ├── lost-found.html     ← Manage lost & found
+│   └── announcements.html  ← Post announcements
+│
+├── api/                    ← PHP backend files
+│   ├── config.php          ← Database connection
+│   └── *.php               ← 50+ API endpoints
+│
+├── css/
+│   └── style.css           ← All styles
+│
+├── js/
+│   └── main.js             ← Common JavaScript
+│
+├── fonts/
+│   └── fontawesome/        ← Offline Font Awesome icons
+│
+├── uploads/                ← Uploaded files (routines, resources, etc.)
+│
+└── database/
+    └── campus_portal.sql   ← Database setup script
+```
    C:\xampp\htdocs\campus-portal\
    ├── index.html
    ├── student-login.html
