@@ -902,8 +902,8 @@ table tr:hover {
 .login-box .logo-icon i { color: #60a5fa; }
 
 /* Landing hero button icons */
-.btn-hero-student i { color: #60a5fa; }
-.btn-hero-admin i { color: #fde68a; }
+.btn-hero-student i { color: #60a5fa; margin-right: 6px; }
+.btn-hero-admin i { color: #fff; margin-right: 6px; }
 
 /* Login tab icons */
 .login-tabs .btn i {

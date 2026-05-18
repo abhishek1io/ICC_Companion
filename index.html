@@ -114,28 +114,43 @@
 
         .feat-card {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            padding: 28px 22px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            padding: 32px 24px 28px;
             text-align: center;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s, transform 0.2s;
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s ease;
         }
 
         .feat-card:hover {
-            border-color: #bfdbfe;
-            transform: translateY(-2px);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.07);
         }
 
+        .feat-card:nth-child(1):hover { border-color: #60a5fa; }
+        .feat-card:nth-child(2):hover { border-color: #34d399; }
+        .feat-card:nth-child(3):hover { border-color: #fb923c; }
+        .feat-card:nth-child(4):hover { border-color: #a78bfa; }
+        .feat-card:nth-child(5):hover { border-color: #f472b6; }
+        .feat-card:nth-child(6):hover { border-color: #2dd4bf; }
+        .feat-card:nth-child(7):hover { border-color: #60a5fa; }
+        .feat-card:nth-child(8):hover { border-color: #34d399; }
+
         .feat-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 10px;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
-            margin: 0 auto 16px;
+            font-size: 24px;
+            margin: 0 auto 18px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feat-card:hover .feat-icon {
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
         }
 
         .feat-icon.blue {
@@ -172,7 +187,7 @@
         .feat-card p {
             font-size: 13px;
             color: var(--gray);
-            line-height: 1.6;
+            line-height: 1.65;
         }
 
         /* ── Footer ────────────────────────────── */
