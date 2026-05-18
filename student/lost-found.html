@@ -12,7 +12,7 @@
     <!-- Header -->
     <div class="header">
         <div class="logo">
-            <span class="logo-icon">🎓</span>
+            <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
             <div>
                 <div class="college-name">ICC Companion</div>
                 <div class="college-short">ICON COMMERCE COLLEGE</div>
@@ -27,20 +27,20 @@
     <!-- Navigation -->
     <nav class="nav-menu">
         <ul>
-            <li><a href="dashboard.html">🏠 Dashboard</a></li>
-            <li><a href="subjects.html">📖 Subjects</a></li>
-            <li><a href="resources.html">📚 Resources</a></li>
-            <li><a href="attendance.html">📊 Attendance</a></li>
-            <li><a href="exams.html">📅 Exams</a></li>
-            <li><a href="routines.html">📋 Routines</a></li>
-            <li><a href="lost-found.html" class="active">🔍 Lost & Found</a></li>
-            <li><a href="announcements.html">📢 Announcements</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-house"></i> Dashboard</a></li>
+            <li><a href="subjects.html"><i class="fas fa-book-open"></i> Subjects</a></li>
+            <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
+            <li><a href="attendance.html"><i class="fas fa-chart-bar"></i> Attendance</a></li>
+            <li><a href="exams.html"><i class="fas fa-calendar"></i> Exams</a></li>
+            <li><a href="routines.html"><i class="fas fa-clipboard"></i> Routines</a></li>
+            <li><a href="lost-found.html" class="active"><i class="fas fa-magnifying-glass"></i> Lost & Found</a></li>
+            <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
         </ul>
     </nav>
 
     <!-- Main Content -->
     <div class="container">
-        <h1 class="page-title">🔍 Lost & Found</h1>
+        <h1 class="page-title"><i class="fas fa-magnifying-glass"></i> Lost & Found</h1>
 
         <!-- Filters -->
         <div class="card">
@@ -119,12 +119,12 @@
                             html += '  <div class="item-details">';
                             html += '    <span class="badge ' + typeClass + '" style="margin-bottom: 8px;">' + item.item_type.toUpperCase() + '</span>';
                             html += '    <div class="item-title">' + item.title + '</div>';
-                            html += '    <div class="item-location">📍 ' + item.location + '</div>';
-                            html += '    <div style="font-size: 12px; color: #64748b; margin-bottom: 10px;">📅 ' + formatDate(item.item_date) + '</div>';
+                            html += '    <div class="item-location"><i class="fas fa-location-dot"></i> ' + item.location + '</div>';
+                            html += '    <div style="font-size: 12px; color: #64748b; margin-bottom: 10px;"><i class="fas fa-calendar"></i> ' + formatDate(item.item_date) + '</div>';
                             if (item.description) {
                                 html += '    <div style="font-size: 13px; color: #475569; margin-bottom: 10px;">' + item.description.substring(0, 100) + '</div>';
                             }
-                            html += '    <div style="font-size: 12px; background: #f1f5f9; padding: 8px; border-radius: 4px;">📞 ' + item.contact_info + '</div>';
+                            html += '    <div style="font-size: 12px; background: #f1f5f9; padding: 8px; border-radius: 4px;"><i class="fas fa-phone"></i> ' + item.contact_info + '</div>';
                             html += '  </div>';
                             html += '</div>';
                         });
@@ -142,14 +142,14 @@
 
         function getCategoryIcon(category) {
             var icons = {
-                'id-card': '🪪',
-                'phone': '📱',
-                'wallet': '👛',
-                'books': '📚',
-                'electronics': '🔌',
-                'other': '📦'
+                'id-card': '<i class="fas fa-id-card"></i>',
+                'phone': '<i class="fas fa-mobile-screen"></i>',
+                'wallet': '<i class="fas fa-wallet"></i>',
+                'books': '<i class="fas fa-book"></i>',
+                'electronics': '<i class="fas fa-plug"></i>',
+                'other': '<i class="fas fa-box"></i>'
             };
-            return icons[category] || '📦';
+            return icons[category] || '<i class="fas fa-box"></i>';
         }
     </script>
 </body>

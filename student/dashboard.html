@@ -12,7 +12,7 @@
     <!-- Header -->
     <div class="header">
         <div class="logo">
-            <span class="logo-icon">🎓</span>
+            <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
             <div>
                 <div class="college-name">ICC Companion</div>
                 <div class="college-short">ICON COMMERCE COLLEGE</div>
@@ -27,14 +27,14 @@
     <!-- Navigation -->
     <nav class="nav-menu">
         <ul>
-            <li><a href="dashboard.html" class="active">🏠 Dashboard</a></li>
-            <li><a href="subjects.html">📖 Subjects</a></li>
-            <li><a href="resources.html">📚 Resources</a></li>
-            <li><a href="attendance.html">📊 Attendance</a></li>
-            <li><a href="exams.html">📅 Exams</a></li>
-            <li><a href="routines.html">📋 Routines</a></li>
-            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
-            <li><a href="announcements.html">📢 Announcements</a></li>
+            <li><a href="dashboard.html" class="active"><i class="fas fa-house"></i> Dashboard</a></li>
+            <li><a href="subjects.html"><i class="fas fa-book-open"></i> Subjects</a></li>
+            <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
+            <li><a href="attendance.html"><i class="fas fa-chart-bar"></i> Attendance</a></li>
+            <li><a href="exams.html"><i class="fas fa-calendar"></i> Exams</a></li>
+            <li><a href="routines.html"><i class="fas fa-clipboard"></i> Routines</a></li>
+            <li><a href="lost-found.html"><i class="fas fa-magnifying-glass"></i> Lost & Found</a></li>
+            <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
         </ul>
     </nav>
 
@@ -42,7 +42,7 @@
     <div class="container">
         <!-- Welcome Card -->
         <div class="card">
-            <h2 style="margin-bottom: 5px;">Welcome back, <span id="studentName">Student</span>! 👋</h2>
+            <h2 style="margin-bottom: 5px;">Welcome back, <span id="studentName">Student</span>! <i class="fa-regular fa-hand-wave"></i></h2>
             <p style="color: #64748b;">Roll No: <span id="studentRoll">-</span> | Department: <span
                     id="studentDept">-</span> | Semester: <span id="studentSem">-</span></p>
         </div>
@@ -50,21 +50,21 @@
         <!-- Stats Cards -->
         <div class="dashboard-grid" id="statsContainer">
             <div class="stat-card">
-                <div class="stat-icon blue">📊</div>
+                <div class="stat-icon blue"><i class="fas fa-chart-bar"></i></div>
                 <div class="stat-info">
                     <h3 id="overallAttendance">--%</h3>
                     <p>Overall Attendance</p>
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon green">📅</div>
+                <div class="stat-icon green"><i class="fas fa-calendar"></i></div>
                 <div class="stat-info">
                     <h3 id="upcomingExams">--</h3>
                     <p>Upcoming Exams</p>
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon orange">📢</div>
+                <div class="stat-icon orange"><i class="fas fa-bullhorn"></i></div>
                 <div class="stat-info">
                     <h3 id="newAnnouncements">--</h3>
                     <p>Announcements</p>
@@ -76,31 +76,31 @@
         <h3 class="page-title" style="font-size: 18px; margin-top: 10px;">Quick Access</h3>
         <div class="menu-grid">
             <a href="subjects.html" class="menu-card">
-                <div class="icon">📖</div>
+                <div class="icon"><i class="fas fa-book-open"></i></div>
                 <div class="title">My Subjects</div>
             </a>
             <a href="resources.html" class="menu-card">
-                <div class="icon">📚</div>
+                <div class="icon"><i class="fas fa-book"></i></div>
                 <div class="title">Academic Resources</div>
             </a>
             <a href="attendance.html" class="menu-card">
-                <div class="icon">📊</div>
+                <div class="icon"><i class="fas fa-chart-bar"></i></div>
                 <div class="title">My Attendance</div>
             </a>
             <a href="exams.html" class="menu-card">
-                <div class="icon">📅</div>
+                <div class="icon"><i class="fas fa-calendar"></i></div>
                 <div class="title">Exam Timetable</div>
             </a>
             <a href="routines.html" class="menu-card">
-                <div class="icon">📋</div>
+                <div class="icon"><i class="fas fa-clipboard"></i></div>
                 <div class="title">Class Routine</div>
             </a>
             <a href="lost-found.html" class="menu-card">
-                <div class="icon">🔍</div>
+                <div class="icon"><i class="fas fa-magnifying-glass"></i></div>
                 <div class="title">Lost & Found</div>
             </a>
             <a href="announcements.html" class="menu-card">
-                <div class="icon">📢</div>
+                <div class="icon"><i class="fas fa-bullhorn"></i></div>
                 <div class="title">Announcements</div>
             </a>
         </div>
@@ -182,8 +182,8 @@
                         data.data.forEach(function (item) {
                             var priorityClass = item.priority === 'high' ? 'high' : '';
                             var mediaIcons = '';
-                            if (item.attachment_url) mediaIcons += ' 📎';
-                            if (item.link_url) mediaIcons += ' 🔗';
+            if (item.attachment_url) mediaIcons += ' <i class="fas fa-paperclip"></i>';
+            if (item.link_url) mediaIcons += ' <i class="fas fa-link"></i>';
                             
                             html += '<div class="announcement-item ' + priorityClass + '" onclick="window.location.href=\'announcements.html\'" style="cursor: pointer;">';
                             html += '  <div class="title">' + item.title + mediaIcons + '</div>';

@@ -7,26 +7,80 @@
     <title>Admin Login - ICC Companion</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
+        .login-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
         .login-tabs .btn {
-            background: #f1f5f9;
+            flex: 1;
+            padding: 10px 6px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
             color: #64748b;
-            border: 2px solid transparent;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .login-tabs .btn.active {
             background: #fff;
-            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .login-tabs .btn i {
+            margin-right: 5px;
+        }
+        .login-tabs .btn.active {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            color: var(--primary);
+            background: #f8faff;
             font-weight: 600;
-            transform: translateY(-1px);
         }
+        .login-tabs .btn:nth-child(1):hover:not(.active) { border-color: #7c3aed; color: #7c3aed; }
+        .login-tabs .btn:nth-child(1):hover:not(.active) i { color: #7c3aed; }
+        .login-tabs .btn:nth-child(2):hover:not(.active) { border-color: #0891b2; color: #0891b2; }
+        .login-tabs .btn:nth-child(2):hover:not(.active) i { color: #0891b2; }
+        .login-tabs .btn:nth-child(3):hover:not(.active) { border-color: #d97706; color: #d97706; }
+        .login-tabs .btn:nth-child(3):hover:not(.active) i { color: #d97706; }
+        .login-tabs .btn:nth-child(1).active { border-color: #7c3aed; }
+        .login-tabs .btn:nth-child(1).active i { color: #7c3aed; }
+        .login-tabs .btn:nth-child(2).active { border-color: #0891b2; }
+        .login-tabs .btn:nth-child(2).active i { color: #0891b2; }
+        .login-tabs .btn:nth-child(3).active { border-color: #d97706; }
+        .login-tabs .btn:nth-child(3).active,
+        .login-tabs .btn:nth-child(3).active i { color: #d97706; }
 
-        .login-tabs .btn:hover:not(.active) {
-            background: #e2e8f0;
-            color: #1e293b;
+        .quick-btn {
+            flex: 1;
+            padding: 14px 8px;
+            border: 1.5px solid transparent;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
         }
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+        .quick-btn:active {
+            transform: translateY(0);
+        }
+        .quick-btn i {
+            font-size: 20px;
+        }
+        .quick-btn.qb-faculty { background: #f5f3ff; color: #7c3aed; }
+        .quick-btn.qb-faculty:hover { background: #ede9fe; border-color: #7c3aed; }
+        .quick-btn.qb-hod { background: #ecfeff; color: #0891b2; }
+        .quick-btn.qb-hod:hover { background: #cffafe; border-color: #0891b2; }
+        .quick-btn.qb-principal { background: #fffbeb; color: #d97706; }
+        .quick-btn.qb-principal:hover { background: #fef3c7; border-color: #d97706; }
     </style>
 </head>
 
@@ -34,20 +88,17 @@
     <div class="login-page">
         <div class="login-box">
             <div class="logo">
-                <div class="logo-icon">🔐</div>
+                <div class="logo-icon"><i class="fas fa-lock"></i></div>
             </div>
             <h1>Admin Login</h1>
             <p class="subtitle">ICC Companion</p>
 
             <div id="errorMsg" class="alert alert-error hidden"></div>
 
-            <div class="login-tabs" style="display: flex; gap: 8px; margin-bottom: 20px;">
-                <button type="button" class="btn btn-outline active" id="facultyTab" onclick="setLoginType('faculty')"
-                    style="flex: 1; border-radius: 8px; font-size: 13px; padding: 10px 5px;">👨‍💼 Faculty</button>
-                <button type="button" class="btn btn-outline" id="hodTab" onclick="setLoginType('dept-admin')"
-                    style="flex: 1; border-radius: 8px; font-size: 13px; padding: 10px 5px;">🏢 HOD</button>
-                <button type="button" class="btn btn-outline" id="principalTab" onclick="setLoginType('super-admin')"
-                    style="flex: 1; border-radius: 8px; font-size: 13px; padding: 10px 5px;">👑 Principal</button>
+            <div class="login-tabs">
+                <button type="button" class="btn active" id="facultyTab" onclick="setLoginType('faculty')"><i class="fas fa-user-tie"></i> Faculty</button>
+                <button type="button" class="btn" id="hodTab" onclick="setLoginType('dept-admin')"><i class="fas fa-building"></i> HOD</button>
+                <button type="button" class="btn" id="principalTab" onclick="setLoginType('super-admin')"><i class="fas fa-crown"></i> Principal</button>
             </div>
 
             <form id="loginForm">
@@ -65,10 +116,27 @@
                 <button type="submit" class="btn btn-primary" id="loginBtn">Login as Faculty</button>
             </form>
 
+            <div class="demo-section">
+                <p class="demo-label">Quick Demo Access</p>
+                <div class="demo-grid">
+                    <button type="button" class="quick-btn qb-faculty" onclick="quickLogin('faculty')">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Faculty</span>
+                    </button>
+                    <button type="button" class="quick-btn qb-hod" onclick="quickLogin('dept-admin')">
+                        <i class="fas fa-building"></i>
+                        <span>HOD</span>
+                    </button>
+                    <button type="button" class="quick-btn qb-principal" onclick="quickLogin('super-admin')">
+                        <i class="fas fa-crown"></i>
+                        <span>Principal</span>
+                    </button>
+                </div>
+            </div>
+
             <div class="switch-login">
                 <a href="index.html">← Back to Home</a>
             </div>
-
 
         </div>
     </div>
@@ -163,6 +231,18 @@
             var errorMsg = document.getElementById('errorMsg');
             errorMsg.textContent = message;
             errorMsg.classList.remove('hidden');
+        }
+
+        function quickLogin(role) {
+            var creds = {
+                'faculty': { user: 'staff', pass: 'staff123' },
+                'dept-admin': { user: 'bca', pass: 'bca123' },
+                'super-admin': { user: 'admin', pass: 'admin123' }
+            };
+            setLoginType(role);
+            document.getElementById('username').value = creds[role].user;
+            document.getElementById('password').value = creds[role].pass;
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
         }
     </script>
 </body>

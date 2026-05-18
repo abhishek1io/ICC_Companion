@@ -3,6 +3,9 @@
    ICON COMMERCE COLLEGE (ICC)
    ============================================= */
 
+/* Font Awesome 6 Free (offline) */
+@import url('../fonts/fontawesome/css/all.min.css');
+
 /* =============================================
    CSS VARIABLES (Easy to change colors)
    ============================================= */
@@ -481,53 +484,154 @@ table tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--light);
+    background: var(--light);
 }
 
 .login-box {
     background-color: white;
-    border-radius: 10px;
-    box-shadow: var(--shadow-md);
-    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+    padding: 40px 36px;
     width: 100%;
     max-width: 400px;
+    position: relative;
+    z-index: 1;
+    animation: loginFadeIn 0.5s ease;
+}
+
+@keyframes loginFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .login-box .logo {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
 .login-box .logo-icon {
-    font-size: 48px;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.login-box .logo-icon i {
     color: var(--primary);
 }
 
 .login-box h1 {
-    font-size: 20px;
+    font-size: 22px;
+    font-weight: 700;
     color: var(--dark);
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
 }
 
 .login-box .subtitle {
     text-align: center;
     color: var(--gray);
     font-size: 14px;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
+}
+
+.login-box .form-group {
+    margin-bottom: 18px;
+}
+
+.login-box .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.login-box .form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--dark);
+    background: #fafbfc;
+    transition: all 0.2s;
+}
+
+.login-box .form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.login-box .form-group input::placeholder {
+    color: #94a3b8;
 }
 
 .login-box .btn {
     width: 100%;
     padding: 12px;
-    margin-top: 10px;
+    margin-top: 6px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.login-box .btn-primary {
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+}
+
+.login-box .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+
+.login-box .btn-primary:active {
+    transform: translateY(0);
 }
 
 .login-box .switch-login {
     text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
+    margin-top: 22px;
+    font-size: 13px;
+}
+
+.login-box .switch-login a {
     color: var(--gray);
+    transition: color 0.2s;
+}
+
+.login-box .switch-login a:hover {
+    color: var(--primary);
+}
+
+.demo-section {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+}
+
+.demo-label {
+    font-size: 11px;
+    color: #94a3b8;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.demo-grid {
+    display: flex;
+    gap: 8px;
 }
 
 /* =============================================
@@ -739,3 +843,82 @@ table tr:hover {
 .hidden {
     display: none;
 }
+
+/* =============================================
+   FONT AWESOME ICON HELPERS
+   ============================================= */
+.header .logo-icon i,
+.login-box .logo-icon i {
+    font-size: inherit;
+}
+
+/* Nav link icons — soft variants */
+.nav-menu li a i {
+    margin-right: 6px;
+    font-size: 0.9em;
+}
+.nav-menu li:nth-child(1) a i { color: #60a5fa; }
+.nav-menu li:nth-child(2) a i { color: #a78bfa; }
+.nav-menu li:nth-child(3) a i { color: #22d3ee; }
+.nav-menu li:nth-child(4) a i { color: #34d399; }
+.nav-menu li:nth-child(5) a i { color: #fbbf24; }
+.nav-menu li:nth-child(6) a i { color: #f87171; }
+.nav-menu li:nth-child(7) a i { color: #f472b6; }
+.nav-menu li:nth-child(8) a i { color: #818cf8; }
+.nav-menu li:nth-child(9) a i { color: #2dd4bf; }
+.nav-menu li:nth-child(10) a i { color: #fb923c; }
+.nav-menu li:nth-child(11) a i { color: #fb7185; }
+
+/* Quick-action menu cards — soft, matching nav */
+.menu-card:nth-child(1) .icon i { color: #a78bfa; }
+.menu-card:nth-child(2) .icon i { color: #22d3ee; }
+.menu-card:nth-child(3) .icon i { color: #34d399; }
+.menu-card:nth-child(4) .icon i { color: #fbbf24; }
+.menu-card:nth-child(5) .icon i { color: #f87171; }
+.menu-card:nth-child(6) .icon i { color: #f472b6; }
+.menu-card:nth-child(7) .icon i { color: #818cf8; }
+.menu-card:nth-child(8) .icon i { color: #2dd4bf; }
+.menu-card:nth-child(9) .icon i { color: #fb923c; }
+.menu-card:nth-child(10) .icon i { color: #fb7185; }
+
+/* Stat icon colors — soft */
+.stat-icon i { font-size: inherit; }
+.stat-icon.blue i { color: #60a5fa; }
+.stat-icon.green i { color: #34d399; }
+.stat-icon.orange i { color: #fb923c; }
+.stat-icon.red i { color: #f87171; }
+
+/* Feature icon colors (landing page) — soft */
+.feat-icon i { font-size: 26px; }
+.feat-icon.blue i { color: #60a5fa; }
+.feat-icon.green i { color: #34d399; }
+.feat-icon.orange i { color: #fb923c; }
+.feat-icon.purple i { color: #a78bfa; }
+.feat-icon.pink i { color: #f472b6; }
+.feat-icon.teal i { color: #2dd4bf; }
+
+/* Header logo icon */
+.header .logo-icon i { color: #fff; }
+.login-box .logo-icon i { color: #60a5fa; }
+
+/* Landing hero button icons */
+.btn-hero-student i { color: #60a5fa; }
+.btn-hero-admin i { color: #fde68a; }
+
+/* Login tab icons */
+.login-tabs .btn i {
+    margin-right: 5px;
+    font-size: 1.1em;
+}
+
+/* Badge/indicator icons */
+.badge i { margin-right: 3px; }
+
+/* Item card icons (lost & found) */
+.item-card .item-image i {
+    font-size: 48px;
+    color: var(--primary);
+}
+
+/* Exam section header icons */
+.section-header i { margin-right: 6px; }

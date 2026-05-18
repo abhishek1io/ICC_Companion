@@ -24,7 +24,7 @@
     <!-- Header -->
     <div class="header">
         <div class="logo">
-            <span class="logo-icon">🎓</span>
+            <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
             <div>
                 <div class="college-name">ICC Companion</div>
                 <div class="college-short">ICON COMMERCE COLLEGE</div>
@@ -39,20 +39,20 @@
     <!-- Navigation -->
     <nav class="nav-menu">
         <ul>
-            <li><a href="dashboard.html">🏠 Dashboard</a></li>
-            <li><a href="subjects.html">📖 Subjects</a></li>
-            <li><a href="resources.html">📚 Resources</a></li>
-            <li><a href="attendance.html">📊 Attendance</a></li>
-            <li><a href="exams.html" class="active">📅 Exams</a></li>
-            <li><a href="routines.html">📋 Routines</a></li>
-            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
-            <li><a href="announcements.html">📢 Announcements</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-house"></i> Dashboard</a></li>
+            <li><a href="subjects.html"><i class="fas fa-book-open"></i> Subjects</a></li>
+            <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
+            <li><a href="attendance.html"><i class="fas fa-chart-bar"></i> Attendance</a></li>
+            <li><a href="exams.html" class="active"><i class="fas fa-calendar"></i> Exams</a></li>
+            <li><a href="routines.html"><i class="fas fa-clipboard"></i> Routines</a></li>
+            <li><a href="lost-found.html"><i class="fas fa-magnifying-glass"></i> Lost & Found</a></li>
+            <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
         </ul>
     </nav>
 
     <!-- Main Content -->
     <div class="container">
-        <h1 class="page-title">📅 Exam Timetable</h1>
+        <h1 class="page-title"><i class="fas fa-calendar"></i> Exam Timetable</h1>
 
         <div style="color: #64748b; font-size: 14px; margin-bottom: 20px;">
             Showing exams for: <strong id="filterInfo">-</strong>
@@ -60,7 +60,7 @@
 
         <!-- SESSIONAL SECTION -->
         <div class="card" style="border-left: 4px solid #f59e0b;">
-            <h3 style="margin: 0 0 15px 0; color: #d97706;">📋 Sessional Examinations</h3>
+            <h3 style="margin: 0 0 15px 0; color: #d97706;"><i class="fas fa-clipboard"></i> Sessional Examinations</h3>
 
             <!-- Schedule File (if uploaded) -->
             <div id="sessionalSchedule" style="display: none;"></div>
@@ -112,9 +112,9 @@
                             } else if (fileExt === 'pdf') {
                                 // PDF - embed inline
                                 html += '<iframe src="../' + s.file_url + '" style="width: 100%; height: 500px; border: none; border-radius: 8px;"></iframe>';
-                                html += '<div style="margin-top: 10px;"><a href="../' + s.file_url + '" target="_blank" class="btn btn-sm btn-outline">🔗 Open in New Tab</a></div>';
+                                html += '<div style="margin-top: 10px;"><a href="../' + s.file_url + '" target="_blank" class="btn btn-sm btn-outline"><i class="fas fa-link"></i> Open in New Tab</a></div>';
                             } else {
-                                html += '<a href="../' + s.file_url + '" target="_blank" class="btn btn-sm btn-primary">📥 Download</a>';
+                                html += '<a href="../' + s.file_url + '" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-download"></i> Download</a>';
                             }
 
                             html += '</div>';
@@ -166,7 +166,7 @@
                 // Details
                 html += '<div style="flex: 1;">';
                 html += '<div style="font-weight: 600;">' + exam.subject_name + '</div>';
-                html += '<div style="font-size: 12px; color: #64748b;">🕐 ' + formatTimeStr(exam.start_time) + ' - ' + formatTimeStr(exam.end_time) + ' | 📍 ' + exam.room + '</div>';
+                html += '<div style="font-size: 12px; color: #64748b;"><i class="fas fa-clock"></i> ' + formatTimeStr(exam.start_time) + ' - ' + formatTimeStr(exam.end_time) + ' | <i class="fas fa-location-dot"></i> ' + exam.room + '</div>';
                 html += '</div>';
 
                 // Days badge

@@ -6,13 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Login - ICC Companion</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .quick-btn {
+            padding: 14px 8px;
+            border: 1.5px solid transparent;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+        .quick-btn:active { transform: translateY(0); }
+        .quick-btn i { font-size: 20px; }
+        .quick-btn.qb-bca { background: #eff6ff; color: #2563eb; }
+        .quick-btn.qb-bca:hover { background: #dbeafe; border-color: #2563eb; }
+        .quick-btn.qb-bba { background: #ecfdf5; color: #059669; }
+        .quick-btn.qb-bba:hover { background: #d1fae5; border-color: #059669; }
+        .quick-btn.qb-bcom { background: #fffbeb; color: #d97706; }
+        .quick-btn.qb-bcom:hover { background: #fef3c7; border-color: #d97706; }
+        .quick-btn.qb-ba { background: #f5f3ff; color: #7c3aed; }
+        .quick-btn.qb-ba:hover { background: #ede9fe; border-color: #7c3aed; }
+    </style>
 </head>
 
 <body>
     <div class="login-page">
         <div class="login-box">
             <div class="logo">
-                <div class="logo-icon">👨‍🎓</div>
+                <div class="logo-icon"><i class="fas fa-user-graduate"></i></div>
             </div>
             <h1>Student Login</h1>
             <p class="subtitle">ICC Companion</p>
@@ -32,6 +64,28 @@
 
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
+
+            <div class="demo-section">
+                <p class="demo-label">Quick Demo Access</p>
+                <div class="demo-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button type="button" class="quick-btn qb-bba" onclick="quickLogin('UT-221-050-0001', '2003-03-10')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>BBA</span>
+                    </button>
+                    <button type="button" class="quick-btn qb-bca" onclick="quickLogin('UT-231-049-0004', '2003-03-25')">
+                        <i class="fas fa-laptop-code"></i>
+                        <span>BCA</span>
+                    </button>
+                    <button type="button" class="quick-btn qb-ba" onclick="quickLogin('UT-221-051-0001', '2003-04-25')">
+                        <i class="fas fa-book-open"></i>
+                        <span>BA</span>
+                    </button>
+                    <button type="button" class="quick-btn qb-bcom" onclick="quickLogin('UT-221-052-0001', '2003-05-08')">
+                        <i class="fas fa-calculator"></i>
+                        <span>B.Com</span>
+                    </button>
+                </div>
+            </div>
 
             <div class="switch-login">
                 <a href="index.html">← Back to Home</a>
@@ -100,6 +154,12 @@
             var errorMsg = document.getElementById('errorMsg');
             errorMsg.textContent = message;
             errorMsg.classList.remove('hidden');
+        }
+
+        function quickLogin(roll, dob) {
+            document.getElementById('rollNumber').value = roll;
+            document.getElementById('dob').value = dob;
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
         }
     </script>
 </body>

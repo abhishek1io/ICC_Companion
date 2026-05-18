@@ -12,7 +12,7 @@
     <!-- Header -->
     <div class="header">
         <div class="logo">
-            <span class="logo-icon">🎓</span>
+            <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
             <div>
                 <div class="college-name">ICC Companion</div>
                 <div class="college-short">ICON COMMERCE COLLEGE</div>
@@ -27,20 +27,20 @@
     <!-- Navigation -->
     <nav class="nav-menu">
         <ul>
-            <li><a href="dashboard.html">🏠 Dashboard</a></li>
-            <li><a href="subjects.html">📖 Subjects</a></li>
-            <li><a href="resources.html">📚 Resources</a></li>
-            <li><a href="attendance.html">📊 Attendance</a></li>
-            <li><a href="exams.html">📅 Exams</a></li>
-            <li><a href="routines.html">📋 Routines</a></li>
-            <li><a href="lost-found.html">🔍 Lost & Found</a></li>
-            <li><a href="announcements.html" class="active">📢 Announcements</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-house"></i> Dashboard</a></li>
+            <li><a href="subjects.html"><i class="fas fa-book-open"></i> Subjects</a></li>
+            <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
+            <li><a href="attendance.html"><i class="fas fa-chart-bar"></i> Attendance</a></li>
+            <li><a href="exams.html"><i class="fas fa-calendar"></i> Exams</a></li>
+            <li><a href="routines.html"><i class="fas fa-clipboard"></i> Routines</a></li>
+            <li><a href="lost-found.html"><i class="fas fa-magnifying-glass"></i> Lost & Found</a></li>
+            <li><a href="announcements.html" class="active"><i class="fas fa-bullhorn"></i> Announcements</a></li>
         </ul>
     </nav>
 
     <!-- Main Content -->
     <div class="container">
-        <h1 class="page-title">📢 Announcements</h1>
+        <h1 class="page-title"><i class="fas fa-bullhorn"></i> Announcements</h1>
 
         <!-- Announcements List -->
         <div id="announcementsList">
@@ -96,12 +96,12 @@
                             if (item.attachment_url || item.link_url) {
                                 html += '  <div style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap;">';
                                 if (item.attachment_url) {
-                                    html += '    <a href="../' + item.attachment_url + '" target="_blank" class="btn btn-sm btn-outline">📎 View Attachment</a>';
+                                    html += '    <a href="../' + item.attachment_url + '" target="_blank" class="btn btn-sm btn-outline"><i class="fas fa-paperclip"></i> View Attachment</a>';
                                 }
                                 if (item.link_url) {
                                     var displayUrl = item.link_url.replace('https://', '').replace('http://', '');
                                     if (displayUrl.length > 40) displayUrl = displayUrl.substring(0, 37) + '...';
-                                    html += '    <a href="' + item.link_url + '" target="_blank" class="btn btn-sm btn-outline">🔗 ' + displayUrl + '</a>';
+                                    html += '    <a href="' + item.link_url + '" target="_blank" class="btn btn-sm btn-outline"><i class="fas fa-link"></i> ' + displayUrl + '</a>';
                                 }
                                 html += '  </div>';
                             }
