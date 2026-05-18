@@ -124,15 +124,22 @@ a {
     border-bottom: 3px solid transparent;
 }
 
-.nav-menu li a:hover {
-    color: var(--primary);
-    background-color: var(--light);
+.nav-menu li a.active {
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
 }
 
-.nav-menu li a.active {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
-}
+.nav-menu li:nth-child(1) a.active { border-bottom-color: #60a5fa; }
+.nav-menu li:nth-child(2) a.active { border-bottom-color: #a78bfa; }
+.nav-menu li:nth-child(3) a.active { border-bottom-color: #22d3ee; }
+.nav-menu li:nth-child(4) a.active { border-bottom-color: #34d399; }
+.nav-menu li:nth-child(5) a.active { border-bottom-color: #fbbf24; }
+.nav-menu li:nth-child(6) a.active { border-bottom-color: #f87171; }
+.nav-menu li:nth-child(7) a.active { border-bottom-color: #f472b6; }
+.nav-menu li:nth-child(8) a.active { border-bottom-color: #818cf8; }
+.nav-menu li:nth-child(9) a.active { border-bottom-color: #2dd4bf; }
+.nav-menu li:nth-child(10) a.active { border-bottom-color: #fb923c; }
+.nav-menu li:nth-child(11) a.active { border-bottom-color: #fb7185; }
 
 /* =============================================
    MAIN CONTAINER
@@ -246,9 +253,19 @@ a {
 }
 
 .menu-card:hover {
-    border-color: var(--primary);
     transform: translateY(-2px);
 }
+
+.menu-card:nth-child(1):hover { border-color: #a78bfa; }
+.menu-card:nth-child(2):hover { border-color: #22d3ee; }
+.menu-card:nth-child(3):hover { border-color: #34d399; }
+.menu-card:nth-child(4):hover { border-color: #fbbf24; }
+.menu-card:nth-child(5):hover { border-color: #f87171; }
+.menu-card:nth-child(6):hover { border-color: #f472b6; }
+.menu-card:nth-child(7):hover { border-color: #818cf8; }
+.menu-card:nth-child(8):hover { border-color: #2dd4bf; }
+.menu-card:nth-child(9):hover { border-color: #fb923c; }
+.menu-card:nth-child(10):hover { border-color: #fb7185; }
 
 .menu-card .icon {
     font-size: 32px;
