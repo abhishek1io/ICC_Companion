@@ -1,0 +1,87 @@
+%% DFD Level 1 — Process Breakdown
+%% ICC Companion College Management System
+
+graph TB
+    STUDENT["`**Student**`"]
+    FACULTY["`**Faculty**`"]
+    ADMIN["`**Admin**`"]
+
+    subgraph SYSTEM["ICC Companion — System Processes"]
+        P1("`**P1**
+        Authentication
+        & Login`")
+        P2("`**P2**
+        Attendance
+        Management`")
+        P3("`**P3**
+        Resource
+        Library`")
+        P4("`**P4**
+        Exam &
+        Routine View`")
+        P5("`**P5**
+        Lost & Found
+        Management`")
+        P6("`**P6**
+        Announcement
+        Management`")
+    end
+
+    D1[("Students DB")]
+    D2[("Attendance DB")]
+    D3[("Resources DB")]
+    D4[("Exams DB")]
+    D5[("Lost & Found DB")]
+    D6[("Announcements DB")]
+
+    STUDENT -->|"Login Request"| P1
+    P1 -->|"Session Token"| STUDENT
+
+    STUDENT -->|"View Request"| P4
+    P4 -->|"Routine Data"| STUDENT
+
+    STUDENT -->|"Download Request"| P3
+    P3 -->|"File Stream"| STUDENT
+
+    STUDENT -->|"Report Item"| P5
+    P5 -->|"Claim Status"| STUDENT
+
+    STUDENT -->|"Browse"| P6
+    P6 -->|"Notices"| STUDENT
+
+    FACULTY -->|"Attendance Entry"| P2
+    P2 -->|"Student Roster"| FACULTY
+    FACULTY -->|"Upload File"| P3
+
+    ADMIN -->|"Manage All"| P6
+    ADMIN -->|"CRUD"| P2
+    ADMIN -->|"CRUD"| P4
+    ADMIN -->|"Oversee"| P5
+
+    P1 --> D1
+    P2 --> D2
+    P3 --> D3
+    P4 --> D4
+    P5 --> D5
+    P6 --> D6
+
+    D1 -.-> P2
+    D2 -.-> P4
+
+    style STUDENT fill:#fef7e0,stroke:#e37400,stroke-width:2px
+    style FACULTY fill:#fef7e0,stroke:#e37400,stroke-width:2px
+    style ADMIN fill:#e6f4ea,stroke:#137333,stroke-width:2px
+
+    style P1 fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+    style P2 fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+    style P3 fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+    style P4 fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+    style P5 fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+    style P6 fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+
+    style D1 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,stroke-dasharray:5 5
+    style D2 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,stroke-dasharray:5 5
+    style D3 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,stroke-dasharray:5 5
+    style D4 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,stroke-dasharray:5 5
+    style D5 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,stroke-dasharray:5 5
+    style D6 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,stroke-dasharray:5 5

@@ -1,0 +1,56 @@
+---
+title: Use Case Diagram — ICC Companion
+---
+flowchart RL
+    subgraph Student_Features["Student"]
+        direction TB
+        UC1["View Attendance"]
+        UC2["Download Resources"]
+        UC3["View Class Routines"]
+        UC4["View Exam Schedule"]
+        UC5["Report Lost & Found Items"]
+        UC6["Browse Announcements"]
+    end
+
+    subgraph Faculty_Features["Faculty"]
+        direction TB
+        UC7["Mark Attendance"]
+        UC8["Upload Resources"]
+        UC9["View My Subjects"]
+    end
+
+    subgraph Admin_Features["Admin"]
+        direction TB
+        UC10["Manage Students"]
+        UC11["Manage Departments"]
+        UC12["Manage Faculty Accounts"]
+        UC13["Manage Exams & Routines"]
+        UC14["Lost & Found Oversight"]
+        UC15["Full System Access"]
+    end
+
+    Student(["Student"]) -.-> UC1
+    Student -.-> UC2
+    Student -.-> UC3
+    Student -.-> UC4
+    Student -.-> UC5
+    Student -.-> UC6
+
+    Faculty(["Faculty"]) -.-> UC7
+    Faculty -.-> UC8
+    Faculty -.-> UC9
+
+    Admin(["Admin"]) -.-> UC10
+    Admin -.-> UC11
+    Admin -.-> UC12
+    Admin -.-> UC13
+    Admin -.-> UC14
+    Admin -.-> UC15
+
+    style Student fill:#fef7e0,stroke:#e37400,stroke-width:3px
+    style Faculty fill:#fef7e0,stroke:#e37400,stroke-width:3px
+    style Admin fill:#e6f4ea,stroke:#137333,stroke-width:3px
+
+    style Student_Features fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px,stroke-dasharray: 6 3
+    style Faculty_Features fill:#fce8e6,stroke:#c5221f,stroke-width:2px,stroke-dasharray: 6 3
+    style Admin_Features fill:#e6f4ea,stroke:#137333,stroke-width:2px,stroke-dasharray: 6 3

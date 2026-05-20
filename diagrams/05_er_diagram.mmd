@@ -1,0 +1,132 @@
+---
+title: ER Diagram — ICC Companion Database
+---
+
+erDiagram
+    FACULTY_SUBJECTS {
+        int id PK
+        int admin_id FK
+        int subject_id FK
+        varchar dept_code
+        int semester
+    }
+
+    DEPARTMENTS ||--o{ STUDENTS : "1 : N"
+    DEPARTMENTS ||--o{ ADMINS : "1 : N"
+    DEPARTMENTS ||--o{ SUBJECTS : "1 : N"
+
+    SUBJECTS ||--o{ ATTENDANCE : "1 : N"
+    SUBJECTS ||--o{ EXAMS : "1 : N"
+    SUBJECTS ||--o{ CLASS_ROUTINES : "1 : N"
+    SUBJECTS ||--o{ RESOURCES : "1 : N"
+
+    STUDENTS ||--o{ ATTENDANCE : "1 : N"
+    STUDENTS ||--o{ LOST_FOUND : "1 : N"
+
+    ADMINS ||--o{ ATTENDANCE : "1 : N"
+    ADMINS ||--o{ CLASS_ROUTINES : "1 : N"
+    ADMINS ||--o{ RESOURCES : "1 : N"
+    ADMINS ||--o{ ANNOUNCEMENTS : "1 : N"
+    ADMINS ||--o{ LOST_FOUND : "1 : N"
+    ADMINS ||--o{ EXAM_SCHEDULES : "1 : N"
+
+    FACULTY_SUBJECTS ||--o{ ATTENDANCE : "1 : N"
+    SUBJECTS ||--o{ FACULTY_SUBJECTS : "1 : N"
+    ADMINS ||--o{ FACULTY_SUBJECTS : "1 : N"
+
+    DEPARTMENTS {
+        int dept_id PK
+        varchar dept_code
+        varchar dept_name
+    }
+
+    SUBJECTS {
+        int subject_id PK
+        varchar subject_name
+        varchar subject_code
+        int dept_id FK
+        int semester
+    }
+
+    STUDENTS {
+        varchar roll_no PK
+        varchar name
+        date dob
+        varchar email
+        varchar phone
+        int dept_id FK
+        int semester
+    }
+
+    ADMINS {
+        int admin_id PK
+        varchar username
+        varchar password
+        varchar name
+        enum role
+        int dept_id FK
+    }
+
+    ATTENDANCE {
+        int attendance_id PK
+        varchar student_id FK
+        int subject_id FK
+        date date
+        enum status
+        int marked_by FK
+    }
+
+    EXAMS {
+        int exam_id PK
+        int subject_id FK
+        date exam_date
+        int total_marks
+        int pass_marks
+    }
+
+    ANNOUNCEMENTS {
+        int announcement_id PK
+        varchar title
+        text description
+        enum priority
+        varchar file
+        int created_by FK
+    }
+
+    CLASS_ROUTINES {
+        int routine_id PK
+        int subject_id FK
+        varchar day_of_week
+        time time_slot
+        varchar room_no
+        int faculty_id FK
+    }
+
+    RESOURCES {
+        int resource_id PK
+        int subject_id FK
+        varchar title
+        varchar file_path
+        enum type
+        int uploaded_by FK
+    }
+
+    LOST_FOUND {
+        int item_id PK
+        varchar title
+        varchar category
+        enum status
+        varchar reported_by FK
+        varchar image
+        enum claim_status
+    }
+
+    EXAM_SCHEDULES {
+        int schedule_id PK
+        int exam_id FK
+        int subject_id FK
+        date exam_date
+        time start_time
+        time end_time
+        int created_by FK
+    }

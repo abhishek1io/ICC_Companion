@@ -1,0 +1,49 @@
+%% System Architecture — 3-Tier Design
+%% ICC Companion College Management System
+
+graph TB
+    subgraph CLIENT["TIER 1: CLIENT (Presentation Layer)"]
+        direction LR
+        A1["Web Browser"]
+        A2["HTML5 / CSS3"]
+        A3["JavaScript (ES6)"]
+        A4["Mobile-Responsive"]
+    end
+
+    subgraph SERVER["TIER 2: SERVER (Application Layer)"]
+        direction LR
+        B1["PHP Backend (XAMPP Apache)"]
+        B2["Authentication & Session Management"]
+        B3["Business Logic: Attendance, Exams, Resources, Routines"]
+        B4["Role-Based Access Control"]
+    end
+
+    subgraph DATABASE["TIER 3: DATABASE (Data Layer)"]
+        direction LR
+        C1["MySQL (phpMyAdmin)"]
+        C2["11 Tables + 1 View"]
+        C3["Normalized Schema with Foreign Keys"]
+    end
+
+    CLIENT -->|"HTTP Requests / AJAX"| SERVER
+    SERVER -->|"MySQL Queries (PDO)"| DATABASE
+    DATABASE -->|"Result Sets"| SERVER
+    SERVER -->|"HTML / JSON Responses"| CLIENT
+
+    style CLIENT fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+    style SERVER fill:#fef7e0,stroke:#f9a825,stroke-width:2px
+    style DATABASE fill:#e6f4ea,stroke:#34a853,stroke-width:2px
+
+    style A1 fill:#e8f0fe,stroke:none
+    style A2 fill:#e8f0fe,stroke:none
+    style A3 fill:#e8f0fe,stroke:none
+    style A4 fill:#e8f0fe,stroke:none
+
+    style B1 fill:#fef7e0,stroke:none
+    style B2 fill:#fef7e0,stroke:none
+    style B3 fill:#fef7e0,stroke:none
+    style B4 fill:#fef7e0,stroke:none
+
+    style C1 fill:#e6f4ea,stroke:none
+    style C2 fill:#e6f4ea,stroke:none
+    style C3 fill:#e6f4ea,stroke:none

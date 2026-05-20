@@ -1,0 +1,35 @@
+%% DFD Level 0 — Context Diagram
+%% ICC Companion College Management System
+
+graph LR
+    STUDENT["`**Student**
+    End User`"]
+    FACULTY["`**Faculty**
+    Subject Teacher`"]
+    ADMIN["`**Admin**
+    HOD / Principal`"]
+    SYSTEM("`**ICC Companion**
+    College Management System`")
+    DB[("`**Database**
+    MySQL`")]
+
+    STUDENT -->|"Login Credentials (Roll + DOB)"| SYSTEM
+    SYSTEM -->|"Attendance %, Resources, Routines"| STUDENT
+
+    FACULTY -->|"Attendance Data, Resource Uploads"| SYSTEM
+    SYSTEM -->|"Subject Lists, Student Rosters"| FACULTY
+
+    ADMIN -->|"CRUD Commands, Configuration"| SYSTEM
+    SYSTEM -->|"Dashboard Data, Reports"| ADMIN
+
+    SYSTEM -->|"SQL Queries"| DB
+    DB -->|"Query Results"| SYSTEM
+
+    style STUDENT fill:#fef7e0,stroke:#e37400,stroke-width:2px
+    style FACULTY fill:#fef7e0,stroke:#e37400,stroke-width:2px
+    style ADMIN fill:#e6f4ea,stroke:#137333,stroke-width:2px
+    style DB fill:#e6f4ea,stroke:#137333,stroke-width:2px,stroke-dasharray: 5 5
+
+    style SYSTEM fill:#e8f0fe,stroke:#1a73e8,stroke-width:3px
+
+    linkStyle default stroke:#5f6368,stroke-width:2px
